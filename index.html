@@ -3,131 +3,461 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITGXD — Home</title>
+    <title>ITGXD | Student Developer</title>
     <style>
-        body {
+        /* --- RESET & VARIABLES --- */
+        * {
             margin: 0;
             padding: 0;
-            font-family: "Inter", sans-serif;
-            background: #111;
-            color: #eee;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #161616;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --accent: #00d4ff; /* Neon Cyan */
+            --accent-glow: rgba(0, 212, 255, 0.4);
+            --secondary: #7000ff; /* Neon Purple */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        span.highlight {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* --- ANIMATION CLASSES --- */
+        .hidden {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- CANVAS BACKGROUND --- */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* --- HEADER / NAV --- */
+        nav {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .cta-btn {
+            padding: 12px 30px;
+            font-size: 1rem;
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 5px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* --- SECTIONS COMMON --- */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* --- ABOUT ME --- */
+        .about-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .about-text {
+            max-width: 600px;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        /* --- SKILLS GRID --- */
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .skill-tag {
+            background: var(--card-bg);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+            cursor: default;
+        }
+
+        .skill-tag:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            color: var(--accent);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        /* --- FUN FACTS (Interactive Cards) --- */
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .fact-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 3px solid var(--secondary);
+            transition: 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fact-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .fact-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .fact-card:hover {
+            transform: translateY(-5px);
+            background: #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* --- PROJECTS --- */
+        .project-card {
+            background: linear-gradient(145deg, #1a1a1a, #111);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
             text-align: center;
         }
-
-        header {
-            padding: 80px 20px;
+        
+        .status-badge {
+            background: rgba(255, 166, 0, 0.2);
+            color: orange;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
         }
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            color: #fff;
-            letter-spacing: -1px;
-        }
-
-        h2 {
-            color: #aaa;
-            font-size: 1.2rem;
-            margin-top: 0;
-        }
-
-        section {
-            max-width: 800px;
-            margin: 60px auto;
-            padding: 0 20px;
-            line-height: 1.7;
-        }
-
-        .tag {
-            display: inline-block;
-            margin: 5px;
-            padding: 6px 14px;
+        /* --- SETUP SECTION --- */
+        .setup-display {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 20px;
-            background: #222;
-            color: #ccc;
-            font-size: 0.9rem;
-            border: 1px solid #333;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .laptop-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--text-muted);
         }
 
+        /* --- FOOTER --- */
         footer {
-            margin-top: 60px;
-            padding: 20px 0;
-            font-size: 0.85rem;
-            color: #555;
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        a {
-            color: #8ab4ff;
-            text-decoration: none;
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>ITGXD</h1>
-    <h2>Student • Developer in Progress • Tech Enthusiast</h2>
-</header>
+    <canvas id="bg-canvas"></canvas>
 
-<section>
-    <h2>👋 About Me</h2>
-    <p>
-        Hey! I'm <strong>ITGXD</strong> — a student who’s trying to level up in coding,
-        game development, and tech. I’m currently building my dream PC setup and learning
-        how to create games (especially a Roblox Factory Tycoon 👀).
-        <br><br>
-        I’m also experimenting with AI tools, GitHub Copilot Pro, and all the
-        crazy stuff that comes with being a curious dev.
-    </p>
-</section>
+    <nav>
+        <div class="container">
+            <div class="logo">ITGXD</div>
+            <a href="#contact" style="color: #fff; text-decoration: none; font-size: 0.9rem;">Get in touch</a>
+        </div>
+    </nav>
 
-<section>
-    <h2>🧠 What I Do</h2>
-    <div class="tag">Roblox Dev (Factory Tycoon project)</div>
-    <div class="tag">Learning HTML / CSS / JS</div>
-    <div class="tag">Minecraft & Fortnite player</div>
-    <div class="tag">Building my first PC</div>
-    <div class="tag">AI & Coding Enthusiast</div>
-    <div class="tag">Student (Class 11 CBSE)</div>
-</section>
+    <section class="hero">
+        <h1 class="hidden">Hi, I'm <span class="highlight">ITGXD</span></h1>
+        <p class="hidden">Class 12 Student | Future Developer | Tech Enthusiast</p>
+        <a href="#about" class="cta-btn hidden">Explore My World</a>
+    </section>
 
-<section>
-    <h2>🔥 Fun Facts</h2>
-    <p>
-        • I got GitHub Copilot Pro with unlimited completions (W student life).<br>
-        • I plan to make a proper game one day — maybe even a full PC factory tycoon.<br>
-        • I use tech way more than I probably should… but it’s worth it.<br>
-        • I like clean and simple website designs — just like this one.
-    </p>
-</section>
+    <div class="container">
+        <section id="about" class="hidden">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        I'm currently a <strong>Class 12 CBSE student</strong> balancing academics with a passion for technology. 
+                        While I'm focused on my studies, I spend my free time exploring AI tools, GitHub Copilot, and the basics of web development.
+                    </p>
+                    <br>
+                    <p>
+                        I love testing out new dev tools and have a curious mind for how things work. My goal is to master "real coding" properly 
+                        and eventually build complex games and applications. When I'm not studying or coding, you can find me playing 
+                        Minecraft or Fortnite with friends.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-<section>
-    <h2>💻 My PC Build (WIP)</h2>
-    <p>
-        • Ryzen 5 7600<br>
-        • RTX 4070 Super<br>
-        • 32GB DDR5 RAM<br>
-        • 1TB NVMe SSD<br>
-        • Zalman CNPS9X Air Cooler<br>
-        <br>
-        (Soon to run all my dev tools + games smooth 😎)
-    </p>
-</section>
+        <section id="skills" class="hidden">
+            <h2 class="section-title">Tech & Interests</h2>
+            <div class="skills-grid">
+                <div class="skill-tag">HTML5 / CSS3</div>
+                <div class="skill-tag">JavaScript (Beginner)</div>
+                <div class="skill-tag">GitHub Student Pack</div>
+                <div class="skill-tag">Copilot Pro User</div>
+                <div class="skill-tag">AI Prompting</div>
+                <div class="skill-tag">Minecraft</div>
+                <div class="skill-tag">Fortnite</div>
+                <div class="skill-tag">Game Dev Enthusiast</div>
+            </div>
+        </section>
 
-<section>
-    <h2>📬 Contact</h2>
-    <p>
-        Want to reach out?  
-        <br>
-        <a href="mailto:your-email-here">your-email-here</a>
-        <br><br>
-        (Replace this with your real email or socials if you want)
-    </p>
-</section>
+        <section id="facts" class="hidden">
+            <h2 class="section-title">Did You Know?</h2>
+            <div class="facts-grid">
+                <div class="fact-card">
+                    <h3>AI Powered 🤖</h3>
+                    <p>I use the GitHub Student Pack to access pro-level AI tools and unlimited completions for free.</p>
+                </div>
+                <div class="fact-card">
+                    <h3>No PC Build (Yet) 💻</h3>
+                    <p>I don't have a crazy tower PC. I run everything on my trusty Dell Inspiron laptop.</p>
+                </div>
+                <div class="fact-card">
+                    <h3>Future Tycoon 🏭</h3>
+                    <p>I have a concept for a Roblox Factory Tycoon game that I plan to build once I master Lua.</p>
+                </div>
+                <div class="fact-card">
+                    <h3>Dream Big 🚀</h3>
+                    <p>My goal is to transition from "student dev" to a professional full-stack developer.</p>
+                </div>
+            </div>
+        </section>
 
-<footer>
-    © 2025 ITGXD — All Rights Reserved.
-</footer>
+        <section id="setup" class="hidden">
+            <h2 class="section-title">My Station</h2>
+            <div class="setup-display">
+                <div class="laptop-icon">💻</div>
+                <h3>Dell Inspiron</h3>
+                <p style="color: var(--text-muted); margin-top: 10px;">
+                    The daily driver. It handles my coding, studying, and casual gaming sessions. 
+                    Proof that you don't need a $3000 rig to start building the future.
+                </p>
+            </div>
+        </section>
 
+        <section id="contact" style="text-align: center;" class="hidden">
+            <h2 class="section-title">Connect</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">
+                Always open to chatting about tech, AI, or gaming strategies.
+            </p>
+            <a href="mailto:placeholder@example.com" class="cta-btn">Send Email</a>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 ITGXD. Built with code & curiosity.</p>
+    </footer>
+
+    <script>
+        // 1. SCROLL ANIMATIONS (Intersection Observer)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                }
+            });
+        });
+
+        const hiddenElements = document.querySelectorAll('.hidden');
+        hiddenElements.forEach((el) => observer.observe(el));
+
+        // 2. BACKGROUND PARTICLE EFFECT
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let particlesArray;
+
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2; // Tiny particles
+                this.speedX = (Math.random() * 1) - 0.5;
+                this.speedY = (Math.random() * 1) - 0.5;
+                this.color = 'rgba(0, 212, 255, 0.5)'; // Cyan tint
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                // Bounce off edges
+                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 15000; // Density
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        initParticles();
+        animateParticles();
+    </script>
 </body>
 </html>
