@@ -80,7 +80,6 @@
     }
 
     .server-icon.home { margin-bottom: 8px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
-    .server-divider { width: 32px; height: 2px; background: var(--border); margin: 4px 0; }
 
     /* --- SIDEBAR --- */
     .channel-sidebar {
@@ -166,8 +165,6 @@
     .message-text { color: #ccddcc; word-wrap: break-word; line-height: 1.4; }
     
     .system-message { color: var(--text-muted); font-style: italic; padding: 8px 0; text-align: center; font-size: 12px; border-bottom: 1px dashed var(--border); margin: 8px 0; }
-    .system-message .join { color: var(--online); }
-    .system-message .leave { color: var(--accent); }
 
     /* --- INPUT AREA --- */
     .chat-input-container { padding: 16px; background: var(--bg-medium); border-top: 2px solid var(--border); }
@@ -211,7 +208,6 @@
     }
     .status-indicator.online { background: var(--online); }
     .status-indicator.offline { background: var(--offline); }
-    .member.offline .member-name { color: var(--text-muted); }
 
     /* --- MODAL --- */
     .modal-overlay {
@@ -248,7 +244,7 @@
   <div class="modal-overlay" id="usernameModal">
     <div class="modal">
       <h2>⚡ RETROCHAT 98 ⚡</h2>
-      <p style="margin-top: 10px; color: var(--text-muted);">Enter username to initialize uplink.<br>Messages are saved locally.</p>
+      <p style="margin-top: 10px; color: var(--text-muted);">Enter username to initialize uplink.<br>Messages are live.</p>
       <input type="text" id="usernameInput" placeholder="Enter Call Sign..." maxlength="15" autofocus>
       <button id="joinBtn">CONNECT</button>
       <br><br>
@@ -318,15 +314,33 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, onValue, set, onDisconnect, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // --- YOUR SPECIFIC FIREBASE CONFIG ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyAE75AlF1oDc_02lue7A7rtZ74x0y3eQLI",
+      authDomain: "retrochat-795b4.firebaseapp.com",
+      databaseURL: "https://retrochat-795b4-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "retrochat-795b4",
+      storageBucket: "retrochat-795b4.firebasestorage.app",
+      messagingSenderId: "588960494570",
+      appId: "1:588960494570:web:702a85c54f386e626fb893"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
     // --- CONFIG & STATE ---
     const COLORS = ['#e94560', '#00ff88', '#ffcc00', '#00ccff', '#ff66cc'];
     const EMOJIS = ['😎', '🤖', '👾', '🎮', '💀', '🔥', '💻', '📀'];
-    
+     
     let state = {
       user: null,
       channel: 'general',
-      users: []
+      userRef: null
     };
 
     // --- DOM ELEMENTS ---
@@ -346,45 +360,13 @@
       channels: document.querySelectorAll('.channel')
     };
 
-    // --- LOCAL STORAGE HELPERS ---
-    const getStorage = (key, defaultVal) => {
-      const data = localStorage.getItem(`retrochat_${key}`);
-      return data ? JSON.parse(data) : defaultVal;
-    };
-
-    const setStorage = (key, value) => {
-      localStorage.setItem(`retrochat_${key}`, JSON.stringify(value));
-    };
-
     // --- CORE LOGIC ---
     function init() {
-      // Check for existing session
       const savedUser = sessionStorage.getItem('retrochat_session');
       if (savedUser) {
         state.user = JSON.parse(savedUser);
         loginSuccess();
       }
-
-      // Initial Render
-      renderMessages();
-      updateUserStatus(true);
-      renderMembers();
-
-      // Listen for updates from other tabs
-      window.addEventListener('storage', (e) => {
-        if (e.key.startsWith('retrochat_messages_')) {
-          renderMessages();
-        }
-        if (e.key === 'retrochat_users') {
-          renderMembers();
-        }
-      });
-      
-      // Heartbeat for online status
-      setInterval(() => {
-        if (state.user) updateUserStatus(true);
-        renderMembers();
-      }, 5000);
     }
 
     function loginSuccess() {
@@ -396,8 +378,8 @@
       els.userAvatar.textContent = state.user.emoji;
       els.userAvatar.style.background = state.user.color;
       
-      updateUserStatus(true);
-      addSystemMessage(`${state.user.name} initialized connection.`);
+      setupRealtimeListeners();
+      setupPresence();
     }
 
     function joinChat() {
@@ -410,82 +392,73 @@
         tag: Math.floor(Math.random() * 9000 + 1000),
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
-        lastSeen: Date.now()
       };
 
       state.user = user;
-      sessionStorage.setItem('retrochat_session', JSON.stringify(user)); // Session storage is per-tab
+      sessionStorage.setItem('retrochat_session', JSON.stringify(user));
       loginSuccess();
     }
 
-    function updateUserStatus(isOnline) {
-      if (!state.user) return;
-      
-      let allUsers = getStorage('users', []);
-      const idx = allUsers.findIndex(u => u.name === state.user.name && u.tag === state.user.tag);
-      
-      const userData = { ...state.user, lastSeen: Date.now() };
+    // --- FIREBASE: PRESENCE ---
+    function setupPresence() {
+      const onlineRef = ref(db, 'online/' + state.user.id);
+      state.userRef = onlineRef;
 
-      if (idx > -1) {
-        allUsers[idx] = userData;
-      } else {
-        allUsers.push(userData);
-      }
-      
-      setStorage('users', allUsers);
-      renderMembers(); // Update local UI immediately
+      onDisconnect(onlineRef).remove();
+
+      set(onlineRef, {
+        ...state.user,
+        lastSeen: serverTimestamp()
+      });
+
+      const allUsersRef = ref(db, 'online');
+      onValue(allUsersRef, (snapshot) => {
+        const data = snapshot.val() || {};
+        const users = Object.values(data);
+        renderMembers(users);
+      });
     }
 
-    // --- MESSAGING ---
+    // --- FIREBASE: MESSAGING ---
+    function setupRealtimeListeners() {
+      const messagesRef = ref(db, `messages/${state.channel}`);
+      
+      onValue(messagesRef, (snapshot) => {
+        const data = snapshot.val();
+        const msgs = data ? Object.values(data) : [];
+        renderMessages(msgs);
+      });
+    }
+
     function sendMessage() {
       const text = els.msgInput.value.trim();
       if (!text || !state.user) return;
 
       const msg = {
-        id: Date.now(),
         text: text,
         user: state.user,
         timestamp: Date.now(),
         type: 'user'
       };
 
-      saveMessage(msg);
+      const messagesRef = ref(db, `messages/${state.channel}`);
+      push(messagesRef, msg);
+
       els.msgInput.value = '';
     }
 
-    function addSystemMessage(text) {
-      const msg = {
-        id: Date.now(),
-        text: text,
-        timestamp: Date.now(),
-        type: 'system'
-      };
-      saveMessage(msg);
-    }
-
-    function saveMessage(msg) {
-      const key = `messages_${state.channel}`;
-      let messages = getStorage(key, []);
-      messages.push(msg);
-      if (messages.length > 50) messages.shift(); // Keep limit
-      setStorage(key, messages);
-      renderMessages();
-    }
-
     // --- RENDERING ---
-    function renderMessages() {
-      const key = `messages_${state.channel}`;
-      const messages = getStorage(key, []);
-      
+    function renderMessages(messages) {
       els.msgContainer.innerHTML = '';
       
-      // Welcome header
       const welcome = document.createElement('div');
       welcome.className = 'system-message';
       welcome.innerHTML = `Welcome to the start of #${state.channel}`;
       els.msgContainer.appendChild(welcome);
 
-      messages.forEach(msg => {
+      const recentMessages = messages.slice(-50);
+
+      recentMessages.forEach(msg => {
         const div = document.createElement('div');
         if (msg.type === 'system') {
           div.className = 'system-message';
@@ -509,40 +482,22 @@
       els.msgContainer.scrollTop = els.msgContainer.scrollHeight;
     }
 
-    function renderMembers() {
-      const allUsers = getStorage('users', []);
-      const now = Date.now();
-      const onlineThreshold = 10000; // 10 seconds
+    function renderMembers(users) {
+      document.getElementById('onlineCount').textContent = users.length;
+      document.getElementById('offlineCount').textContent = 0;
 
-      // Sort users by last seen
-      const online = [];
-      const offline = [];
-
-      allUsers.forEach(u => {
-        if (now - u.lastSeen < onlineThreshold) {
-          online.push(u);
-        } else {
-          offline.push(u);
-        }
-      });
-
-      // Update Counts
-      document.getElementById('onlineCount').textContent = online.length;
-      document.getElementById('offlineCount').textContent = offline.length;
-
-      // Helper to generate HTML
-      const createMemberHTML = (u, isOnline) => `
-        <div class="member ${isOnline ? '' : 'offline'}">
-          <div class="member-avatar" style="background:${u.color}; ${isOnline ? '' : 'opacity:0.5'}">
+      const createMemberHTML = (u) => `
+        <div class="member">
+          <div class="member-avatar" style="background:${u.color}">
             ${u.emoji}
-            <div class="status-indicator ${isOnline ? 'online' : 'offline'}"></div>
+            <div class="status-indicator online"></div>
           </div>
-          <span class="member-name" style="${isOnline ? 'color:'+u.color : ''}">${u.name}</span>
+          <span class="member-name" style="color:${u.color}">${u.name}</span>
         </div>
       `;
 
-      els.onlineList.innerHTML = online.map(u => createMemberHTML(u, true)).join('');
-      els.offlineList.innerHTML = offline.map(u => createMemberHTML(u, false)).join('');
+      els.onlineList.innerHTML = users.map(u => createMemberHTML(u)).join('');
+      els.offlineList.innerHTML = '<div style="padding:10px; color:#666; font-size:10px;">Offline history disabled</div>';
     }
 
     // --- UTILS ---
@@ -555,7 +510,7 @@
         ch.classList.toggle('active', ch.textContent.includes(channelName));
       });
       
-      renderMessages();
+      setupRealtimeListeners(); 
     };
 
     function escapeHtml(text) {
@@ -567,19 +522,16 @@
     // --- EVENT LISTENERS ---
     els.joinBtn.addEventListener('click', joinChat);
     els.input.addEventListener('keypress', (e) => e.key === 'Enter' && joinChat());
-    
     els.msgInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendMessage();
     });
-
+    
     els.clearBtn.addEventListener('click', () => {
-      localStorage.clear();
+      sessionStorage.clear();
       location.reload();
     });
 
-    // Start
     init();
-
   </script>
 </body>
 </html>
