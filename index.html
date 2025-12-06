@@ -340,7 +340,8 @@
     let state = {
       user: null,
       channel: 'general',
-      userRef: null
+      userRef: null,
+      lastMsgCount: 0 // Tracks number of messages for sound logic
     };
 
     // --- DOM ELEMENTS ---
@@ -359,6 +360,30 @@
       userAvatar: document.getElementById('userAvatarSmall'),
       channels: document.querySelectorAll('.channel')
     };
+
+    // --- SOUND ENGINE ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playRetroBeep() {
+      // Only play if browser allows audio context
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      oscillator.type = 'square'; // 8-bit sound wave
+      oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // A4 note
+      oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1); // Slide up
+      
+      gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime); // Low volume
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      
+      oscillator.start();
+      oscillator.stop(audioCtx.currentTime + 0.1);
+    }
 
     // --- CORE LOGIC ---
     function init() {
@@ -397,6 +422,9 @@
       state.user = user;
       sessionStorage.setItem('retrochat_session', JSON.stringify(user));
       loginSuccess();
+      
+      // Resume audio context on user interaction
+      if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
     // --- FIREBASE: PRESENCE ---
@@ -423,9 +451,24 @@
     function setupRealtimeListeners() {
       const messagesRef = ref(db, `messages/${state.channel}`);
       
+      // Reset count when switching channels so we don't beep at old history
+      state.lastMsgCount = 0;
+
       onValue(messagesRef, (snapshot) => {
         const data = snapshot.val();
         const msgs = data ? Object.values(data) : [];
+        
+        // Play sound if we have MORE messages than before, 
+        // and it's not the very first load (count > 0)
+        if (msgs.length > state.lastMsgCount && state.lastMsgCount !== 0) {
+          // Optional: Don't beep if I sent the message
+          const lastMsg = msgs[msgs.length - 1];
+          if (lastMsg.user.name !== state.user.name) {
+               playRetroBeep();
+          }
+        }
+
+        state.lastMsgCount = msgs.length;
         renderMessages(msgs);
       });
     }
@@ -460,10 +503,32 @@
 
       recentMessages.forEach(msg => {
         const div = document.createElement('div');
+        
         if (msg.type === 'system') {
           div.className = 'system-message';
           div.innerHTML = `<span>${msg.text}</span>`;
         } else {
+          // --- TEXT FORMATTING LOGIC ---
+          let content = escapeHtml(msg.text);
+          
+          // 1. Linkify URLs
+          content = content.replace(
+            /(https?:\/\/[^\s]+)/g, 
+            '<a href="$1" target="_blank" style="color:#00ff88;text-decoration:underline;">$1</a>'
+          );
+
+          // 2. Bold (**text**)
+          content = content.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+          // 3. Italic (*text*)
+          content = content.replace(/\*(.*?)\*/g, '<i>$1</i>');
+
+          // 4. Code (`text`)
+          content = content.replace(
+            /`(.*?)`/g, 
+            '<code style="background:rgba(255,255,255,0.1);padding:2px 4px;border-radius:3px;font-family:monospace;">$1</code>'
+          );
+
           div.className = 'message';
           div.innerHTML = `
             <div class="message-avatar" style="background:${msg.user.color}">${msg.user.emoji}</div>
@@ -472,13 +537,14 @@
                 <span class="message-author" style="color:${msg.user.color}">${msg.user.name}</span>
                 <span class="message-timestamp">${new Date(msg.timestamp).toLocaleTimeString()}</span>
               </div>
-              <div class="message-text">${escapeHtml(msg.text)}</div>
+              <div class="message-text">${content}</div>
             </div>
           `;
         }
         els.msgContainer.appendChild(div);
       });
       
+      // Auto-scroll to bottom
       els.msgContainer.scrollTop = els.msgContainer.scrollHeight;
     }
 
