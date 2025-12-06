@@ -2,14 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1. 0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retro Discord Clone</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* --- RESET & VARIABLES --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --bg-dark: #1a1a2e;
@@ -25,11 +22,6 @@
       --offline: #666666;
     }
 
-    @font-face {
-      font-family: 'PixelFont';
-      src: local('Courier New'), local('monospace');
-    }
-
     body {
       font-family: 'Courier New', 'Lucida Console', monospace;
       background: var(--bg-dark);
@@ -37,17 +29,14 @@
       height: 100vh;
       overflow: hidden;
       font-size: 14px;
-      text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+      text-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
     }
 
     /* Scanline effect */
     body::before {
       content: '';
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: repeating-linear-gradient(
         0deg,
         rgba(0, 0, 0, 0.1) 0px,
@@ -59,12 +48,9 @@
       z-index: 9999;
     }
 
-    . container {
-      display: flex;
-      height: 100vh;
-    }
+    .container { display: flex; height: 100vh; }
 
-    /* Server List */
+    /* --- SERVER LIST --- */
     .server-list {
       width: 72px;
       background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3a 100%);
@@ -74,582 +60,230 @@
       align-items: center;
       gap: 8px;
       border-right: 2px solid var(--border);
-      box-shadow: inset -2px 0 0 #000, inset 2px 0 0 #3a3a5a;
     }
 
     .server-icon {
-      width: 48px;
-      height: 48px;
+      width: 48px; height: 48px;
       background: var(--bg-light);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s;
       border: 2px solid var(--border);
       font-size: 20px;
-      box-shadow: 2px 2px 0 #000, inset 1px 1px 0 #4a4a6a;
+      box-shadow: 2px 2px 0 #000;
     }
 
-    .server-icon:hover, .server-icon. active {
+    .server-icon:hover, .server-icon.active {
       border-radius: 16px;
       background: var(--accent);
       box-shadow: 0 0 10px var(--accent);
     }
 
-    . server-icon.home {
-      background: var(--accent);
-      margin-bottom: 8px;
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 8px;
-    }
+    .server-icon.home { margin-bottom: 8px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+    .server-divider { width: 32px; height: 2px; background: var(--border); margin: 4px 0; }
 
-    .server-divider {
-      width: 32px;
-      height: 2px;
-      background: var(--border);
-      margin: 4px 0;
-    }
-
-    /* Channel Sidebar */
+    /* --- SIDEBAR --- */
     .channel-sidebar {
       width: 240px;
       background: linear-gradient(180deg, var(--bg-medium) 0%, #0d1a30 100%);
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       border-right: 2px solid var(--border);
-      box-shadow: inset -2px 0 0 #000;
     }
 
     .server-header {
       padding: 16px;
       border-bottom: 2px solid var(--border);
-      font-weight: bold;
-      font-size: 16px;
+      font-weight: bold; font-size: 16px;
       background: var(--bg-dark);
-      text-transform: uppercase;
-      letter-spacing: 2px;
+      text-transform: uppercase; letter-spacing: 2px;
       box-shadow: 0 2px 0 #000;
     }
 
-    .channel-category {
-      padding: 16px 8px 4px;
-      font-size: 11px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .channel-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 8px;
-    }
-
+    .channel-category { padding: 16px 8px 4px; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .channel-list { flex: 1; overflow-y: auto; padding: 8px; }
+    
     .channel {
-      padding: 8px 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid transparent;
-      margin: 2px 0;
+      padding: 6px 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+      border: 1px solid transparent; margin: 2px 0; border-radius: 4px;
     }
 
-    .channel:hover {
-      background: var(--bg-light);
-      border: 1px solid var(--border);
-      box-shadow: inset 1px 1px 0 #4a4a6a, inset -1px -1px 0 #000;
-    }
+    .channel:hover { background: var(--bg-light); border: 1px solid var(--border); }
+    .channel.active { background: var(--bg-light); color: var(--text-secondary); border: 1px solid var(--accent); box-shadow: 0 0 5px var(--accent); }
+    .channel-hash { color: var(--text-muted); }
 
-    . channel.active {
-      background: var(--bg-light);
-      color: var(--text-secondary);
-      border: 1px solid var(--accent);
-      box-shadow: 0 0 5px var(--accent);
-    }
-
-    .channel-hash {
-      color: var(--text-muted);
-    }
-
-    /* User Panel */
     .user-panel {
-      padding: 12px;
-      background: #0a0a1a;
+      padding: 12px; background: #0a0a1a;
       border-top: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 -2px 0 #3a3a5a;
+      display: flex; align-items: center; gap: 8px;
     }
 
     .user-avatar {
-      width: 32px;
-      height: 32px;
+      width: 32px; height: 32px;
       background: var(--accent);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; border: 2px solid var(--border);
       position: relative;
     }
 
-    .user-avatar::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      right: -2px;
-      width: 12px;
-      height: 12px;
-      background: var(--online);
-      border-radius: 50%;
-      border: 2px solid #0a0a1a;
-    }
+    .user-info { flex: 1; overflow: hidden; }
+    .user-name { font-size: 12px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-tag { font-size: 10px; color: var(--text-muted); }
 
-    .user-info {
-      flex: 1;
-    }
-
-    .user-name {
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .user-tag {
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    /* Main Chat Area */
-    .main-chat {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: var(--bg-dark);
-    }
-
+    /* --- MAIN CHAT --- */
+    .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--bg-dark); min-width: 0; }
+    
     .chat-header {
-      padding: 16px;
-      border-bottom: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--bg-medium);
-      box-shadow: 0 2px 0 #000;
+      padding: 16px; border-bottom: 2px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg-medium); box-shadow: 0 2px 0 #000;
     }
-
-    . chat-header-hash {
-      font-size: 24px;
-      color: var(--text-muted);
-    }
-
-    .chat-header-name {
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    .chat-header-topic {
-      color: var(--text-muted);
-      font-size: 12px;
-      border-left: 2px solid var(--border);
-      padding-left: 12px;
-      margin-left: 12px;
-    }
+    .chat-header-hash { font-size: 24px; color: var(--text-muted); }
+    .chat-header-name { font-weight: bold; font-size: 16px; }
+    .chat-header-topic { color: var(--text-muted); font-size: 12px; border-left: 2px solid var(--border); padding-left: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .messages-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+      flex: 1; overflow-y: auto; padding: 16px;
+      display: flex; flex-direction: column; gap: 4px;
+      scroll-behavior: smooth;
     }
 
-    .message {
-      display: flex;
-      gap: 12px;
-      padding: 8px;
-      border-radius: 4px;
-      animation: messageIn 0.3s ease;
-    }
-
-    @keyframes messageIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .message:hover {
-      background: rgba(255, 255, 255, 0. 02);
-    }
+    .message { display: flex; gap: 12px; padding: 8px; border-radius: 4px; animation: messageIn 0.2s ease; }
+    .message:hover { background: rgba(255, 255, 255, 0.02); }
+    @keyframes messageIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
     .message-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      border: 2px solid var(--border);
-      flex-shrink: 0;
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; border: 2px solid var(--border); flex-shrink: 0;
     }
 
-    .message-content {
-      flex: 1;
-      min-width: 0;
-    }
+    .message-content { flex: 1; min-width: 0; }
+    .message-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+    .message-author { font-weight: bold; cursor: pointer; }
+    .message-timestamp { font-size: 10px; color: var(--text-muted); }
+    .message-text { color: #ccddcc; word-wrap: break-word; line-height: 1.4; }
+    
+    .system-message { color: var(--text-muted); font-style: italic; padding: 8px 0; text-align: center; font-size: 12px; border-bottom: 1px dashed var(--border); margin: 8px 0; }
+    .system-message .join { color: var(--online); }
+    .system-message .leave { color: var(--accent); }
 
-    .message-header {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .message-author {
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .message-author:hover {
-      text-decoration: underline;
-    }
-
-    .message-timestamp {
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    .message-text {
-      color: #ccddcc;
-      word-wrap: break-word;
-      line-height: 1.4;
-    }
-
-    .system-message {
-      color: var(--text-muted);
-      font-style: italic;
-      padding: 8px 16px;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    . system-message . join {
-      color: var(--online);
-    }
-
-    .system-message .leave {
-      color: var(--accent);
-    }
-
-    /* Chat Input */
-    .chat-input-container {
-      padding: 16px;
-      background: var(--bg-medium);
-      border-top: 2px solid var(--border);
-    }
-
+    /* --- INPUT AREA --- */
+    .chat-input-container { padding: 16px; background: var(--bg-medium); border-top: 2px solid var(--border); }
     .chat-input-wrapper {
-      display: flex;
-      background: var(--bg-dark);
-      border: 2px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: inset 2px 2px 0 #000, inset -1px -1px 0 #3a3a5a;
-    }
-
-    .chat-input {
-      flex: 1;
-      padding: 12px 16px;
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .chat-input::placeholder {
-      color: var(--text-muted);
-    }
-
-    . chat-input-buttons {
-      display: flex;
-      padding: 4px;
-      gap: 4px;
-    }
-
-    .input-btn {
-      width: 36px;
-      height: 36px;
-      background: var(--bg-light);
-      border: 2px solid var(--border);
-      border-radius: 4px;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      box-shadow: 1px 1px 0 #000;
-    }
-
-    .input-btn:hover {
-      background: var(--accent);
-      color: white;
-    }
-
-    /* Member List */
-    . member-list {
-      width: 240px;
-      background: linear-gradient(180deg, var(--bg-medium) 0%, #0d1a30 100%);
-      border-left: 2px solid var(--border);
-      overflow-y: auto;
-      box-shadow: inset 2px 0 0 #000;
-    }
-
-    .member-category {
-      padding: 16px 16px 8px;
-      font-size: 11px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .member {
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-    }
-
-    .member:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .member-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      border: 2px solid var(--border);
-      position: relative;
-    }
-
-    .status-indicator {
-      position: absolute;
-      bottom: -2px;
-      right: -2px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: 2px solid var(--bg-medium);
-    }
-
-    .status-indicator. online { background: var(--online); }
-    .status-indicator. away { background: var(--away); }
-    .status-indicator.offline { background: var(--offline); }
-
-    .member-name {
-      font-size: 13px;
-    }
-
-    .member. offline . member-name {
-      color: var(--text-muted);
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--bg-dark);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--bg-light);
-    }
-
-    /* Typing indicator */
-    .typing-indicator {
-      padding: 8px 16px;
-      font-size: 12px;
-      color: var(--text-muted);
-      min-height: 28px;
-    }
-
-    . typing-dots {
-      display: inline-flex;
-      gap: 2px;
-    }
-
-    .typing-dots span {
-      width: 6px;
-      height: 6px;
-      background: var(--text-muted);
-      border-radius: 50%;
-      animation: typing 1. 4s infinite;
-    }
-
-    . typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes typing {
-      0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-4px); }
-    }
-
-    /* Username modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-    }
-
-    .modal {
-      background: var(--bg-medium);
-      padding: 32px;
-      border-radius: 8px;
-      border: 2px solid var(--accent);
-      box-shadow: 0 0 20px var(--accent), inset 1px 1px 0 #4a4a6a;
-      text-align: center;
-      max-width: 400px;
-    }
-
-    .modal h2 {
-      margin-bottom: 8px;
-      color: var(--text-secondary);
-    }
-
-    .modal p {
-      color: var(--text-muted);
-      margin-bottom: 24px;
-      font-size: 12px;
-    }
-
-    .modal input {
-      width: 100%;
-      padding: 12px 16px;
-      background: var(--bg-dark);
-      border: 2px solid var(--border);
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 14px;
-      margin-bottom: 16px;
-      outline: none;
+      display: flex; background: var(--bg-dark);
+      border: 2px solid var(--border); border-radius: 4px;
       box-shadow: inset 2px 2px 0 #000;
     }
-
-    .modal input:focus {
-      border-color: var(--accent);
+    .chat-input {
+      flex: 1; padding: 12px 16px; background: transparent; border: none;
+      color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;
     }
+    .chat-input-buttons { display: flex; padding: 4px; gap: 4px; }
+    .input-btn {
+      width: 36px; height: 36px; background: var(--bg-light);
+      border: 2px solid var(--border); border-radius: 4px;
+      color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .input-btn:hover { background: var(--accent); color: white; }
 
+    /* --- MEMBER LIST --- */
+    .member-list {
+      width: 200px; background: linear-gradient(180deg, var(--bg-medium) 0%, #0d1a30 100%);
+      border-left: 2px solid var(--border); overflow-y: auto; display: none; /* Hidden on small screens */
+    }
+    @media (min-width: 800px) { .member-list { display: block; } }
+
+    .member-category { padding: 16px 16px 8px; font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
+    .member { padding: 6px 12px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .member:hover { background: rgba(255, 255, 255, 0.05); }
+    
+    .member-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; border: 2px solid var(--border); position: relative;
+    }
+    .status-indicator {
+      position: absolute; bottom: -2px; right: -2px; width: 10px; height: 10px;
+      border-radius: 50%; border: 2px solid var(--bg-medium);
+    }
+    .status-indicator.online { background: var(--online); }
+    .status-indicator.offline { background: var(--offline); }
+    .member.offline .member-name { color: var(--text-muted); }
+
+    /* --- MODAL --- */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex; align-items: center; justify-content: center; z-index: 10000;
+    }
+    .modal {
+      background: var(--bg-medium); padding: 32px; border-radius: 8px;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 20px var(--accent); text-align: center; max-width: 400px;
+    }
+    .modal input {
+      width: 100%; padding: 12px; background: var(--bg-dark);
+      border: 2px solid var(--border); color: var(--text-primary);
+      font-family: inherit; margin: 16px 0; outline: none;
+    }
     .modal button {
-      padding: 12px 32px;
-      background: var(--accent);
-      border: 2px solid #ff6b80;
-      color: white;
-      font-family: inherit;
-      font-size: 14px;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      box-shadow: 2px 2px 0 #000;
+      padding: 12px 32px; background: var(--accent); border: 2px solid #ff6b80;
+      color: white; font-family: inherit; font-weight: bold; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 2px;
     }
+    .hidden { display: none !important; }
 
-    .modal button:hover {
-      background: #ff6b80;
-      box-shadow: 0 0 10px var(--accent);
-    }
-
-    . hidden {
-      display: none ! important;
-    }
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--bg-light); }
   </style>
 </head>
 <body>
-  <!-- Username Modal -->
+
   <div class="modal-overlay" id="usernameModal">
     <div class="modal">
-      <h2>⚡ Welcome to RetroChat ⚡</h2>
-      <p>Enter your username to join the chat room. <br>All messages are stored locally in your browser. </p>
-      <input type="text" id="usernameInput" placeholder="Enter username..." maxlength="20" autofocus>
-      <button id="joinBtn">Join Chat</button>
+      <h2>⚡ RETROCHAT 98 ⚡</h2>
+      <p style="margin-top: 10px; color: var(--text-muted);">Enter username to initialize uplink.<br>Messages are saved locally.</p>
+      <input type="text" id="usernameInput" placeholder="Enter Call Sign..." maxlength="15" autofocus>
+      <button id="joinBtn">CONNECT</button>
+      <br><br>
+      <button id="clearDataBtn" style="font-size: 10px; padding: 5px; background: #333; border: 1px solid #555;">[RESET MEMORY]</button>
     </div>
   </div>
 
   <div class="container">
-    <!-- Server List -->
     <div class="server-list">
       <div class="server-icon home">🏠</div>
-      <div class="server-divider"></div>
       <div class="server-icon active">💾</div>
       <div class="server-icon">🎮</div>
       <div class="server-icon">🎵</div>
-      <div class="server-icon">🌐</div>
-      <div class="server-icon" style="background: var(--bg-light); color: var(--online);">+</div>
     </div>
 
-    <!-- Channel Sidebar -->
     <div class="channel-sidebar">
-      <div class="server-header">📟 RetroChat 98</div>
+      <div class="server-header">📟 RetroChat</div>
       <div class="channel-list">
         <div class="channel-category">📁 Text Channels</div>
-        <div class="channel active" data-channel="general">
-          <span class="channel-hash">#</span>
-          <span>general</span>
+        <div class="channel active" onclick="switchChannel('general')">
+          <span class="channel-hash">#</span><span>general</span>
         </div>
-        <div class="channel" data-channel="random">
-          <span class="channel-hash">#</span>
-          <span>random</span>
+        <div class="channel" onclick="switchChannel('random')">
+          <span class="channel-hash">#</span><span>random</span>
         </div>
-        <div class="channel" data-channel="tech-talk">
-          <span class="channel-hash">#</span>
-          <span>tech-talk</span>
-        </div>
-        <div class="channel" data-channel="gaming">
-          <span class="channel-hash">#</span>
-          <span>gaming</span>
+        <div class="channel" onclick="switchChannel('tech')">
+          <span class="channel-hash">#</span><span>tech</span>
         </div>
         <div class="channel-category">🔊 Voice Channels</div>
-        <div class="channel" data-channel="lounge">
-          <span class="channel-hash">🔈</span>
-          <span>Lounge</span>
-        </div>
-        <div class="channel" data-channel="music">
-          <span class="channel-hash">🔈</span>
-          <span>Music Room</span>
+        <div class="channel" onclick="switchChannel('lounge')">
+          <span class="channel-hash">🔈</span><span>Lounge</span>
         </div>
       </div>
       <div class="user-panel">
-        <div class="user-avatar" id="userAvatarSmall">? </div>
+        <div class="user-avatar" id="userAvatarSmall">?</div>
         <div class="user-info">
           <div class="user-name" id="userNameDisplay">Guest</div>
           <div class="user-tag">#<span id="userTagDisplay">0000</span></div>
@@ -658,267 +292,271 @@
       </div>
     </div>
 
-    <!-- Main Chat -->
     <div class="main-chat">
       <div class="chat-header">
         <span class="chat-header-hash">#</span>
         <span class="chat-header-name" id="currentChannelName">general</span>
-        <span class="chat-header-topic">Welcome to the retro zone!  🕹️ Keep it cool. </span>
+        <span class="chat-header-topic">Welcome to the digital frontier.</span>
       </div>
-      <div class="messages-container" id="messagesContainer">
-        <!-- Messages will be inserted here -->
-      </div>
-      <div class="typing-indicator" id="typingIndicator"></div>
+      <div class="messages-container" id="messagesContainer"></div>
       <div class="chat-input-container">
         <div class="chat-input-wrapper">
-          <input type="text" class="chat-input" id="messageInput" placeholder="Message #general" disabled>
+          <input type="text" class="chat-input" id="messageInput" placeholder="Message #general" autocomplete="off" disabled>
           <div class="chat-input-buttons">
-            <div class="input-btn">😀</div>
+            <div class="input-btn">😊</div>
             <div class="input-btn">📎</div>
-            <div class="input-btn">🎁</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Member List -->
     <div class="member-list">
-      <div class="member-category">🟢 Online — <span id="onlineCount">0</span></div>
-      <div id="onlineMembers">
-        <!-- Online members will be inserted here -->
-      </div>
+      <div class="member-category">🟢 Online — <span id="onlineCount">1</span></div>
+      <div id="onlineMembers"></div>
       <div class="member-category">⚫ Offline — <span id="offlineCount">0</span></div>
-      <div id="offlineMembers">
-        <!-- Offline members will be inserted here -->
-      </div>
+      <div id="offlineMembers"></div>
     </div>
   </div>
 
   <script>
-    // ============================================
-    // RETRO DISCORD CLONE - Pure JS + localStorage
-    // ============================================
+    // --- CONFIG & STATE ---
+    const COLORS = ['#e94560', '#00ff88', '#ffcc00', '#00ccff', '#ff66cc'];
+    const EMOJIS = ['😎', '🤖', '👾', '🎮', '💀', '🔥', '💻', '📀'];
+    
+    let state = {
+      user: null,
+      channel: 'general',
+      users: []
+    };
 
-    const COLORS = [
-      '#e94560', '#00ff88', '#ffcc00', '#00ccff', '#ff66cc',
-      '#66ff66', '#ff9933', '#cc66ff', '#66ccff', '#ff6666'
-    ];
+    // --- DOM ELEMENTS ---
+    const els = {
+      modal: document.getElementById('usernameModal'),
+      input: document.getElementById('usernameInput'),
+      joinBtn: document.getElementById('joinBtn'),
+      clearBtn: document.getElementById('clearDataBtn'),
+      msgContainer: document.getElementById('messagesContainer'),
+      msgInput: document.getElementById('messageInput'),
+      channelName: document.getElementById('currentChannelName'),
+      onlineList: document.getElementById('onlineMembers'),
+      offlineList: document.getElementById('offlineMembers'),
+      userName: document.getElementById('userNameDisplay'),
+      userTag: document.getElementById('userTagDisplay'),
+      userAvatar: document.getElementById('userAvatarSmall'),
+      channels: document.querySelectorAll('.channel')
+    };
 
-    const EMOJIS = ['😎', '🤖', '👾', '🎮', '💀', '🔥', '⚡', '🌟', '🎸', '🍕'];
+    // --- LOCAL STORAGE HELPERS ---
+    const getStorage = (key, defaultVal) => {
+      const data = localStorage.getItem(`retrochat_${key}`);
+      return data ? JSON.parse(data) : defaultVal;
+    };
 
-    // State
-    let currentUser = null;
-    let currentChannel = 'general';
-    let typingTimeout = null;
+    const setStorage = (key, value) => {
+      localStorage.setItem(`retrochat_${key}`, JSON.stringify(value));
+    };
 
-    // DOM Elements
-    const modal = document.getElementById('usernameModal');
-    const usernameInput = document. getElementById('usernameInput');
-    const joinBtn = document. getElementById('joinBtn');
-    const messageInput = document.getElementById('messageInput');
-    const messagesContainer = document. getElementById('messagesContainer');
-    const channels = document.querySelectorAll('.channel[data-channel]');
-    const currentChannelName = document.getElementById('currentChannelName');
-    const typingIndicator = document.getElementById('typingIndicator');
-    const onlineMembers = document.getElementById('onlineMembers');
-    const offlineMembers = document.getElementById('offlineMembers');
-    const onlineCount = document. getElementById('onlineCount');
-    const offlineCount = document. getElementById('offlineCount');
-    const userNameDisplay = document.getElementById('userNameDisplay');
-    const userTagDisplay = document.getElementById('userTagDisplay');
-    const userAvatarSmall = document.getElementById('userAvatarSmall');
-
-    // ============================================
-    // STORAGE FUNCTIONS
-    // ============================================
-
-    function getMessages(channel) {
-      const data = localStorage.getItem(`retrochat_messages_${channel}`);
-      return data ?  JSON.parse(data) : [];
-    }
-
-    function saveMessage(channel, message) {
-      const messages = getMessages(channel);
-      messages.push(message);
-      // Keep only last 100 messages per channel
-      if (messages.length > 100) messages.shift();
-      localStorage.setItem(`retrochat_messages_${channel}`, JSON.stringify(messages));
-    }
-
-    function getUsers() {
-      const data = localStorage.getItem('retrochat_users');
-      return data ? JSON.parse(data) : [];
-    }
-
-    function saveUser(user) {
-      let users = getUsers();
-      const existingIndex = users.findIndex(u => u. id === user.id);
-      if (existingIndex >= 0) {
-        users[existingIndex] = user;
-      } else {
-        users.push(user);
+    // --- CORE LOGIC ---
+    function init() {
+      // Check for existing session
+      const savedUser = sessionStorage.getItem('retrochat_session');
+      if (savedUser) {
+        state.user = JSON.parse(savedUser);
+        loginSuccess();
       }
-      localStorage.setItem('retrochat_users', JSON. stringify(users));
+
+      // Initial Render
+      renderMessages();
+      updateUserStatus(true);
+      renderMembers();
+
+      // Listen for updates from other tabs
+      window.addEventListener('storage', (e) => {
+        if (e.key.startsWith('retrochat_messages_')) {
+          renderMessages();
+        }
+        if (e.key === 'retrochat_users') {
+          renderMembers();
+        }
+      });
+      
+      // Heartbeat for online status
+      setInterval(() => {
+        if (state.user) updateUserStatus(true);
+        renderMembers();
+      }, 5000);
     }
 
-    function updateUserOnlineStatus(userId, isOnline) {
-      let users = getUsers();
-      const user = users.find(u => u.id === userId);
-      if (user) {
-        user.online = isOnline;
-        user.lastSeen = Date.now();
-        localStorage.setItem('retrochat_users', JSON.stringify(users));
-      }
+    function loginSuccess() {
+      els.modal.classList.add('hidden');
+      els.msgInput.disabled = false;
+      els.msgInput.focus();
+      els.userName.textContent = state.user.name;
+      els.userTag.textContent = state.user.tag;
+      els.userAvatar.textContent = state.user.emoji;
+      els.userAvatar.style.background = state.user.color;
+      
+      updateUserStatus(true);
+      addSystemMessage(`${state.user.name} initialized connection.`);
     }
 
-    // ============================================
-    // USER FUNCTIONS
-    // ============================================
+    function joinChat() {
+      const name = els.input.value.trim();
+      if (!name) return;
 
-    function generateUserId() {
-      return 'user_' + Math. random().toString(36).substr(2, 9);
-    }
-
-    function generateTag() {
-      return String(Math.floor(Math.random() * 10000)). padStart(4, '0');
-    }
-
-    function getRandomColor() {
-      return COLORS[Math. floor(Math.random() * COLORS. length)];
-    }
-
-    function getRandomEmoji() {
-      return EMOJIS[Math. floor(Math.random() * EMOJIS.length)];
-    }
-
-    function createUser(username) {
-      return {
-        id: generateUserId(),
-        name: username,
-        tag: generateTag(),
-        color: getRandomColor(),
-        emoji: getRandomEmoji(),
-        online: true,
+      const user = {
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+        name: name,
+        tag: Math.floor(Math.random() * 9000 + 1000),
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
         lastSeen: Date.now()
       };
+
+      state.user = user;
+      sessionStorage.setItem('retrochat_session', JSON.stringify(user)); // Session storage is per-tab
+      loginSuccess();
     }
 
-    function checkExistingSession() {
-      const sessionData = localStorage.getItem('retrochat_session');
-      if (sessionData) {
-        const session = JSON.parse(sessionData);
-        currentUser = session;
-        updateUserOnlineStatus(currentUser.id, true);
-        return true;
-      }
-      return false;
-    }
-
-    // ============================================
-    // UI FUNCTIONS
-    // ============================================
-
-    function renderMessage(message, prepend = false) {
-      const msgDiv = document.createElement('div');
+    function updateUserStatus(isOnline) {
+      if (!state.user) return;
       
-      if (message.system) {
-        msgDiv.className = 'system-message';
-        msgDiv.innerHTML = message.text;
+      let allUsers = getStorage('users', []);
+      const idx = allUsers.findIndex(u => u.name === state.user.name && u.tag === state.user.tag);
+      
+      const userData = { ...state.user, lastSeen: Date.now() };
+
+      if (idx > -1) {
+        allUsers[idx] = userData;
       } else {
-        msgDiv.className = 'message';
-        msgDiv.innerHTML = `
-          <div class="message-avatar" style="background: ${message.user.color}">${message.user. emoji}</div>
-          <div class="message-content">
-            <div class="message-header">
-              <span class="message-author" style="color: ${message.user.color}">${message.user. name}</span>
-              <span class="message-timestamp">${formatTimestamp(message. timestamp)}</span>
+        allUsers.push(userData);
+      }
+      
+      setStorage('users', allUsers);
+      renderMembers(); // Update local UI immediately
+    }
+
+    // --- MESSAGING ---
+    function sendMessage() {
+      const text = els.msgInput.value.trim();
+      if (!text || !state.user) return;
+
+      const msg = {
+        id: Date.now(),
+        text: text,
+        user: state.user,
+        timestamp: Date.now(),
+        type: 'user'
+      };
+
+      saveMessage(msg);
+      els.msgInput.value = '';
+    }
+
+    function addSystemMessage(text) {
+      const msg = {
+        id: Date.now(),
+        text: text,
+        timestamp: Date.now(),
+        type: 'system'
+      };
+      saveMessage(msg);
+    }
+
+    function saveMessage(msg) {
+      const key = `messages_${state.channel}`;
+      let messages = getStorage(key, []);
+      messages.push(msg);
+      if (messages.length > 50) messages.shift(); // Keep limit
+      setStorage(key, messages);
+      renderMessages();
+    }
+
+    // --- RENDERING ---
+    function renderMessages() {
+      const key = `messages_${state.channel}`;
+      const messages = getStorage(key, []);
+      
+      els.msgContainer.innerHTML = '';
+      
+      // Welcome header
+      const welcome = document.createElement('div');
+      welcome.className = 'system-message';
+      welcome.innerHTML = `Welcome to the start of #${state.channel}`;
+      els.msgContainer.appendChild(welcome);
+
+      messages.forEach(msg => {
+        const div = document.createElement('div');
+        if (msg.type === 'system') {
+          div.className = 'system-message';
+          div.innerHTML = `<span>${msg.text}</span>`;
+        } else {
+          div.className = 'message';
+          div.innerHTML = `
+            <div class="message-avatar" style="background:${msg.user.color}">${msg.user.emoji}</div>
+            <div class="message-content">
+              <div class="message-header">
+                <span class="message-author" style="color:${msg.user.color}">${msg.user.name}</span>
+                <span class="message-timestamp">${new Date(msg.timestamp).toLocaleTimeString()}</span>
+              </div>
+              <div class="message-text">${escapeHtml(msg.text)}</div>
             </div>
-            <div class="message-text">${escapeHtml(message.text)}</div>
-          </div>
-        `;
-      }
-
-      if (prepend) {
-        messagesContainer.insertBefore(msgDiv, messagesContainer.firstChild);
-      } else {
-        messagesContainer.appendChild(msgDiv);
-      }
-    }
-
-    function loadMessages(channel) {
-      messagesContainer.innerHTML = '';
+          `;
+        }
+        els.msgContainer.appendChild(div);
+      });
       
-      // Add welcome message
-      const welcomeDiv = document.createElement('div');
-      welcomeDiv.className = 'system-message';
-      welcomeDiv.innerHTML = `Welcome to <strong>#${channel}</strong>! This is the beginning of this channel.  🚀`;
-      messagesContainer.appendChild(welcomeDiv);
-
-      const messages = getMessages(channel);
-      messages. forEach(msg => renderMessage(msg));
-      scrollToBottom();
+      els.msgContainer.scrollTop = els.msgContainer.scrollHeight;
     }
 
     function renderMembers() {
-      let users = getUsers();
-      
-      // Mark users as offline if not seen in 30 seconds
+      const allUsers = getStorage('users', []);
       const now = Date.now();
-      users. forEach(user => {
-        if (user.lastSeen && now - user.lastSeen > 30000) {
-          user.online = false;
+      const onlineThreshold = 10000; // 10 seconds
+
+      // Sort users by last seen
+      const online = [];
+      const offline = [];
+
+      allUsers.forEach(u => {
+        if (now - u.lastSeen < onlineThreshold) {
+          online.push(u);
+        } else {
+          offline.push(u);
         }
       });
 
-      const online = users.filter(u => u.online);
-      const offline = users.filter(u => !u.online);
+      // Update Counts
+      document.getElementById('onlineCount').textContent = online.length;
+      document.getElementById('offlineCount').textContent = offline.length;
 
-      onlineCount.textContent = online.length;
-      offlineCount.textContent = offline.length;
-
-      onlineMembers.innerHTML = online.map(user => `
-        <div class="member">
-          <div class="member-avatar" style="background: ${user.color}">
-            ${user.emoji}
-            <div class="status-indicator online"></div>
+      // Helper to generate HTML
+      const createMemberHTML = (u, isOnline) => `
+        <div class="member ${isOnline ? '' : 'offline'}">
+          <div class="member-avatar" style="background:${u.color}; ${isOnline ? '' : 'opacity:0.5'}">
+            ${u.emoji}
+            <div class="status-indicator ${isOnline ? 'online' : 'offline'}"></div>
           </div>
-          <span class="member-name" style="color: ${user.color}">${user.name}</span>
+          <span class="member-name" style="${isOnline ? 'color:'+u.color : ''}">${u.name}</span>
         </div>
-      `).join('');
+      `;
 
-      offlineMembers.innerHTML = offline. map(user => `
-        <div class="member offline">
-          <div class="member-avatar" style="background: ${user.color}; opacity: 0.5">
-            ${user. emoji}
-            <div class="status-indicator offline"></div>
-          </div>
-          <span class="member-name">${user.name}</span>
-        </div>
-      `).join('');
+      els.onlineList.innerHTML = online.map(u => createMemberHTML(u, true)).join('');
+      els.offlineList.innerHTML = offline.map(u => createMemberHTML(u, false)).join('');
     }
 
-    function updateUserPanel() {
-      if (currentUser) {
-        userNameDisplay.textContent = currentUser.name;
-        userTagDisplay.textContent = currentUser.tag;
-        userAvatarSmall.textContent = currentUser. emoji;
-        userAvatarSmall.style.background = currentUser.color;
-      }
-    }
-
-    function formatTimestamp(ts) {
-      const date = new Date(ts);
-      const today = new Date();
-      const isToday = date. toDateString() === today.toDateString();
+    // --- UTILS ---
+    window.switchChannel = (channelName) => {
+      state.channel = channelName;
+      els.channelName.textContent = channelName;
+      els.msgInput.placeholder = `Message #${channelName}`;
       
-      const time = date.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute: '2-digit',
-        hour12: true 
+      els.channels.forEach(ch => {
+        ch.classList.toggle('active', ch.textContent.includes(channelName));
       });
-
-      return isToday ? `Today at ${time}` : date.toLocaleDateString() + ' ' + time;
-    }
+      
+      renderMessages();
+    };
 
     function escapeHtml(text) {
       const div = document.createElement('div');
@@ -926,155 +564,22 @@
       return div.innerHTML;
     }
 
-    function scrollToBottom() {
-      messagesContainer.scrollTop = messagesContainer. scrollHeight;
-    }
-
-    function switchChannel(channel) {
-      currentChannel = channel;
-      
-      channels.forEach(ch => {
-        ch.classList.toggle('active', ch.dataset.channel === channel);
-      });
-
-      currentChannelName.textContent = channel;
-      messageInput.placeholder = `Message #${channel}`;
-      loadMessages(channel);
-    }
-
-    // ============================================
-    // MESSAGE FUNCTIONS
-    // ============================================
-
-    function sendMessage(text) {
-      if (! text.trim() || !currentUser) return;
-
-      const message = {
-        id: Date.now(),
-        user: currentUser,
-        text: text. trim(),
-        timestamp: Date.now(),
-        channel: currentChannel
-      };
-
-      saveMessage(currentChannel, message);
-      renderMessage(message);
-      scrollToBottom();
-
-      // Update last seen
-      updateUserOnlineStatus(currentUser.id, true);
-    }
-
-    function addSystemMessage(text) {
-      const message = {
-        id: Date.now(),
-        system: true,
-        text: text,
-        timestamp: Date.now()
-      };
-      
-      saveMessage(currentChannel, message);
-      renderMessage(message);
-      scrollToBottom();
-    }
-
-    // ============================================
-    // EVENT HANDLERS
-    // ============================================
-
-    function handleJoin() {
-      const username = usernameInput.value.trim();
-      if (!username) {
-        usernameInput.style.borderColor = '#ff0000';
-        return;
-      }
-
-      currentUser = createUser(username);
-      localStorage.setItem('retrochat_session', JSON.stringify(currentUser));
-      saveUser(currentUser);
-
-      modal.classList.add('hidden');
-      messageInput.disabled = false;
-      messageInput.focus();
-
-      updateUserPanel();
-      renderMembers();
-      loadMessages(currentChannel);
-
-      addSystemMessage(`<span class="join">→</span> <strong>${currentUser.name}</strong> has joined the chat!`);
-    }
-
-    joinBtn.addEventListener('click', handleJoin);
-    usernameInput.addEventListener('keypress', (e) => {
-      if (e. key === 'Enter') handleJoin();
+    // --- EVENT LISTENERS ---
+    els.joinBtn.addEventListener('click', joinChat);
+    els.input.addEventListener('keypress', (e) => e.key === 'Enter' && joinChat());
+    
+    els.msgInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
     });
 
-    messageInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendMessage(messageInput.value);
-        messageInput. value = '';
-      }
+    els.clearBtn.addEventListener('click', () => {
+      localStorage.clear();
+      location.reload();
     });
 
-    channels.forEach(channel => {
-      channel. addEventListener('click', () => {
-        const channelName = channel.dataset. channel;
-        if (channelName) {
-          switchChannel(channelName);
-        }
-      });
-    });
-
-    // ============================================
-    // INITIALIZATION
-    // ============================================
-
-    function init() {
-      if (checkExistingSession()) {
-        modal.classList.add('hidden');
-        messageInput.disabled = false;
-        updateUserPanel();
-        loadMessages(currentChannel);
-      }
-
-      renderMembers();
-
-      // Heartbeat - update online status every 10 seconds
-      setInterval(() => {
-        if (currentUser) {
-          updateUserOnlineStatus(currentUser.id, true);
-        }
-        renderMembers();
-      }, 10000);
-
-      // Check for new messages every 2 seconds (simulates real-time)
-      let lastMessageCount = 0;
-      setInterval(() => {
-        const messages = getMessages(currentChannel);
-        if (messages.length > lastMessageCount) {
-          // New messages!  Reload only the new ones
-          const newMessages = messages.slice(lastMessageCount);
-          newMessages.forEach(msg => {
-            // Don't re-render our own messages
-            if (! msg.user || msg.user.id !== currentUser?. id) {
-              renderMessage(msg);
-            }
-          });
-          scrollToBottom();
-        }
-        lastMessageCount = messages.length;
-      }, 2000);
-    }
-
-    // Handle page close
-    window.addEventListener('beforeunload', () => {
-      if (currentUser) {
-        addSystemMessage(`<span class="leave">←</span> <strong>${currentUser.name}</strong> has left the chat.`);
-        updateUserOnlineStatus(currentUser.id, false);
-      }
-    });
-
+    // Start
     init();
+
   </script>
 </body>
 </html>
