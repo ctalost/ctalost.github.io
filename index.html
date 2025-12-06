@@ -3,47 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ishan S</title>
+    <title>Ishan S | Portfolio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        body {
+        /* --- CSS Variables for Easy Theming --- */
+        :root {
+            --bg-color: #FAFAFA;       /* Very soft off-white (Notion-esque) */
+            --card-bg: #FFFFFF;        /* Pure white for cards */
+            --text-main: #202020;      /* Almost black, softer on eyes */
+            --text-muted: #666666;     /* Muted gray for secondary text */
+            --accent: #4F46E5;         /* Premium Indigo accent */
+            --border: #E5E5E5;         /* Subtle borders */
+            --radius: 12px;            /* Smooth rounded corners */
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* Soft, diffuse shadow */
+            --font-main: 'Inter', sans-serif;
+        }
+
+        /* --- Global Reset & Typography --- */
+        * {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            font-family: "Arial", sans-serif;
-            background: #ffffff;
-            color: #111;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* --- Layout Container --- */
+        .container {
+            max-width: 720px; /* Narrow width for better readability */
+            margin: 0 auto;
+            padding: 6rem 1.5rem 4rem;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Staggered Animation Classes */
+        .reveal {
+            opacity: 0; /* Start hidden */
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* --- Section Styling --- */
+        section {
+            margin-bottom: 5rem;
         }
 
         h1 {
-            font-size: 3rem;
-            margin: 0;
-            font-weight: 700;
+            font-size: 3.5rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        h2 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
         }
 
         p {
-            margin-top: 10px;
-            font-size: 1.2rem;
-            opacity: 0.7;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 400;
         }
 
-        .dot {
-            height: 8px;
-            width: 8px;
-            background-color: #007aff;
-            border-radius: 50%;
-            display: inline-block;
-            margin-left: 6px;
+        /* --- Hero Section --- */
+        .hero {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 4rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* --- Hobbies Grid --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+            border-color: var(--accent);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+        }
+
+        /* --- Fun Facts List --- */
+        .fact-list {
+            list-style: none;
+        }
+
+        .fact-item {
+            background: var(--card-bg);
+            padding: 1.2rem;
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            border-left: 3px solid var(--accent);
+        }
+
+        .fact-item span {
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        /* --- Responsive Tweaks --- */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .container { padding-top: 4rem; }
+            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-
 <body>
-    <h1>Ishan S<span class="dot"></span></h1>
-    <p>Welcome to my minimal corner of the internet.</p>
+
+    <div class="container">
+        
+        <section class="hero reveal delay-1">
+            <h1>Ishan S</h1>
+            <p>Digital Craftsman & Minimalist</p>
+        </section>
+
+        <section class="bio reveal delay-2">
+            <h2>About Me</h2>
+            <p>
+                I am a multidisciplinary creative focused on building clean, functional, and human-centric digital experiences. 
+                With a background in design and a passion for engineering, I bridge the gap between aesthetics and performance. 
+                Currently, I’m exploring the intersection of modern web technologies and minimalist design principles.
+            </p>
+        </section>
+
+        <section class="hobbies reveal delay-3">
+            <h2>Interests & Hobbies</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Photography</h3>
+                    <p>Capturing urban landscapes and brutalist architecture.</p>
+                </div>
+                <div class="card">
+                    <h3>Reading</h3>
+                    <p>Deep diving into sci-fi classics and design philosophy.</p>
+                </div>
+                <div class="card">
+                    <h3>Cycling</h3>
+                    <p>Early morning rides to clear the mind and disconnect.</p>
+                </div>
+                <div class="card">
+                    <h3>Brewing</h3>
+                    <p>Obsessed with the science of the perfect pour-over coffee.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="facts reveal delay-4">
+            <h2>Fun Facts</h2>
+            <ul class="fact-list">
+                <li class="fact-item">
+                    <span>I own five mechanical keyboards, but only use one.</span>
+                </li>
+                <li class="fact-item">
+                    <span>I once debugged code in a dream (and it worked).</span>
+                </li>
+                <li class="fact-item">
+                    <span>I prefer Dark Mode for everything, except reading.</span>
+                </li>
+            </ul>
+        </section>
+
+        <footer class="reveal delay-5">
+            <p>&copy; 2024 Ishan S. All rights reserved.</p>
+        </footer>
+
+    </div>
+
 </body>
 </html>
