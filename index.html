@@ -3,316 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER-GRID ULTRA</title>
+    <title>Pixel Space | Premium</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
         :root {
-            --bg: #050505;
-            --term-green: #0f0;
-            --neon-pink: #ff0055;
-            --neon-blue: #00f3ff;
-            --glass: rgba(255, 255, 255, 0.05);
+            --bg-dark: #1e1f22;
+            --bg-panel: #2b2d31;
+            --primary: #5865F2;
+            --accent: #eb459e;
+            --text-main: #ffffff;
+            --text-dim: #949ba4;
+            --border: #111214;
         }
+
+        * { box-sizing: border-box; }
 
         body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            background: #000;
-            color: var(--term-green);
-            font-family: 'Share Tech Mono', monospace;
-            overflow: hidden;
-            height: 100vh;
-            user-select: none;
-        }
-
-        /* --- CRT SCREEN FX --- */
-        .crt-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-            z-index: 9999;
-            animation: flicker 0.15s infinite;
-        }
-        
-        @keyframes flicker {
-            0% { opacity: 0.97; }
-            100% { opacity: 1; }
-        }
-
-        /* The main container acts like a screen */
-        #main-interface {
             display: flex;
-            height: 100%;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            gap: 20px;
-            filter: contrast(1.2) brightness(1.1) saturate(1.2);
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* --- SIDEBAR --- */
+        /* --- LAYOUT --- */
+        .app-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px; /* Sidebar | Canvas | Chat */
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- LEFT: TOOLS --- */
         .sidebar {
-            width: 280px;
-            background: #111;
-            border: 2px solid var(--neon-blue);
-            padding: 15px;
+            background: var(--bg-panel);
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-            position: relative;
+            gap: 20px;
+            border-right: 1px solid var(--border);
         }
 
-        .header-title {
-            font-family: 'Press Start 2P', cursive;
-            color: var(--neon-pink);
+        .logo {
+            font-weight: 800;
             font-size: 1.2rem;
-            text-shadow: 2px 2px #fff;
-            text-align: center;
-            margin-bottom: 10px;
+            color: var(--primary);
+            letter-spacing: -0.5px;
         }
 
-        .control-group {
-            border: 1px dashed #333;
-            padding: 10px;
+        .tool-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        label { display: block; margin-bottom: 5px; color: #888; font-size: 0.8rem; }
-
-        /* Fancy Buttons */
-        button {
-            background: transparent;
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-            padding: 10px;
-            width: 100%;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.2s;
+        .label {
+            font-size: 0.75rem;
             text-transform: uppercase;
-            margin-bottom: 5px;
-            position: relative;
-            overflow: hidden;
+            color: var(--text-dim);
+            font-weight: 600;
         }
 
-        button:hover {
-            background: var(--neon-blue);
-            color: #000;
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        button.active {
-            background: var(--neon-pink);
-            border-color: var(--neon-pink);
+        button {
+            background: #383a40;
+            border: none;
             color: white;
-            box-shadow: 0 0 10px var(--neon-pink);
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* --- CANVAS --- */
-        .viewport {
-            flex-grow: 1;
+        button:hover { background: #404249; }
+        button.active { background: var(--primary); color: white; }
+        
+        button.danger { color: #ff5555; }
+        button.danger:hover { background: rgba(255, 85, 85, 0.1); }
+
+        input[type="color"] {
+            width: 100%;
+            height: 40px;
+            border: none;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        /* --- CENTER: CANVAS --- */
+        .main-stage {
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #080808;
-            border: 2px solid #333;
+            background: #313338;
             position: relative;
             overflow: hidden;
-            cursor: none; /* We use custom cursors */
+        }
+
+        /* The wrapper ensures cursors stay relative to the grid */
+        .canvas-wrapper {
+            position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            border: 4px solid var(--bg-dark);
+            border-radius: 8px;
+            cursor: crosshair;
         }
 
         #grid {
             display: grid;
-            grid-template-columns: repeat(50, 1fr); /* 50x30 Grid */
-            width: 100%;
-            height: 100%;
-            max-width: 1000px;
-            aspect-ratio: 50/30;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            grid-template-columns: repeat(40, 1fr); /* 40x25 Grid */
+            width: 800px;
+            height: 500px;
+            background: #fff;
         }
 
         .pixel {
             width: 100%;
             height: 100%;
-            border: 1px solid rgba(255,255,255,0.02);
-            transition: background 0.1s;
+            background: #ffffff; /* Default white canvas */
+            border: 1px solid rgba(0,0,0,0.05); /* Light grid lines */
         }
 
-        /* --- MULTIPLAYER CURSORS --- */
-        .remote-cursor {
+        /* CURSORS */
+        .cursor {
             position: absolute;
             pointer-events: none;
-            z-index: 100;
-            transition: top 0.1s linear, left 0.1s linear;
+            z-index: 10;
+            transition: all 0.1s linear;
         }
         
-        .cursor-pointer {
-            width: 0; 
-            height: 0; 
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 15px solid var(--neon-pink);
-            transform: rotate(-25deg);
+        .cursor-arrow {
+            width: 0; height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 12px solid var(--accent);
         }
-
-        .cursor-label {
-            background: var(--neon-pink);
+        
+        .cursor-name {
+            background: var(--bg-dark);
             color: white;
-            padding: 2px 5px;
-            font-size: 0.7rem;
+            padding: 2px 6px;
+            font-size: 10px;
             border-radius: 4px;
-            margin-left: 10px;
             white-space: nowrap;
+            margin-top: 2px;
+            margin-left: 6px;
         }
 
-        /* My local cursor */
-        #my-cursor {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid white;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 200;
-            transform: translate(-50%, -50%);
-            mix-blend-mode: difference;
-        }
-
-        /* --- CHAT OVERLAY --- */
-        .chat-overlay {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 300px;
-            height: 200px;
-            background: rgba(0,0,0,0.8);
-            border: 1px solid #555;
+        /* --- RIGHT: CHAT --- */
+        .chat-panel {
+            background: var(--bg-panel);
+            border-left: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            z-index: 50;
         }
-        
-        #chat-history {
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #chat-feed {
             flex-grow: 1;
+            padding: 15px;
             overflow-y: auto;
-            padding: 10px;
-            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
-        
-        .msg { margin-bottom: 4px; }
-        .msg b { color: var(--neon-blue); }
+
+        .msg { font-size: 0.9rem; line-height: 1.4; word-break: break-word; }
+        .msg strong { color: var(--primary); }
+        .msg span { color: var(--text-dim); font-size: 0.75rem; margin-left: 5px; }
+
+        .chat-input-box {
+            padding: 15px;
+            background: #232428;
+        }
 
         #chat-input {
-            background: #222;
+            width: 100%;
+            background: #383a40;
             border: none;
-            border-top: 1px solid #555;
-            color: white;
             padding: 10px;
-            font-family: inherit;
+            border-radius: 4px;
+            color: white;
+            outline: none;
         }
 
-        /* --- SCREEN SHAKE ANIMATION --- */
-        .shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+            .sidebar { flex-direction: row; align-items: center; padding: 10px; overflow-x: auto;}
+            .chat-panel { height: 200px; }
+            #grid { width: 90vw; height: 56.25vw; } /* Maintain aspect ratio */
         }
-
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="crt-overlay"></div>
-
-    <div id="main-interface">
+    <div class="app-container">
         
-        <div class="sidebar">
-            <div class="header-title">GRID OS v9.0</div>
+        <nav class="sidebar">
+            <div class="logo">Pixel Space</div>
             
-            <div class="control-group">
-                <label>OPERATOR</label>
-                <div id="username-display" style="color:white; font-weight:bold;">GUEST</div>
+            <div class="tool-section">
+                <div class="label">User</div>
+                <div id="username-display" style="font-weight: bold; font-size: 0.9rem;">Guest</div>
+                <div class="label" style="margin-top: 5px;">Online: <span id="online-count">1</span></div>
             </div>
 
-            <div class="control-group">
-                <label>TOOLKIT</label>
-                <button id="tool-pen" class="active">🖊️ PEN</button>
-                <button id="tool-fill">🌊 FLOOD FILL</button>
-                <button id="tool-eraser">❌ ERASER</button>
+            <div class="tool-section">
+                <div class="label">Tools</div>
+                <button id="btn-draw" class="active">✏️ Pencil</button>
+                <button id="btn-erase">🧼 Eraser</button>
             </div>
 
-            <div class="control-group">
-                <label>COLOR MATRIX</label>
-                <input type="color" id="colorPicker" value="#00f3ff" style="width:100%; height:40px; border:none; cursor:pointer;">
+            <div class="tool-section">
+                <div class="label">Palette</div>
+                <input type="color" id="color-picker" value="#5865F2">
             </div>
 
-            <div class="control-group">
-                <label>SYSTEM CMDS</label>
-                <button id="btn-dl">💾 SAVE IMAGE</button>
-                <button id="btn-nuke" style="border-color: red; color: red;">☢️ FORMAT DRIVE</button>
+            <div class="tool-section" style="margin-top: auto;">
+                <button id="btn-clear" class="danger">🗑️ Clear Canvas</button>
             </div>
+        </nav>
 
-            <div style="margin-top:auto; font-size:0.7rem; color:#555;">
-                CONNECTED USERS: <span id="online-count">0</span>
+        <main class="main-stage">
+            <div class="canvas-wrapper" id="canvas-wrapper">
+                <div id="remote-cursor-layer"></div>
+                <div id="grid">
+                    </div>
             </div>
-        </div>
+        </main>
 
-        <div class="viewport" id="viewport">
-            <div id="my-cursor"></div>
-            <div id="remote-cursors-layer"></div>
-            <div id="grid"></div>
-            
-            <div class="chat-overlay">
-                <div id="chat-history"></div>
-                <input id="chat-input" placeholder="Broadcast message...">
+        <aside class="chat-panel">
+            <div class="chat-header">
+                Live Chat
             </div>
-        </div>
+            <div id="chat-feed"></div>
+            <div class="chat-input-box">
+                <input type="text" id="chat-input" placeholder="Type a message...">
+            </div>
+        </aside>
 
     </div>
 
-    <script>
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function sfx(type) {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            const now = audioCtx.currentTime;
-            
-            if(type === 'blip') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(800, now);
-                osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
-                gain.gain.setValueAtTime(0.05, now);
-                osc.start(now);
-                osc.stop(now + 0.1);
-            } else if (type === 'fill') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(200, now);
-                osc.frequency.linearRampToValueAtTime(600, now + 0.3);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.linearRampToValueAtTime(0, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            }
-        }
-    </script>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getDatabase, ref, set, update, push, onValue, onChildAdded, onChildChanged, remove, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+        import { getDatabase, ref, set, update, push, onValue, onChildAdded, remove, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-        // FIREBASE CONFIG
+        // CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyAE75AlF1oDc_02lue7A7rtZ74x0y3eQLI",
             authDomain: "retrochat-795b4.firebaseapp.com",
@@ -327,251 +280,188 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- CONSTANTS ---
-        const COLS = 50;
-        const ROWS = 30;
-        const TOTAL_PIXELS = COLS * ROWS;
-        const myId = Math.random().toString(36).substr(2, 9);
-        let myName = prompt("ENTER HACKER ALIAS:", "User-" + Math.floor(Math.random()*1000));
-        if(!myName) myName = "Anon";
-        document.getElementById('username-display').innerText = myName;
-
-        // --- STATE ---
-        let currentTool = 'pen';
+        // --- VARIABLES ---
+        const GRID_W = 40;
+        const GRID_H = 25;
+        const TOTAL_PIXELS = GRID_W * GRID_H;
+        
+        let currentTool = 'draw';
         let isMouseDown = false;
-        let pixelDataLocal = new Array(TOTAL_PIXELS).fill(null); // Local cache for flood fill
+        const myId = Math.random().toString(36).substr(2, 9);
+        const myName = "Artist-" + Math.floor(Math.random() * 100);
+        document.getElementById('username-display').innerText = myName;
 
         // --- DOM ---
         const grid = document.getElementById('grid');
-        const colorPicker = document.getElementById('colorPicker');
-        const viewport = document.getElementById('viewport');
-        const myCursor = document.getElementById('my-cursor');
-        
-        // --- INITIALIZATION ---
-        // Build Grid
-        for(let i=0; i<TOTAL_PIXELS; i++) {
-            const p = document.createElement('div');
-            p.className = 'pixel';
-            p.dataset.idx = i;
-            grid.appendChild(p);
+        const wrapper = document.getElementById('canvas-wrapper');
+        const colorPicker = document.getElementById('color-picker');
+        const chatFeed = document.getElementById('chat-feed');
+
+        // --- 1. INITIALIZE GRID ---
+        function initGrid() {
+            grid.innerHTML = '';
+            for(let i=0; i<TOTAL_PIXELS; i++) {
+                const pixel = document.createElement('div');
+                pixel.classList.add('pixel');
+                pixel.dataset.id = i;
+                
+                // Add event listeners per pixel for performance
+                pixel.addEventListener('mousedown', () => {
+                    isMouseDown = true;
+                    draw(i);
+                });
+                pixel.addEventListener('mouseenter', () => {
+                    if(isMouseDown) draw(i);
+                });
+
+                grid.appendChild(pixel);
+            }
         }
+        initGrid();
 
-        // --- TOOL HANDLERS ---
-        document.getElementById('tool-pen').onclick = () => setTool('pen');
-        document.getElementById('tool-fill').onclick = () => setTool('fill');
-        document.getElementById('tool-eraser').onclick = () => setTool('eraser');
-        document.getElementById('btn-nuke').onclick = nukeBoard;
-        document.getElementById('btn-dl').onclick = saveImage;
-
-        function setTool(t) {
-            currentTool = t;
-            document.querySelectorAll('.control-group button').forEach(b => b.classList.remove('active'));
-            if(t !== 'pen' && t!=='eraser' && t!=='fill') return; // Safety
-            document.getElementById(`tool-${t}`).classList.add('active');
-        }
-
-        // --- INPUT HANDLING ---
-        grid.addEventListener('mousedown', (e) => {
-            isMouseDown = true;
-            handleAction(e.target);
-        });
         document.addEventListener('mouseup', () => isMouseDown = false);
-        grid.addEventListener('mouseover', (e) => {
-            if(isMouseDown && currentTool !== 'fill') handleAction(e.target);
-        });
 
-        function handleAction(target) {
-            if(!target.classList.contains('pixel')) return;
-            const idx = parseInt(target.dataset.idx);
+        // --- 2. DRAWING LOGIC ---
+        function draw(index) {
             let color = colorPicker.value;
-            if(currentTool === 'eraser') color = 'transparent';
+            if (currentTool === 'erase') color = '#ffffff'; // Eraser paints white
 
-            if(currentTool === 'fill') {
-                performFloodFill(idx, color);
-            } else {
-                // Pen / Eraser
-                // Optimistic update
-                target.style.background = color === 'transparent' ? '' : color;
-                set(ref(db, `pixels/${idx}`), color);
-                sfx('blip');
-            }
+            // 1. Optimistic UI update (Instant feedback)
+            grid.children[index].style.backgroundColor = color;
+
+            // 2. Send to Firebase
+            set(ref(db, `pixels/${index}`), color);
         }
 
-        // --- FLOOD FILL ALGORITHM (BFS) ---
-        function performFloodFill(startIdx, targetColor) {
-            // Get color of clicked pixel
-            const startNode = grid.children[startIdx];
-            const startColor = startNode.style.backgroundColor || 'transparent'; // computed style check
-            
-            // Convert HEX to RGB for comparison if needed, but for simplicity we rely on what's in local cache
-            // Better: use the local cache array we maintain
-            const cachedStartColor = pixelDataLocal[startIdx] || 'transparent';
-            
-            if(cachedStartColor === targetColor) return; // Same color
-
-            sfx('fill');
-            document.body.classList.add('shake');
-            setTimeout(()=>document.body.classList.remove('shake'), 500);
-
-            const queue = [startIdx];
-            const updates = {};
-            const visited = new Set();
-            visited.add(startIdx);
-
-            while(queue.length > 0) {
-                const idx = queue.shift();
-                updates[`pixels/${idx}`] = targetColor;
-
-                const x = idx % COLS;
-                const y = Math.floor(idx / COLS);
-
-                // Check Neighbors (Up, Down, Left, Right)
-                const neighbors = [
-                    { idx: idx - COLS, valid: y > 0 }, // Up
-                    { idx: idx + COLS, valid: y < ROWS - 1 }, // Down
-                    { idx: idx - 1,    valid: x > 0 }, // Left
-                    { idx: idx + 1,    valid: x < COLS - 1 } // Right
-                ];
-
-                for(let n of neighbors) {
-                    if(n.valid && !visited.has(n.idx)) {
-                        const nColor = pixelDataLocal[n.idx] || 'transparent';
-                        if(nColor === cachedStartColor) {
-                            visited.add(n.idx);
-                            queue.push(n.idx);
-                        }
-                    }
-                }
-            }
-
-            // Batch update Firebase (Magical performance!)
-            update(ref(db), updates);
-        }
-
-        function nukeBoard() {
-            if(confirm("SYSTEM WARNING: DESTROY ALL DATA?")) {
-                remove(ref(db, 'pixels'));
-                sfx('fill');
-            }
-        }
-
-        function saveImage() {
-            alert("Feature simulated: Imagine a cool PNG downloading now.");
-        }
-
-        // --- SYNC ENGINE ---
+        // --- 3. SYNC PIXELS ---
         const pixelsRef = ref(db, 'pixels');
-        onValue(pixelsRef, (snap) => {
-            const data = snap.val();
-            // Clear grid if null
+        onValue(pixelsRef, (snapshot) => {
+            const data = snapshot.val();
             if(!data) {
-                pixelDataLocal.fill(null);
-                Array.from(grid.children).forEach(p => p.style.background = '');
+                // If board is clear
+                Array.from(grid.children).forEach(p => p.style.backgroundColor = '#ffffff');
                 return;
             }
-
-            // Update only changed pixels
+            // Update pixels
             Object.keys(data).forEach(key => {
-                const col = data[key];
-                const i = parseInt(key);
-                if(pixelDataLocal[i] !== col) {
-                    pixelDataLocal[i] = col;
-                    grid.children[i].style.background = col === 'transparent' ? '' : col;
+                const idx = parseInt(key);
+                if(grid.children[idx]) {
+                    grid.children[idx].style.backgroundColor = data[key];
                 }
             });
-            // Handle removals (if logic needed)
         });
 
-        // --- LIVE CURSORS ---
+        // --- 4. MULTIPLAYER CURSORS (FIXED) ---
         const cursorRef = ref(db, `cursors/${myId}`);
-        onDisconnect(cursorRef).remove();
+        onDisconnect(cursorRef).remove(); // Remove my cursor when I leave
 
-        viewport.addEventListener('mousemove', (e) => {
-            // Move local cursor visual
-            myCursor.style.left = e.clientX + 'px';
-            myCursor.style.top = e.clientY + 'px';
+        wrapper.addEventListener('mousemove', (e) => {
+            // Get position RELATIVE to the canvas wrapper
+            const rect = wrapper.getBoundingClientRect();
+            
+            // Calculate X and Y as percentages (0 to 100)
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-            // Calculate relative position % inside viewport to handle different screen sizes
-            const rect = viewport.getBoundingClientRect();
-            const xPct = (e.clientX - rect.left) / rect.width * 100;
-            const yPct = (e.clientY - rect.top) / rect.height * 100;
-
-            // Throttle updates to DB (every 50ms)
-            updateCursorPos(xPct, yPct);
+            // Simple throttle to prevent lagging the DB
+            updateCursor(x, y);
         });
 
         let lastUpdate = 0;
-        function updateCursorPos(x, y) {
+        function updateCursor(x, y) {
             const now = Date.now();
-            if(now - lastUpdate > 50) {
+            if(now - lastUpdate > 50) { // Limit to 20 updates per second
                 set(cursorRef, {
-                    x: x,
-                    y: y,
+                    x: x.toFixed(2), // Round to 2 decimals
+                    y: y.toFixed(2),
                     name: myName,
-                    color: colorPicker.value,
-                    ts: serverTimestamp()
+                    color: colorPicker.value
                 });
                 lastUpdate = now;
             }
         }
 
-        // Render Remote Cursors
-        const allCursorsRef = ref(db, 'cursors');
-        onValue(allCursorsRef, (snap) => {
-            const cursors = snap.val() || {};
-            const container = document.getElementById('remote-cursors-layer');
+        // Render other players' cursors
+        onValue(ref(db, 'cursors'), (snapshot) => {
+            const cursors = snapshot.val() || {};
+            const layer = document.getElementById('remote-cursor-layer');
             
-            // Remove disconnected
-            Array.from(container.children).forEach(el => {
+            // Cleanup old cursors
+            Array.from(layer.children).forEach(el => {
                 if(!cursors[el.id]) el.remove();
             });
 
-            // Update/Create
+            // Update/Add cursors
             Object.keys(cursors).forEach(key => {
-                if(key === myId) return; // Don't draw self
+                if(key === myId) return; // Don't show my own network cursor
+
                 const data = cursors[key];
-                
                 let el = document.getElementById(key);
+                
                 if(!el) {
                     el = document.createElement('div');
                     el.id = key;
-                    el.className = 'remote-cursor';
+                    el.className = 'cursor';
                     el.innerHTML = `
-                        <div class="cursor-pointer" style="border-bottom-color:${data.color}"></div>
-                        <div class="cursor-label" style="background:${data.color}">${data.name}</div>
+                        <div class="cursor-arrow" style="border-bottom-color: ${data.color}"></div>
+                        <div class="cursor-name">${data.name}</div>
                     `;
-                    container.appendChild(el);
+                    layer.appendChild(el);
                 }
                 
                 el.style.left = data.x + '%';
                 el.style.top = data.y + '%';
             });
-            
+
+            // Update online count
             document.getElementById('online-count').innerText = Object.keys(cursors).length;
         });
 
-        // --- CHAT ---
+        // --- 5. CHAT SYSTEM ---
         const chatInput = document.getElementById('chat-input');
+        
         chatInput.addEventListener('keypress', (e) => {
             if(e.key === 'Enter' && chatInput.value.trim() !== '') {
                 push(ref(db, 'chat'), {
-                    user: myName,
-                    msg: chatInput.value,
-                    color: colorPicker.value
+                    name: myName,
+                    text: chatInput.value.trim(),
+                    ts: Date.now()
                 });
                 chatInput.value = '';
             }
         });
 
-        onChildAdded(ref(db, 'chat'), (snap) => {
-            const data = snap.val();
-            const div = document.createElement('div');
-            div.className = 'msg';
-            div.innerHTML = `<b style="color:${data.color}">${data.user}:</b> ${data.msg}`;
-            const hist = document.getElementById('chat-history');
-            hist.appendChild(div);
-            hist.scrollTop = hist.scrollHeight;
+        onChildAdded(ref(db, 'chat'), (snapshot) => {
+            const data = snapshot.val();
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'msg';
+            
+            // Format time
+            const date = new Date(data.ts);
+            const timeStr = date.getHours() + ':' + date.getMinutes().toString().padStart(2, '0');
+
+            msgDiv.innerHTML = `<strong>${data.name}</strong><span>${timeStr}</span><br>${data.text}`;
+            
+            chatFeed.appendChild(msgDiv);
+            chatFeed.scrollTop = chatFeed.scrollHeight; // Auto-scroll
         });
+
+        // --- 6. TOOLS & CONTROLS ---
+        document.getElementById('btn-draw').onclick = (e) => setTool('draw', e.target);
+        document.getElementById('btn-erase').onclick = (e) => setTool('erase', e.target);
+        
+        document.getElementById('btn-clear').onclick = () => {
+            if(confirm("Are you sure you want to wipe the canvas for everyone?")) {
+                remove(ref(db, 'pixels'));
+            }
+        };
+
+        function setTool(tool, btn) {
+            currentTool = tool;
+            // Update UI
+            document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+        }
 
     </script>
 </body>
