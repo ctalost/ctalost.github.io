@@ -3,308 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RetroChat MEGA BASE</title>
+    <title>CYBER-GRID ULTRA</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap');
 
         :root {
-            --bg-color: #050505;
-            --panel-bg: #111;
-            --neon-pink: #ff00ff;
-            --neon-blue: #00ffff;
-            --neon-green: #00ff00;
-            --neon-yellow: #ffff00;
-            --border: 2px solid;
+            --bg: #050505;
+            --term-green: #0f0;
+            --neon-pink: #ff0055;
+            --neon-blue: #00f3ff;
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
         body {
-            background-color: var(--bg-color);
-            color: white;
-            font-family: 'VT323', monospace;
             margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background: #000;
+            color: var(--term-green);
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
             height: 100vh;
-            box-sizing: border-box;
-            overflow: hidden; /* Prevent body scroll, handle inside containers */
+            user-select: none;
         }
 
-        h1 {
-            color: var(--neon-yellow);
-            text-shadow: 2px 2px var(--neon-pink);
-            font-size: 2.5rem;
-            margin: 0 0 10px 0;
-            letter-spacing: 2px;
+        /* --- CRT SCREEN FX --- */
+        .crt-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: flicker 0.15s infinite;
+        }
+        
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            100% { opacity: 1; }
         }
 
-        /* LAYOUT CONTAINER */
-        .dashboard {
+        /* The main container acts like a screen */
+        #main-interface {
             display: flex;
-            gap: 20px;
+            height: 100%;
             width: 100%;
-            max-width: 1200px;
-            height: 85vh;
+            padding: 20px;
+            box-sizing: border-box;
+            gap: 20px;
+            filter: contrast(1.2) brightness(1.1) saturate(1.2);
         }
 
-        /* --- LEFT PANEL: CONTROLS --- */
+        /* --- SIDEBAR --- */
         .sidebar {
-            flex: 1;
+            width: 280px;
+            background: #111;
+            border: 2px solid var(--neon-blue);
+            padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            min-width: 200px;
-        }
-
-        .panel {
-            background: var(--panel-bg);
-            border: var(--border) var(--neon-blue);
-            padding: 15px;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
-        }
-
-        .panel h2 {
-            margin-top: 0;
-            color: var(--neon-pink);
-            border-bottom: 1px dashed var(--neon-pink);
-            font-size: 1.5rem;
-        }
-
-        /* Controls */
-        .tool-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        input[type="color"] {
-            width: 50px;
-            height: 50px;
-            border: none;
-            background: none;
-            cursor: pointer;
-        }
-
-        button {
-            background: var(--neon-blue);
-            border: none;
-            padding: 8px 12px;
-            font-family: 'VT323', monospace;
-            font-size: 1.2rem;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 5px;
-            transition: 0.1s;
-            text-transform: uppercase;
-        }
-
-        button:hover {
-            filter: brightness(1.2);
-        }
-        
-        button:active {
-            transform: translateY(2px);
-        }
-
-        button.active-tool {
-            background: var(--neon-pink);
-            color: white;
-            box-shadow: inset 0 0 5px black;
-        }
-
-        .danger-btn {
-            background: red;
-            color: white;
-            margin-top: 10px;
-        }
-
-        /* Stats */
-        .stat-box {
-            font-size: 1.2rem;
-            color: var(--neon-green);
-        }
-
-        /* --- MIDDLE PANEL: CANVAS --- */
-        .canvas-container {
-            flex: 3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: var(--border) var(--neon-green);
-            background: #000;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
-            overflow: auto;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
             position: relative;
         }
 
-        #pixel-grid {
+        .header-title {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-pink);
+            font-size: 1.2rem;
+            text-shadow: 2px 2px #fff;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .control-group {
+            border: 1px dashed #333;
+            padding: 10px;
+        }
+
+        label { display: block; margin-bottom: 5px; color: #888; font-size: 0.8rem; }
+
+        /* Fancy Buttons */
+        button {
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px;
+            width: 100%;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        button.active {
+            background: var(--neon-pink);
+            border-color: var(--neon-pink);
+            color: white;
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        /* --- CANVAS --- */
+        .viewport {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #080808;
+            border: 2px solid #333;
+            position: relative;
+            overflow: hidden;
+            cursor: none; /* We use custom cursors */
+        }
+
+        #grid {
             display: grid;
-            /* 40 columns */
-            grid-template-columns: repeat(40, 1fr); 
+            grid-template-columns: repeat(50, 1fr); /* 50x30 Grid */
             width: 100%;
             height: 100%;
-            cursor: crosshair;
+            max-width: 1000px;
+            aspect-ratio: 50/30;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
         }
 
         .pixel {
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            background-color: transparent;
-        }
-        
-        /* --- RIGHT PANEL: CHAT --- */
-        .chat-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            border: var(--border) var(--neon-pink);
-            min-width: 250px;
-            background: var(--panel-bg);
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(255,255,255,0.02);
+            transition: background 0.1s;
         }
 
-        #chat-window {
+        /* --- MULTIPLAYER CURSORS --- */
+        .remote-cursor {
+            position: absolute;
+            pointer-events: none;
+            z-index: 100;
+            transition: top 0.1s linear, left 0.1s linear;
+        }
+        
+        .cursor-pointer {
+            width: 0; 
+            height: 0; 
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 15px solid var(--neon-pink);
+            transform: rotate(-25deg);
+        }
+
+        .cursor-label {
+            background: var(--neon-pink);
+            color: white;
+            padding: 2px 5px;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+
+        /* My local cursor */
+        #my-cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 200;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+
+        /* --- CHAT OVERLAY --- */
+        .chat-overlay {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 200px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #555;
+            display: flex;
+            flex-direction: column;
+            z-index: 50;
+        }
+        
+        #chat-history {
             flex-grow: 1;
             overflow-y: auto;
             padding: 10px;
-            font-size: 1.1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+            font-size: 0.9rem;
         }
-
-        .chat-msg {
-            word-wrap: break-word;
-        }
-        .chat-msg span.time { color: #666; font-size: 0.8rem; margin-right: 5px; }
-        .chat-msg span.txt { color: white; }
-
-        .chat-input-area {
-            display: flex;
-            border-top: 1px solid var(--neon-pink);
-        }
+        
+        .msg { margin-bottom: 4px; }
+        .msg b { color: var(--neon-blue); }
 
         #chat-input {
-            flex-grow: 1;
-            background: black;
-            color: var(--neon-blue);
+            background: #222;
             border: none;
+            border-top: 1px solid #555;
+            color: white;
             padding: 10px;
-            font-family: 'VT323', monospace;
-            font-size: 1.2rem;
-            outline: none;
+            font-family: inherit;
         }
 
-        #send-btn {
-            width: auto;
-            margin: 0;
-            border-radius: 0;
+        /* --- SCREEN SHAKE ANIMATION --- */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
         }
 
-        /* Loading Overlay */
-        #loader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-            color: var(--neon-green);
-            font-size: 2rem;
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 800px) {
-            .dashboard { flex-direction: column; height: auto; }
-            body { overflow-y: scroll; }
-            #pixel-grid { min-height: 300px; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
     </style>
 </head>
 <body>
 
-    <div id="loader">
-        <p>INITIALIZING SYSTEM...</p>
-        <p style="font-size: 1rem; color: #666">Connecting to Firebase...</p>
-    </div>
+    <div class="crt-overlay"></div>
 
-    <h1>RETRO NEXUS V2.0</h1>
-
-    <div class="dashboard">
+    <div id="main-interface">
         
         <div class="sidebar">
+            <div class="header-title">GRID OS v9.0</div>
             
-            <div class="panel">
-                <h2>TOOLS</h2>
-                <div class="tool-row">
-                    <input type="color" id="colorPicker" value="#00ffff">
-                    <span style="font-size: 0.8rem;">PICK COLOR</span>
-                </div>
-                <button id="btn-draw" class="active-tool">✏️ DRAW</button>
-                <button id="btn-eraser">🧽 ERASER</button>
-                <button id="btn-nuke" class="danger-btn">☢️ NUKE BOARD</button>
+            <div class="control-group">
+                <label>OPERATOR</label>
+                <div id="username-display" style="color:white; font-weight:bold;">GUEST</div>
             </div>
 
-            <div class="panel">
-                <h2>STATS</h2>
-                <p class="stat-box">🟢 ONLINE: <span id="online-count">1</span></p>
-                <p class="stat-box">🔥 HYPE CLICKS: <span id="hype-count">0</span></p>
-                <button id="hype-btn" style="margin-top:10px;">PRESS FOR HYPE</button>
+            <div class="control-group">
+                <label>TOOLKIT</label>
+                <button id="tool-pen" class="active">🖊️ PEN</button>
+                <button id="tool-fill">🌊 FLOOD FILL</button>
+                <button id="tool-eraser">❌ ERASER</button>
             </div>
 
+            <div class="control-group">
+                <label>COLOR MATRIX</label>
+                <input type="color" id="colorPicker" value="#00f3ff" style="width:100%; height:40px; border:none; cursor:pointer;">
+            </div>
+
+            <div class="control-group">
+                <label>SYSTEM CMDS</label>
+                <button id="btn-dl">💾 SAVE IMAGE</button>
+                <button id="btn-nuke" style="border-color: red; color: red;">☢️ FORMAT DRIVE</button>
+            </div>
+
+            <div style="margin-top:auto; font-size:0.7rem; color:#555;">
+                CONNECTED USERS: <span id="online-count">0</span>
+            </div>
         </div>
 
-        <div class="canvas-container">
-            <div id="pixel-grid">
-                </div>
-        </div>
-
-        <div class="chat-panel">
-            <div style="background: var(--neon-pink); color:black; padding: 5px; text-align: center;">GLOBAL CHAT</div>
-            <div id="chat-window">
-                </div>
-            <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Type here..." maxlength="30">
-                <button id="send-btn">SEND</button>
+        <div class="viewport" id="viewport">
+            <div id="my-cursor"></div>
+            <div id="remote-cursors-layer"></div>
+            <div id="grid"></div>
+            
+            <div class="chat-overlay">
+                <div id="chat-history"></div>
+                <input id="chat-input" placeholder="Broadcast message...">
             </div>
         </div>
 
     </div>
 
     <script>
-        // Simple Audio Synth for sound effects
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(type) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+        function sfx(type) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-
-            if (type === 'paint') {
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+            
+            if(type === 'blip') {
                 osc.type = 'square';
-                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
-                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
-            } else if (type === 'chat') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+                gain.gain.setValueAtTime(0.05, now);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'fill') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.linearRampToValueAtTime(600, now + 0.3);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
             }
         }
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getDatabase, ref, set, update, push, onValue, onChildAdded, remove, onDisconnect, runTransaction } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+        import { getDatabase, ref, set, update, push, onValue, onChildAdded, onChildChanged, remove, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
+        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyAE75AlF1oDc_02lue7A7rtZ74x0y3eQLI",
             authDomain: "retrochat-795b4.firebaseapp.com",
@@ -319,151 +327,250 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- VARS ---
-        const COLS = 40;
-        const ROWS = 25;
+        // --- CONSTANTS ---
+        const COLS = 50;
+        const ROWS = 30;
+        const TOTAL_PIXELS = COLS * ROWS;
+        const myId = Math.random().toString(36).substr(2, 9);
+        let myName = prompt("ENTER HACKER ALIAS:", "User-" + Math.floor(Math.random()*1000));
+        if(!myName) myName = "Anon";
+        document.getElementById('username-display').innerText = myName;
+
+        // --- STATE ---
+        let currentTool = 'pen';
         let isMouseDown = false;
-        let currentTool = 'draw'; // 'draw' or 'eraser'
-        
+        let pixelDataLocal = new Array(TOTAL_PIXELS).fill(null); // Local cache for flood fill
+
         // --- DOM ---
-        const grid = document.getElementById('pixel-grid');
+        const grid = document.getElementById('grid');
         const colorPicker = document.getElementById('colorPicker');
-        const loader = document.getElementById('loader');
-        const chatWindow = document.getElementById('chat-window');
-        const chatInput = document.getElementById('chat-input');
-        const sendBtn = document.getElementById('send-btn');
-        const onlineDisplay = document.getElementById('online-count');
+        const viewport = document.getElementById('viewport');
+        const myCursor = document.getElementById('my-cursor');
         
-        // --- 1. BUILD GRID ---
-        // 40 * 25 = 1000 pixels
-        for (let i = 0; i < (COLS * ROWS); i++) {
-            const div = document.createElement('div');
-            div.classList.add('pixel');
-            div.dataset.index = i;
-            
-            // Mouse Events for Drag-to-Paint
-            div.addEventListener('mousedown', () => {
-                isMouseDown = true;
-                paintPixel(i);
-            });
-            div.addEventListener('mouseenter', () => {
-                if (isMouseDown) paintPixel(i);
-            });
-
-            grid.appendChild(div);
+        // --- INITIALIZATION ---
+        // Build Grid
+        for(let i=0; i<TOTAL_PIXELS; i++) {
+            const p = document.createElement('div');
+            p.className = 'pixel';
+            p.dataset.idx = i;
+            grid.appendChild(p);
         }
 
+        // --- TOOL HANDLERS ---
+        document.getElementById('tool-pen').onclick = () => setTool('pen');
+        document.getElementById('tool-fill').onclick = () => setTool('fill');
+        document.getElementById('tool-eraser').onclick = () => setTool('eraser');
+        document.getElementById('btn-nuke').onclick = nukeBoard;
+        document.getElementById('btn-dl').onclick = saveImage;
+
+        function setTool(t) {
+            currentTool = t;
+            document.querySelectorAll('.control-group button').forEach(b => b.classList.remove('active'));
+            if(t !== 'pen' && t!=='eraser' && t!=='fill') return; // Safety
+            document.getElementById(`tool-${t}`).classList.add('active');
+        }
+
+        // --- INPUT HANDLING ---
+        grid.addEventListener('mousedown', (e) => {
+            isMouseDown = true;
+            handleAction(e.target);
+        });
         document.addEventListener('mouseup', () => isMouseDown = false);
+        grid.addEventListener('mouseover', (e) => {
+            if(isMouseDown && currentTool !== 'fill') handleAction(e.target);
+        });
 
-        // --- 2. PAINTING LOGIC ---
-        function paintPixel(index) {
+        function handleAction(target) {
+            if(!target.classList.contains('pixel')) return;
+            const idx = parseInt(target.dataset.idx);
             let color = colorPicker.value;
-            if (currentTool === 'eraser') color = 'transparent';
-            
-            // Update UI immediately (optimistic)
-            const pixel = grid.children[index];
-            pixel.style.backgroundColor = color;
-            
-            // Send to DB
-            set(ref(db, 'pixels/' + index), color);
-            playSound('paint');
+            if(currentTool === 'eraser') color = 'transparent';
+
+            if(currentTool === 'fill') {
+                performFloodFill(idx, color);
+            } else {
+                // Pen / Eraser
+                // Optimistic update
+                target.style.background = color === 'transparent' ? '' : color;
+                set(ref(db, `pixels/${idx}`), color);
+                sfx('blip');
+            }
         }
 
-        // --- 3. SYNC PIXELS ---
-        const pixelsRef = ref(db, 'pixels');
-        onValue(pixelsRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                // Apply all colors
-                Object.keys(data).forEach(key => {
-                    if (grid.children[key]) {
-                        grid.children[key].style.backgroundColor = data[key];
+        // --- FLOOD FILL ALGORITHM (BFS) ---
+        function performFloodFill(startIdx, targetColor) {
+            // Get color of clicked pixel
+            const startNode = grid.children[startIdx];
+            const startColor = startNode.style.backgroundColor || 'transparent'; // computed style check
+            
+            // Convert HEX to RGB for comparison if needed, but for simplicity we rely on what's in local cache
+            // Better: use the local cache array we maintain
+            const cachedStartColor = pixelDataLocal[startIdx] || 'transparent';
+            
+            if(cachedStartColor === targetColor) return; // Same color
+
+            sfx('fill');
+            document.body.classList.add('shake');
+            setTimeout(()=>document.body.classList.remove('shake'), 500);
+
+            const queue = [startIdx];
+            const updates = {};
+            const visited = new Set();
+            visited.add(startIdx);
+
+            while(queue.length > 0) {
+                const idx = queue.shift();
+                updates[`pixels/${idx}`] = targetColor;
+
+                const x = idx % COLS;
+                const y = Math.floor(idx / COLS);
+
+                // Check Neighbors (Up, Down, Left, Right)
+                const neighbors = [
+                    { idx: idx - COLS, valid: y > 0 }, // Up
+                    { idx: idx + COLS, valid: y < ROWS - 1 }, // Down
+                    { idx: idx - 1,    valid: x > 0 }, // Left
+                    { idx: idx + 1,    valid: x < COLS - 1 } // Right
+                ];
+
+                for(let n of neighbors) {
+                    if(n.valid && !visited.has(n.idx)) {
+                        const nColor = pixelDataLocal[n.idx] || 'transparent';
+                        if(nColor === cachedStartColor) {
+                            visited.add(n.idx);
+                            queue.push(n.idx);
+                        }
                     }
-                });
-            } else {
-                // If data is null (nuked), clear board
-                Array.from(grid.children).forEach(p => p.style.backgroundColor = 'transparent');
+                }
             }
-            loader.style.display = 'none';
-        });
 
-        // --- 4. TOOLS ---
-        document.getElementById('btn-draw').addEventListener('click', (e) => {
-            currentTool = 'draw';
-            updateToolUI(e.target);
-        });
-        document.getElementById('btn-eraser').addEventListener('click', (e) => {
-            currentTool = 'eraser';
-            updateToolUI(e.target);
-        });
-        document.getElementById('btn-nuke').addEventListener('click', () => {
-            if(confirm("WARNING: This will delete the ENTIRE drawing for EVERYONE. Are you sure?")) {
+            // Batch update Firebase (Magical performance!)
+            update(ref(db), updates);
+        }
+
+        function nukeBoard() {
+            if(confirm("SYSTEM WARNING: DESTROY ALL DATA?")) {
                 remove(ref(db, 'pixels'));
+                sfx('fill');
             }
+        }
+
+        function saveImage() {
+            alert("Feature simulated: Imagine a cool PNG downloading now.");
+        }
+
+        // --- SYNC ENGINE ---
+        const pixelsRef = ref(db, 'pixels');
+        onValue(pixelsRef, (snap) => {
+            const data = snap.val();
+            // Clear grid if null
+            if(!data) {
+                pixelDataLocal.fill(null);
+                Array.from(grid.children).forEach(p => p.style.background = '');
+                return;
+            }
+
+            // Update only changed pixels
+            Object.keys(data).forEach(key => {
+                const col = data[key];
+                const i = parseInt(key);
+                if(pixelDataLocal[i] !== col) {
+                    pixelDataLocal[i] = col;
+                    grid.children[i].style.background = col === 'transparent' ? '' : col;
+                }
+            });
+            // Handle removals (if logic needed)
         });
 
-        function updateToolUI(activeBtn) {
-            document.querySelectorAll('.panel button').forEach(b => b.classList.remove('active-tool'));
-            activeBtn.classList.add('active-tool');
+        // --- LIVE CURSORS ---
+        const cursorRef = ref(db, `cursors/${myId}`);
+        onDisconnect(cursorRef).remove();
+
+        viewport.addEventListener('mousemove', (e) => {
+            // Move local cursor visual
+            myCursor.style.left = e.clientX + 'px';
+            myCursor.style.top = e.clientY + 'px';
+
+            // Calculate relative position % inside viewport to handle different screen sizes
+            const rect = viewport.getBoundingClientRect();
+            const xPct = (e.clientX - rect.left) / rect.width * 100;
+            const yPct = (e.clientY - rect.top) / rect.height * 100;
+
+            // Throttle updates to DB (every 50ms)
+            updateCursorPos(xPct, yPct);
+        });
+
+        let lastUpdate = 0;
+        function updateCursorPos(x, y) {
+            const now = Date.now();
+            if(now - lastUpdate > 50) {
+                set(cursorRef, {
+                    x: x,
+                    y: y,
+                    name: myName,
+                    color: colorPicker.value,
+                    ts: serverTimestamp()
+                });
+                lastUpdate = now;
+            }
         }
 
-        // --- 5. CHAT SYSTEM ---
-        function sendMessage() {
-            const txt = chatInput.value.trim();
-            if (txt === "") return;
+        // Render Remote Cursors
+        const allCursorsRef = ref(db, 'cursors');
+        onValue(allCursorsRef, (snap) => {
+            const cursors = snap.val() || {};
+            const container = document.getElementById('remote-cursors-layer');
             
-            const msgData = {
-                text: txt,
-                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-            };
-            
-            // Push to list
-            push(ref(db, 'chat'), msgData);
-            chatInput.value = "";
-        }
+            // Remove disconnected
+            Array.from(container.children).forEach(el => {
+                if(!cursors[el.id]) el.remove();
+            });
 
-        sendBtn.addEventListener('click', sendMessage);
+            // Update/Create
+            Object.keys(cursors).forEach(key => {
+                if(key === myId) return; // Don't draw self
+                const data = cursors[key];
+                
+                let el = document.getElementById(key);
+                if(!el) {
+                    el = document.createElement('div');
+                    el.id = key;
+                    el.className = 'remote-cursor';
+                    el.innerHTML = `
+                        <div class="cursor-pointer" style="border-bottom-color:${data.color}"></div>
+                        <div class="cursor-label" style="background:${data.color}">${data.name}</div>
+                    `;
+                    container.appendChild(el);
+                }
+                
+                el.style.left = data.x + '%';
+                el.style.top = data.y + '%';
+            });
+            
+            document.getElementById('online-count').innerText = Object.keys(cursors).length;
+        });
+
+        // --- CHAT ---
+        const chatInput = document.getElementById('chat-input');
         chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-
-        // Listen for new messages
-        // limitToLast(20) keeps it from loading history forever
-        // Note: Using onChildAdded for efficient list updates
-        onChildAdded(ref(db, 'chat'), (snapshot) => {
-            const data = snapshot.val();
-            const div = document.createElement('div');
-            div.classList.add('chat-msg');
-            div.innerHTML = `<span class="time">[${data.time}]</span> <span class="txt">${data.text}</span>`;
-            chatWindow.appendChild(div);
-            chatWindow.scrollTop = chatWindow.scrollHeight; // Auto scroll to bottom
-            playSound('chat');
-        });
-
-        // --- 6. PRESENCE (ONLINE COUNT) ---
-        // This creates a temporary ID for you, adds it to DB, removes on disconnect
-        const myConRef = push(ref(db, 'connections'));
-        set(myConRef, true);
-        onDisconnect(myConRef).remove();
-
-        onValue(ref(db, 'connections'), (snap) => {
-            if (snap.exists()) {
-                onlineDisplay.innerText = Object.keys(snap.val()).length;
-            } else {
-                onlineDisplay.innerText = 1;
+            if(e.key === 'Enter' && chatInput.value.trim() !== '') {
+                push(ref(db, 'chat'), {
+                    user: myName,
+                    msg: chatInput.value,
+                    color: colorPicker.value
+                });
+                chatInput.value = '';
             }
         });
 
-        // --- 7. HYPE BUTTON ---
-        const hypeRef = ref(db, 'globalHype');
-        const hypeDisplay = document.getElementById('hype-count');
-        
-        document.getElementById('hype-btn').addEventListener('click', () => {
-             runTransaction(hypeRef, (count) => (count || 0) + 1);
-        });
-
-        onValue(hypeRef, (snap) => {
-            hypeDisplay.innerText = snap.val() || 0;
+        onChildAdded(ref(db, 'chat'), (snap) => {
+            const data = snap.val();
+            const div = document.createElement('div');
+            div.className = 'msg';
+            div.innerHTML = `<b style="color:${data.color}">${data.user}:</b> ${data.msg}`;
+            const hist = document.getElementById('chat-history');
+            hist.appendChild(div);
+            hist.scrollTop = hist.scrollHeight;
         });
 
     </script>
