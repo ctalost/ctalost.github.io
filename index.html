@@ -3,273 +3,968 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Space | Premium</title>
+    <title>ArtSync - Multiplayer Canvas</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         :root {
-            --bg-dark: #1e1f22;
-            --bg-panel: #2b2d31;
-            --primary: #5865F2;
-            --accent: #eb459e;
-            --text-main: #ffffff;
-            --text-dim: #949ba4;
-            --border: #111214;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --bg-dark: #0f0f23;
+            --bg-card: #1a1a2e;
+            --bg-input: #16213e;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
-
-        * { box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* --- LAYOUT --- */
-        .app-container {
-            display: grid;
-            grid-template-columns: 250px 1fr 300px; /* Sidebar | Canvas | Chat */
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
         }
 
-        /* --- LEFT: TOOLS --- */
-        .sidebar {
-            background: var(--bg-panel);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            border-right: 1px solid var(--border);
+        . bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0. 1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
         }
 
-        .logo {
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: var(--primary);
-            letter-spacing: -0.5px;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0. 5; }
         }
 
-        .tool-section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            font-weight: 600;
-        }
-
-        button {
-            background: #383a40;
-            border: none;
-            color: white;
-            padding: 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.2s;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        button:hover { background: #404249; }
-        button.active { background: var(--primary); color: white; }
-        
-        button.danger { color: #ff5555; }
-        button.danger:hover { background: rgba(255, 85, 85, 0.1); }
-
-        input[type="color"] {
-            width: 100%;
-            height: 40px;
-            border: none;
-            cursor: pointer;
-            background: transparent;
-        }
-
-        /* --- CENTER: CANVAS --- */
-        .main-stage {
+        /* Login Screen */
+        .login-screen {
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #313338;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 48px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        . logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo p {
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: var(--bg-input);
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0. 2);
+        }
+
+        .input-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px -10px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        . divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: var(--text-muted);
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            padding: 0 16px;
+            font-size: 0.875rem;
+        }
+
+        /* App Container */
+        . app-container {
+            display: none;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--bg-card);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .room-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-input);
+            border-radius: 8px;
+        }
+
+        .room-code {
+            font-family: monospace;
+            font-size: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0. 2s;
+        }
+
+        .copy-btn:hover {
+            color: var(--primary);
+        }
+
+        . header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .users-online {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .users-avatars {
+            display: flex;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-left: -8px;
+            border: 2px solid var(--bg-card);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar:first-child {
+            margin-left: 0;
+        }
+
+        .user-avatar . tooltip {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-dark);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .user-avatar:hover . tooltip {
+            opacity: 1;
+        }
+
+        . leave-btn {
+            padding: 10px 20px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .leave-btn:hover {
+            background: #dc2626;
+        }
+
+        /* Main Content */
+        . main-content {
+            display: flex;
+            height: calc(100vh - 73px);
+        }
+
+        /* Toolbar */
+        .toolbar {
+            width: 72px;
+            background: var(--bg-card);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tool-btn {
+            width: 48px;
+            height: 48px;
+            border: none;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0. 2s;
+            position: relative;
+        }
+
+        .tool-btn:hover {
+            background: var(--bg-input);
+            color: var(--text);
+        }
+
+        .tool-btn. active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tool-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .tool-divider {
+            width: 32px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 8px 0;
+        }
+
+        . color-picker-wrapper {
+            position: relative;
+        }
+
+        .color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .color-preview:hover {
+            transform: scale(1.1);
+        }
+
+        #colorPicker {
+            position: absolute;
+            opacity: 0;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .brush-size-wrapper {
+            margin-top: auto;
+        }
+
+        .brush-size-display {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .brush-slider {
+            writing-mode: vertical-lr;
+            direction: rtl;
+            width: 6px;
+            height: 120px;
+            -webkit-appearance: none;
+            background: var(--bg-input);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .brush-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Canvas Area */
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-input);
             position: relative;
             overflow: hidden;
         }
 
-        /* The wrapper ensures cursors stay relative to the grid */
-        .canvas-wrapper {
+        .canvas-container {
             position: relative;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            border: 4px solid var(--bg-dark);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #canvas {
+            display: block;
+            background: white;
             cursor: crosshair;
         }
 
-        #grid {
-            display: grid;
-            grid-template-columns: repeat(40, 1fr); /* 40x25 Grid */
-            width: 800px;
-            height: 500px;
-            background: #fff;
-        }
-
-        .pixel {
-            width: 100%;
-            height: 100%;
-            background: #ffffff; /* Default white canvas */
-            border: 1px solid rgba(0,0,0,0.05); /* Light grid lines */
-        }
-
-        /* CURSORS */
-        .cursor {
+        /* Remote Cursors */
+        . remote-cursor {
             position: absolute;
             pointer-events: none;
-            z-index: 10;
-            transition: all 0.1s linear;
-        }
-        
-        .cursor-arrow {
-            width: 0; height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-bottom: 12px solid var(--accent);
-        }
-        
-        .cursor-name {
-            background: var(--bg-dark);
-            color: white;
-            padding: 2px 6px;
-            font-size: 10px;
-            border-radius: 4px;
-            white-space: nowrap;
-            margin-top: 2px;
-            margin-left: 6px;
+            z-index: 100;
+            transition: left 0.05s linear, top 0.05s linear;
         }
 
-        /* --- RIGHT: CHAT --- */
+        .cursor-pointer {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .cursor-name {
+            position: absolute;
+            top: 24px;
+            left: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+
+        /* Chat Panel */
         .chat-panel {
-            background: var(--bg-panel);
-            border-left: 1px solid var(--border);
+            width: 320px;
+            background: var(--bg-card);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
         }
 
         .chat-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0. 1);
             font-weight: 600;
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
         }
 
-        #chat-feed {
-            flex-grow: 1;
-            padding: 15px;
+        .chat-messages {
+            flex: 1;
             overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 10px;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        . message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .message-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        . message-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        . message-text {
+            font-size: 0.875rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        . system-message {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .chat-input-wrapper {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: var(--bg-input);
+            color: var(--text);
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0. 2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0. 2s;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Undo/Redo Stack Display */
+        .history-controls {
+            display: flex;
+            gap: 4px;
+            margin-top: auto;
+            padding-top: 8px;
+        }
+
+        .history-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0. 2s;
+        }
+
+        .history-btn:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+        }
+
+        . history-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
 
-        .msg { font-size: 0.9rem; line-height: 1.4; word-break: break-word; }
-        .msg strong { color: var(--primary); }
-        .msg span { color: var(--text-dim); font-size: 0.75rem; margin-left: 5px; }
-
-        .chat-input-box {
-            padding: 15px;
-            background: #232428;
+        .toast {
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
         }
 
-        #chat-input {
-            width: 100%;
-            background: #383a40;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            color: white;
-            outline: none;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .app-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto 1fr auto;
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
             }
-            .sidebar { flex-direction: row; align-items: center; padding: 10px; overflow-x: auto;}
-            .chat-panel { height: 200px; }
-            #grid { width: 90vw; height: 56.25vw; } /* Maintain aspect ratio */
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast. success { border-left: 3px solid var(--success); }
+        .toast.error { border-left: 3px solid var(--danger); }
+        . toast.info { border-left: 3px solid var(--primary); }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 15, 35, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--bg-input);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Color Palette */
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            padding: 8px;
+            background: var(--bg-dark);
+            border-radius: 12px;
+            margin-top: 8px;
+        }
+
+        .palette-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .palette-color:hover {
+            transform: scale(1. 2);
+        }
+
+        .palette-color.active {
+            border-color: white;
+        }
+
+        /* Download Button */
+        . download-btn {
+            margin-top: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chat-panel {
+                display: none;
+            }
+            
+            .toolbar {
+                width: 60px;
+                padding: 8px;
+            }
+            
+            .tool-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .header {
+                padding: 12px 16px;
+            }
+            
+            .room-info {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-
-    <div class="app-container">
-        
-        <nav class="sidebar">
-            <div class="logo">Pixel Space</div>
+    <div class="bg-animation"></div>
+    
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="logo">
+                <h1>🎨 ArtSync</h1>
+                <p>Real-time collaborative canvas</p>
+            </div>
             
-            <div class="tool-section">
-                <div class="label">User</div>
-                <div id="username-display" style="font-weight: bold; font-size: 0.9rem;">Guest</div>
-                <div class="label" style="margin-top: 5px;">Online: <span id="online-count">1</span></div>
+            <div class="input-group">
+                <label for="username">Your Name</label>
+                <input type="text" id="username" placeholder="Enter your display name" maxlength="20">
             </div>
-
-            <div class="tool-section">
-                <div class="label">Tools</div>
-                <button id="btn-draw" class="active">✏️ Pencil</button>
-                <button id="btn-erase">🧼 Eraser</button>
+            
+            <button class="btn btn-primary" id="createRoomBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="16"/>
+                    <line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+                Create New Room
+            </button>
+            
+            <div class="divider"><span>or join existing</span></div>
+            
+            <div class="input-group">
+                <label for="roomCode">Room Code</label>
+                <input type="text" id="roomCode" placeholder="Enter 6-character room code" maxlength="6" style="text-transform: uppercase;">
             </div>
-
-            <div class="tool-section">
-                <div class="label">Palette</div>
-                <input type="color" id="color-picker" value="#5865F2">
+            
+            <button class="btn btn-secondary" id="joinRoomBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                    <polyline points="10 17 15 12 10 7"/>
+                    <line x1="15" y1="12" x2="3" y2="12"/>
+                </svg>
+                Join Room
+            </button>
+        </div>
+    </div>
+    
+    <!-- Main App -->
+    <div class="app-container" id="appContainer">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="header-logo">🎨 ArtSync</span>
+                <div class="room-info">
+                    <span>Room:</span>
+                    <span class="room-code" id="displayRoomCode">ABC123</span>
+                    <button class="copy-btn" id="copyCodeBtn" title="Copy room code">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
-
-            <div class="tool-section" style="margin-top: auto;">
-                <button id="btn-clear" class="danger">🗑️ Clear Canvas</button>
+            <div class="header-right">
+                <div class="users-online">
+                    <div class="users-avatars" id="usersAvatars"></div>
+                </div>
+                <button class="leave-btn" id="leaveBtn">Leave Room</button>
             </div>
-        </nav>
-
-        <main class="main-stage">
-            <div class="canvas-wrapper" id="canvas-wrapper">
-                <div id="remote-cursor-layer"></div>
-                <div id="grid">
+        </header>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <button class="tool-btn active" data-tool="brush" title="Brush">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+                        <path d="M18 13l-1.5-7. 5L2 2l3.5 14.5L13 18l5-5z"/>
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="eraser" title="Eraser">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 20H7L3 16c-. 8-. 8-. 8-2 0-2.8L13. 8 2. 4c. 8-. 8 2-. 8 2.8 0L21 6.8c.8. 8. 8 2 0 2.8L12 18"/>
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="fill" title="Fill Bucket">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 11l-8-8-8. 6 8.6a2 2 0 0 0 0 2.8l5. 2 5.2c.8.8 2 .8 2.8 0L19 11z"/>
+                        <path d="M5 2l5 5"/>
+                        <path d="M2 13h15"/>
+                        <path d="M22 20. 7c0 .8-.7 1.3-1.5 1.3s-1.5-. 5-1.5-1.3c0-1 1.5-2.7 1.5-2.7s1.5 1.7 1.5 2.7z"/>
+                    </svg>
+                </button>
+                
+                <div class="tool-divider"></div>
+                
+                <button class="tool-btn" data-tool="line" title="Line">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="19" x2="19" y2="5"/>
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="rect" title="Rectangle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="circle" title="Circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="9"/>
+                    </svg>
+                </button>
+                
+                <div class="tool-divider"></div>
+                
+                <div class="color-picker-wrapper">
+                    <input type="color" id="colorPicker" value="#6366f1">
+                    <div class="color-preview" id="colorPreview" style="background: #6366f1;"></div>
+                </div>
+                
+                <div class="color-palette" id="colorPalette"></div>
+                
+                <div class="brush-size-wrapper">
+                    <div class="brush-size-display"><span id="brushSizeValue">5</span>px</div>
+                    <input type="range" class="brush-slider" id="brushSlider" min="1" max="50" value="5">
+                </div>
+                
+                <div class="history-controls">
+                    <button class="history-btn" id="undoBtn" title="Undo" disabled>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 7v6h6"/>
+                            <path d="M3 13a9 9 0 1 0 3-7. 7L3 7"/>
+                        </svg>
+                    </button>
+                    <button class="history-btn" id="redoBtn" title="Redo" disabled>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 7v6h-6"/>
+                            <path d="M21 13a9 9 0 1 1-3-7. 7L21 7"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <button class="tool-btn download-btn" id="downloadBtn" title="Download Canvas">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                </button>
+                
+                <button class="tool-btn" id="clearBtn" title="Clear Canvas" style="color: var(--danger);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Canvas Area -->
+            <div class="canvas-area" id="canvasArea">
+                <div class="canvas-container" id="canvasContainer">
+                    <canvas id="canvas" width="1200" height="800"></canvas>
+                </div>
+            </div>
+            
+            <!-- Chat Panel -->
+            <div class="chat-panel">
+                <div class="chat-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Room Chat
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input-wrapper">
+                    <div class="chat-input-container">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="Type a message..." maxlength="500">
+                        <button class="send-btn" id="sendBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </button>
                     </div>
+                </div>
             </div>
-        </main>
-
-        <aside class="chat-panel">
-            <div class="chat-header">
-                Live Chat
-            </div>
-            <div id="chat-feed"></div>
-            <div class="chat-input-box">
-                <input type="text" id="chat-input" placeholder="Type a message...">
-            </div>
-        </aside>
-
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getDatabase, ref, set, update, push, onValue, onChildAdded, remove, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-
-        // CONFIG
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat. js"></script>
+    
+    <script>
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAE75AlF1oDc_02lue7A7rtZ74x0y3eQLI",
-            authDomain: "retrochat-795b4.firebaseapp.com",
-            databaseURL: "https://retrochat-795b4-default-rtdb.asia-southeast1.firebasedatabase.app",
+            authDomain: "retrochat-795b4.firebaseapp. com",
+            databaseURL: "https://retrochat-795b4-default-rtdb. asia-southeast1.firebasedatabase.app",
             projectId: "retrochat-795b4",
             storageBucket: "retrochat-795b4.firebasestorage.app",
             messagingSenderId: "588960494570",
@@ -277,192 +972,1595 @@
             measurementId: "G-PLF4ETNC5Z"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-        // --- VARIABLES ---
-        const GRID_W = 40;
-        const GRID_H = 25;
-        const TOTAL_PIXELS = GRID_W * GRID_H;
-        
-        let currentTool = 'draw';
-        let isMouseDown = false;
-        const myId = Math.random().toString(36).substr(2, 9);
-        const myName = "Artist-" + Math.floor(Math.random() * 100);
-        document.getElementById('username-display').innerText = myName;
-
-        // --- DOM ---
-        const grid = document.getElementById('grid');
-        const wrapper = document.getElementById('canvas-wrapper');
-        const colorPicker = document.getElementById('color-picker');
-        const chatFeed = document.getElementById('chat-feed');
-
-        // --- 1. INITIALIZE GRID ---
-        function initGrid() {
-            grid.innerHTML = '';
-            for(let i=0; i<TOTAL_PIXELS; i++) {
-                const pixel = document.createElement('div');
-                pixel.classList.add('pixel');
-                pixel.dataset.id = i;
-                
-                // Add event listeners per pixel for performance
-                pixel.addEventListener('mousedown', () => {
-                    isMouseDown = true;
-                    draw(i);
-                });
-                pixel.addEventListener('mouseenter', () => {
-                    if(isMouseDown) draw(i);
-                });
-
-                grid.appendChild(pixel);
-            }
-        }
-        initGrid();
-
-        document.addEventListener('mouseup', () => isMouseDown = false);
-
-        // --- 2. DRAWING LOGIC ---
-        function draw(index) {
-            let color = colorPicker.value;
-            if (currentTool === 'erase') color = '#ffffff'; // Eraser paints white
-
-            // 1. Optimistic UI update (Instant feedback)
-            grid.children[index].style.backgroundColor = color;
-
-            // 2. Send to Firebase
-            set(ref(db, `pixels/${index}`), color);
-        }
-
-        // --- 3. SYNC PIXELS ---
-        const pixelsRef = ref(db, 'pixels');
-        onValue(pixelsRef, (snapshot) => {
-            const data = snapshot.val();
-            if(!data) {
-                // If board is clear
-                Array.from(grid.children).forEach(p => p.style.backgroundColor = '#ffffff');
-                return;
-            }
-            // Update pixels
-            Object.keys(data).forEach(key => {
-                const idx = parseInt(key);
-                if(grid.children[idx]) {
-                    grid.children[idx].style.backgroundColor = data[key];
-                }
-            });
-        });
-
-        // --- 4. MULTIPLAYER CURSORS (FIXED) ---
-        const cursorRef = ref(db, `cursors/${myId}`);
-        onDisconnect(cursorRef).remove(); // Remove my cursor when I leave
-
-        wrapper.addEventListener('mousemove', (e) => {
-            // Get position RELATIVE to the canvas wrapper
-            const rect = wrapper.getBoundingClientRect();
-            
-            // Calculate X and Y as percentages (0 to 100)
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-            // Simple throttle to prevent lagging the DB
-            updateCursor(x, y);
-        });
-
-        let lastUpdate = 0;
-        function updateCursor(x, y) {
-            const now = Date.now();
-            if(now - lastUpdate > 50) { // Limit to 20 updates per second
-                set(cursorRef, {
-                    x: x.toFixed(2), // Round to 2 decimals
-                    y: y.toFixed(2),
-                    name: myName,
-                    color: colorPicker.value
-                });
-                lastUpdate = now;
-            }
-        }
-
-        // Render other players' cursors
-        onValue(ref(db, 'cursors'), (snapshot) => {
-            const cursors = snapshot.val() || {};
-            const layer = document.getElementById('remote-cursor-layer');
-            
-            // Cleanup old cursors
-            Array.from(layer.children).forEach(el => {
-                if(!cursors[el.id]) el.remove();
-            });
-
-            // Update/Add cursors
-            Object.keys(cursors).forEach(key => {
-                if(key === myId) return; // Don't show my own network cursor
-
-                const data = cursors[key];
-                let el = document.getElementById(key);
-                
-                if(!el) {
-                    el = document.createElement('div');
-                    el.id = key;
-                    el.className = 'cursor';
-                    el.innerHTML = `
-                        <div class="cursor-arrow" style="border-bottom-color: ${data.color}"></div>
-                        <div class="cursor-name">${data.name}</div>
-                    `;
-                    layer.appendChild(el);
-                }
-                
-                el.style.left = data.x + '%';
-                el.style.top = data.y + '%';
-            });
-
-            // Update online count
-            document.getElementById('online-count').innerText = Object.keys(cursors).length;
-        });
-
-        // --- 5. CHAT SYSTEM ---
-        const chatInput = document.getElementById('chat-input');
-        
-        chatInput.addEventListener('keypress', (e) => {
-            if(e.key === 'Enter' && chatInput.value.trim() !== '') {
-                push(ref(db, 'chat'), {
-                    name: myName,
-                    text: chatInput.value.trim(),
-                    ts: Date.now()
-                });
-                chatInput.value = '';
-            }
-        });
-
-        onChildAdded(ref(db, 'chat'), (snapshot) => {
-            const data = snapshot.val();
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'msg';
-            
-            // Format time
-            const date = new Date(data.ts);
-            const timeStr = date.getHours() + ':' + date.getMinutes().toString().padStart(2, '0');
-
-            msgDiv.innerHTML = `<strong>${data.name}</strong><span>${timeStr}</span><br>${data.text}`;
-            
-            chatFeed.appendChild(msgDiv);
-            chatFeed.scrollTop = chatFeed.scrollHeight; // Auto-scroll
-        });
-
-        // --- 6. TOOLS & CONTROLS ---
-        document.getElementById('btn-draw').onclick = (e) => setTool('draw', e.target);
-        document.getElementById('btn-erase').onclick = (e) => setTool('erase', e.target);
-        
-        document.getElementById('btn-clear').onclick = () => {
-            if(confirm("Are you sure you want to wipe the canvas for everyone?")) {
-                remove(ref(db, 'pixels'));
-            }
+        // App State
+        const state = {
+            username: '',
+            oderId: '',
+            roomCode: '',
+            currentTool: 'brush',
+            currentColor: '#6366f1',
+            brushSize: 5,
+            isDrawing: false,
+            lastX: 0,
+            lastY: 0,
+            shapeStartX: 0,
+            shapeStartY: 0,
+            users: {},
+            undoStack: [],
+            redoStack: [],
+            maxHistory: 50
         };
 
-        function setTool(tool, btn) {
-            currentTool = tool;
-            // Update UI
-            document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
+        // Color Palette
+        const colors = [
+            '#000000', '#ffffff', '#ef4444', '#f97316',
+            '#eab308', '#22c55e', '#14b8a6', '#3b82f6',
+            '#6366f1', '#8b5cf6', '#d946ef', '#ec4899',
+            '#78716c', '#64748b', '#0ea5e9', '#84cc16'
+        ];
+
+        // DOM Elements
+        const elements = {
+            loginScreen: document.getElementById('loginScreen'),
+            appContainer: document.getElementById('appContainer'),
+            username: document.getElementById('username'),
+            roomCode: document.getElementById('roomCode'),
+            createRoomBtn: document.getElementById('createRoomBtn'),
+            joinRoomBtn: document.getElementById('joinRoomBtn'),
+            displayRoomCode: document.getElementById('displayRoomCode'),
+            copyCodeBtn: document. getElementById('copyCodeBtn'),
+            leaveBtn: document.getElementById('leaveBtn'),
+            usersAvatars: document.getElementById('usersAvatars'),
+            canvas: document.getElementById('canvas'),
+            canvasArea: document. getElementById('canvasArea'),
+            canvasContainer: document. getElementById('canvasContainer'),
+            colorPicker: document. getElementById('colorPicker'),
+            colorPreview: document.getElementById('colorPreview'),
+            colorPalette: document.getElementById('colorPalette'),
+            brushSlider: document.getElementById('brushSlider'),
+            brushSizeValue: document.getElementById('brushSizeValue'),
+            undoBtn: document. getElementById('undoBtn'),
+            redoBtn: document.getElementById('redoBtn'),
+            downloadBtn: document.getElementById('downloadBtn'),
+            clearBtn: document.getElementById('clearBtn'),
+            chatMessages: document.getElementById('chatMessages'),
+            chatInput: document.getElementById('chatInput'),
+            sendBtn: document. getElementById('sendBtn'),
+            toastContainer: document.getElementById('toastContainer'),
+            loadingOverlay: document.getElementById('loadingOverlay')
+        };
+
+        const ctx = elements.canvas. getContext('2d');
+        let tempCanvas, tempCtx;
+
+        // Utility Functions
+        function generateId() {
+            return Math.random().toString(36).substr(2, 9);
         }
 
+        function generateRoomCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars. charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function getRandomColor() {
+            const hue = Math.floor(Math.random() * 360);
+            return `hsl(${hue}, 70%, 50%)`;
+        }
+
+        function showLoading() {
+            elements. loadingOverlay. style.display = 'flex';
+        }
+
+        function hideLoading() {
+            elements.loadingOverlay.style. display = 'none';
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast. className = `toast ${type}`;
+            toast.innerHTML = message;
+            elements.toastContainer. appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Initialize Color Palette
+        function initColorPalette() {
+            colors.forEach(color => {
+                const div = document. createElement('div');
+                div.className = 'palette-color';
+                div. style.background = color;
+                div.addEventListener('click', () => setColor(color));
+                elements.colorPalette.appendChild(div);
+            });
+        }
+
+        function setColor(color) {
+            state.currentColor = color;
+            elements. colorPicker.value = color;
+            elements.colorPreview.style.background = color;
+            document.querySelectorAll('.palette-color'). forEach(el => {
+                el.classList.toggle('active', el. style.background === color);
+            });
+        }
+
+        // Canvas Setup
+        function initCanvas() {
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, elements.canvas.width, elements.canvas. height);
+            
+            // Create temp canvas for shape preview
+            tempCanvas = document.createElement('canvas');
+            tempCanvas.width = elements. canvas.width;
+            tempCanvas.height = elements.canvas. height;
+            tempCtx = tempCanvas.getContext('2d');
+            
+            saveState();
+        }
+
+        function saveState() {
+            if (state.undoStack.length >= state.maxHistory) {
+                state. undoStack.shift();
+            }
+            state.undoStack.push(elements.canvas.toDataURL());
+            state.redoStack = [];
+            updateHistoryButtons();
+        }
+
+        function updateHistoryButtons() {
+            elements.undoBtn.disabled = state.undoStack.length <= 1;
+            elements.redoBtn.disabled = state. redoStack.length === 0;
+        }
+
+        function undo() {
+            if (state.undoStack.length <= 1) return;
+            state.redoStack.push(state.undoStack.pop());
+            loadCanvasState(state.undoStack[state.undoStack.length - 1]);
+            updateHistoryButtons();
+            syncCanvas();
+        }
+
+        function redo() {
+            if (state.redoStack.length === 0) return;
+            const stateData = state.redoStack.pop();
+            state.undoStack.push(stateData);
+            loadCanvasState(stateData);
+            updateHistoryButtons();
+            syncCanvas();
+        }
+
+        function loadCanvasState(dataUrl) {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, elements.canvas.width, elements. canvas.height);
+                ctx.drawImage(img, 0, 0);
+            };
+            img. src = dataUrl;
+        }
+
+        // Drawing Functions
+        function startDrawing(e) {
+            const rect = elements.canvas.getBoundingClientRect();
+            const scaleX = elements. canvas.width / rect.width;
+            const scaleY = elements.canvas.height / rect. height;
+            const x = (e. clientX - rect. left) * scaleX;
+            const y = (e. clientY - rect. top) * scaleY;
+            
+            state.isDrawing = true;
+            state.lastX = x;
+            state.lastY = y;
+            state.shapeStartX = x;
+            state.shapeStartY = y;
+            
+            if (state.currentTool === 'brush' || state.currentTool === 'eraser') {
+                ctx.beginPath();
+                ctx.arc(x, y, state.brushSize / 2, 0, Math.PI * 2);
+                ctx. fillStyle = state. currentTool === 'eraser' ? 'white' : state.currentColor;
+                ctx.fill();
+                
+                syncStroke({
+                    tool: state.currentTool,
+                    color: state.currentTool === 'eraser' ? 'white' : state. currentColor,
+                    size: state. brushSize,
+                    points: [{ x, y }]
+                });
+            } else if (state.currentTool === 'fill') {
+                floodFill(Math.floor(x), Math.floor(y), state.currentColor);
+                saveState();
+                syncCanvas();
+            }
+            
+            // Copy canvas to temp for shape preview
+            tempCtx.drawImage(elements.canvas, 0, 0);
+        }
+
+        function draw(e) {
+            if (!state. isDrawing) return;
+            
+            const rect = elements. canvas.getBoundingClientRect();
+            const scaleX = elements.canvas.width / rect.width;
+            const scaleY = elements.canvas.height / rect. height;
+            const x = (e. clientX - rect. left) * scaleX;
+            const y = (e. clientY - rect. top) * scaleY;
+            
+            // Sync cursor position
+            syncCursor(x, y);
+            
+            if (state.currentTool === 'brush' || state.currentTool === 'eraser') {
+                ctx.beginPath();
+                ctx. moveTo(state.lastX, state.lastY);
+                ctx.lineTo(x, y);
+                ctx.strokeStyle = state.currentTool === 'eraser' ? 'white' : state.currentColor;
+                ctx.lineWidth = state.brushSize;
+                ctx.stroke();
+                
+                syncStroke({
+                    tool: state.currentTool,
+                    color: state.currentTool === 'eraser' ? 'white' : state. currentColor,
+                    size: state. brushSize,
+                    points: [{ x: state.lastX, y: state.lastY }, { x, y }]
+                });
+                
+                state.lastX = x;
+                state. lastY = y;
+            } else if (['line', 'rect', 'circle'].includes(state.currentTool)) {
+                // Clear and redraw base
+                ctx.clearRect(0, 0, elements.canvas. width, elements.canvas.height);
+                ctx.drawImage(tempCanvas, 0, 0);
+                
+                ctx.strokeStyle = state.currentColor;
+                ctx. lineWidth = state. brushSize;
+                ctx.beginPath();
+                
+                if (state.currentTool === 'line') {
+                    ctx.moveTo(state.shapeStartX, state.shapeStartY);
+                    ctx.lineTo(x, y);
+                } else if (state. currentTool === 'rect') {
+                    ctx.rect(state.shapeStartX, state. shapeStartY, x - state.shapeStartX, y - state.shapeStartY);
+                } else if (state.currentTool === 'circle') {
+                    const radius = Math.sqrt(Math.pow(x - state.shapeStartX, 2) + Math.pow(y - state.shapeStartY, 2));
+                    ctx.arc(state.shapeStartX, state.shapeStartY, radius, 0, Math. PI * 2);
+                }
+                ctx.stroke();
+            }
+        }
+
+        function stopDrawing(e) {
+            if (!state.isDrawing) return;
+            state.isDrawing = false;
+            
+            if (['line', 'rect', 'circle'].includes(state. currentTool)) {
+                const rect = elements.canvas.getBoundingClientRect();
+                const scaleX = elements.canvas.width / rect.width;
+                const scaleY = elements.canvas. height / rect.height;
+                const x = (e.clientX - rect.left) * scaleX;
+                const y = (e.clientY - rect.top) * scaleY;
+                
+                syncShape({
+                    tool: state.currentTool,
+                    color: state.currentColor,
+                    size: state.brushSize,
+                    startX: state.shapeStartX,
+                    startY: state.shapeStartY,
+                    endX: x,
+                    endY: y
+                });
+            }
+            
+            saveState();
+            syncCanvas();
+        }
+
+        // Flood Fill
+        function floodFill(startX, startY, fillColor) {
+            const imageData = ctx.getImageData(0, 0, elements. canvas.width, elements.canvas.height);
+            const data = imageData.data;
+            const width = elements.canvas.width;
+            const height = elements.canvas.height;
+            
+            const startIdx = (startY * width + startX) * 4;
+            const startR = data[startIdx];
+            const startG = data[startIdx + 1];
+            const startB = data[startIdx + 2];
+            
+            // Parse fill color
+            const tempDiv = document.createElement('div');
+            tempDiv.style.color = fillColor;
+            document.body.appendChild(tempDiv);
+            const rgb = getComputedStyle(tempDiv).color. match(/\d+/g). map(Number);
+            document.body.removeChild(tempDiv);
+            
+            if (startR === rgb[0] && startG === rgb[1] && startB === rgb[2]) return;
+            
+            const stack = [[startX, startY]];
+            const visited = new Set();
+            
+            while (stack.length > 0) {
+                const [x, y] = stack.pop();
+                const key = `${x},${y}`;
+                
+                if (visited.has(key)) continue;
+                if (x < 0 || x >= width || y < 0 || y >= height) continue;
+                
+                const idx = (y * width + x) * 4;
+                if (Math.abs(data[idx] - startR) > 10 || 
+                    Math. abs(data[idx + 1] - startG) > 10 || 
+                    Math.abs(data[idx + 2] - startB) > 10) continue;
+                
+                visited.add(key);
+                data[idx] = rgb[0];
+                data[idx + 1] = rgb[1];
+                data[idx + 2] = rgb[2];
+                data[idx + 3] = 255;
+                
+                stack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+            }
+            
+            ctx. putImageData(imageData, 0, 0);
+        }
+
+        // Tool Selection
+        function selectTool(tool) {
+            state.currentTool = tool;
+            document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+                btn.classList.toggle('active', btn. dataset.tool === tool);
+            });
+        }
+
+        // Firebase Sync Functions
+        function syncCursor(x, y) {
+            if (! state.roomCode) return;
+            database.ref(`rooms/${state.roomCode}/cursors/${state.oderId}`).set({
+                x, y,
+                color: state.users[state.oderId]?.color || '#6366f1',
+                name: state.username
+            });
+        }
+
+        function syncStroke(strokeData) {
+            if (!state.roomCode) return;
+            database.ref(`rooms/${state.roomCode}/strokes`).push({
+                ...strokeData,
+                userId: state.oderId,
+                timestamp: Date.now()
+            });
+        }
+
+        function syncShape(shapeData) {
+            if (!state.roomCode) return;
+            database. ref(`rooms/${state.roomCode}/shapes`).push({
+                ...shapeData,
+                oderId: state.oderId,
+                timestamp: Date.now()
+            });
+        }
+
+        function syncCanvas() {
+            if (!state.roomCode) return;
+            const dataUrl = elements.canvas.toDataURL('image/png', 0.5);
+            database.ref(`rooms/${state.roomCode}/canvas`).set({
+                data: dataUrl,
+                timestamp: Date. now(),
+                updatedBy: state.oderId
+            });
+        }
+
+        // Room Functions
+        async function createRoom() {
+            const username = elements.username.value. trim();
+            if (!username) {
+                showToast('Please enter your name', 'error');
+                return;
+            }
+            
+            showLoading();
+            state.username = username;
+            state.oderId = generateId();
+            state.roomCode = generateRoomCode();
+            
+            const userColor = getRandomColor();
+            state.users[state.oderId] = { name: username, color: userColor };
+            
+            try {
+                await database.ref(`rooms/${state.roomCode}`).set({
+                    createdAt: Date. now(),
+                    createdBy: state. oderId
+                });
+                
+                await joinRoomInternal();
+                hideLoading();
+                showToast('Room created successfully!  🎉', 'success');
+            } catch (error) {
+                hideLoading();
+                showToast('Failed to create room', 'error');
+                console.error(error);
+            }
+        }
+
+        async function joinRoom() {
+            const username = elements.username.value.trim();
+            const roomCode = elements. roomCode.value. trim(). toUpperCase();
+            
+            if (!username) {
+                showToast('Please enter your name', 'error');
+                return;
+            }
+            if (!roomCode || roomCode. length !== 6) {
+                showToast('Please enter a valid 6-character room code', 'error');
+                return;
+            }
+            
+            showLoading();
+            state.username = username;
+            state.oderId = generateId();
+            state.roomCode = roomCode;
+            
+            try {
+                const snapshot = await database.ref(`rooms/${roomCode}`).once('value');
+                if (! snapshot.exists()) {
+                    hideLoading();
+                    showToast('Room not found', 'error');
+                    return;
+                }
+                
+                await joinRoomInternal();
+                hideLoading();
+                showToast('Joined room successfully! 🎨', 'success');
+            } catch (error) {
+                hideLoading();
+                showToast('Failed to join room', 'error');
+                console.error(error);
+            }
+        }
+
+        async function joinRoomInternal() {
+            const userColor = getRandomColor();
+            state. users[state.oderId] = { name: state.username, color: userColor };
+            
+            // Add user to room
+            await database.ref(`rooms/${state.roomCode}/users/${state.oderId}`).set({
+                name: state.username,
+                color: userColor,
+                joinedAt: Date. now()
+            });
+            
+            // Set up presence
+            const userRef = database.ref(`rooms/${state.roomCode}/users/${state.oderId}`);
+            userRef.onDisconnect().remove();
+            
+            const cursorRef = database. ref(`rooms/${state.roomCode}/cursors/${state.oderId}`);
+            cursorRef.onDisconnect().remove();
+            
+            // Listen for users
+            database.ref(`rooms/${state.roomCode}/users`).on('value', snapshot => {
+                const users = snapshot.val() || {};
+                state.users = users;
+                updateUsersDisplay();
+            });
+            
+            // Listen for user joined/left
+            database.ref(`rooms/${state.roomCode}/users`).on('child_added', snapshot => {
+                const user = snapshot.val();
+                if (snapshot.key !== state.oderId) {
+                    addSystemMessage(`${user. name} joined the room`);
+                }
+            });
+            
+            database.ref(`rooms/${state.roomCode}/users`). on('child_removed', snapshot => {
+                const user = snapshot.val();
+                addSystemMessage(`${user.name} left the room`);
+                // Remove their cursor
+                const cursorEl = document.querySelector(`[data-cursor-id="${snapshot.key}"]`);
+                if (cursorEl) cursorEl.remove();
+            });
+            
+            // Listen for canvas updates
+            database.ref(`rooms/${state.roomCode}/canvas`).on('value', snapshot => {
+                const canvasData = snapshot. val();
+                if (canvasData && canvasData.updatedBy !== state.oderId) {
+                    loadCanvasState(canvasData. data);
+                }
+            });
+            
+            // Listen for strokes
+            database. ref(`rooms/${state.roomCode}/strokes`).orderByChild('timestamp'). limitToLast(1).on('child_added', snapshot => {
+                const stroke = snapshot.val();
+                if (stroke.userId !== state.oderId) {
+                    drawRemoteStroke(stroke);
+                }
+            });
+            
+            // Listen for shapes
+            database.ref(`rooms/${state.roomCode}/shapes`). orderByChild('timestamp').limitToLast(1).on('child_added', snapshot => {
+                const shape = snapshot.val();
+                if (shape.oderId !== state.oderId) {
+                    drawRemoteShape(shape);
+                }
+            });
+            
+            // Listen for cursors
+            database. ref(`rooms/${state.roomCode}/cursors`).on('value', snapshot => {
+                const cursors = snapshot.val() || {};
+                updateRemoteCursors(cursors);
+            });
+            
+            // Listen for chat
+            database.ref(`rooms/${state.roomCode}/chat`). orderByChild('timestamp'). limitToLast(50).on('child_added', snapshot => {
+                const message = snapshot.val();
+                addChatMessage(message);
+            });
+            
+            // Load existing canvas
+            const canvasSnapshot = await database.ref(`rooms/${state. roomCode}/canvas`).once('value');
+            if (canvasSnapshot.exists()) {
+                loadCanvasState(canvasSnapshot.val(). data);
+            }
+            
+            // Show app
+            elements.loginScreen.style.display = 'none';
+            elements.appContainer.style.display = 'block';
+            elements.displayRoomCode.textContent = state.roomCode;
+            
+            initCanvas();
+        }
+
+        function drawRemoteStroke(stroke) {
+            ctx.strokeStyle = stroke.color;
+            ctx. lineWidth = stroke. size;
+            ctx. lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            if (stroke.points.length === 1) {
+                ctx.beginPath();
+                ctx. arc(stroke.points[0].x, stroke.points[0]. y, stroke.size / 2, 0, Math.PI * 2);
+                ctx.fillStyle = stroke.color;
+                ctx. fill();
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(stroke.points[0].x, stroke.points[0]. y);
+                ctx.lineTo(stroke.points[1]. x, stroke.points[1].y);
+                ctx.stroke();
+            }
+        }
+
+        function drawRemoteShape(shape) {
+            ctx.strokeStyle = shape.color;
+            ctx.lineWidth = shape.size;
+            ctx.beginPath();
+            
+            if (shape. tool === 'line') {
+                ctx. moveTo(shape. startX, shape. startY);
+                ctx.lineTo(shape.endX, shape.endY);
+            } else if (shape.tool === 'rect') {
+                ctx.rect(shape.startX, shape.startY, shape.endX - shape.startX, shape.endY - shape.startY);
+            } else if (shape. tool === 'circle') {
+                const radius = Math.sqrt(Math.pow(shape.endX - shape.startX, 2) + Math.pow(shape. endY - shape. startY, 2));
+                ctx. arc(shape.startX, shape.startY, radius, 0, Math.PI * 2);
+            }
+            ctx.stroke();
+        }
+
+        function updateRemoteCursors(cursors) {
+            // Remove old cursors
+            document.querySelectorAll('. remote-cursor').forEach(el => {
+                if (! cursors[el.dataset.cursorId]) {
+                    el.remove();
+                }
+            });
+            
+            Object.entries(cursors).forEach(([userId, cursor]) => {
+                if (userId === state.oderId) return;
+                
+                let cursorEl = document. querySelector(`[data-cursor-id="${userId}"]`);
+                
+                if (!cursorEl) {
+                    cursorEl = document.createElement('div');
+                    cursorEl.className = 'remote-cursor';
+                    cursorEl.dataset. cursorId = oderId;
+                    cursorEl.innerHTML = `
+                        <div class="cursor-pointer" style="background: ${cursor.color}"></div>
+                        <div class="cursor-name">${cursor.name}</div>
+                    `;
+                    elements.canvasContainer.appendChild(cursorEl);
+                }
+                
+                const rect = elements.canvas.getBoundingClientRect();
+                const scaleX = rect.width / elements. canvas.width;
+                const scaleY = rect.height / elements.canvas.height;
+                
+                cursorEl. style.left = `${cursor.x * scaleX}px`;
+                cursorEl.style.top = `${cursor. y * scaleY}px`;
+            });
+        }
+
+        function updateUsersDisplay() {
+            elements.usersAvatars.innerHTML = '';
+            Object.entries(state. users).forEach(([userId, user]) => {
+                const avatar = document.createElement('div');
+                avatar. className = 'user-avatar';
+                avatar.style.background = user.color;
+                avatar.innerHTML = `
+                    ${user.name. charAt(0).toUpperCase()}
+                    <span class="tooltip">${user.name}${userId === state.oderId ? ' (You)' : ''}</span>
+                `;
+                elements.usersAvatars. appendChild(avatar);
+            });
+        }
+
+        function leaveRoom() {
+            if (confirm('Are you sure you want to leave the room?')) {
+                database.ref(`rooms/${state.roomCode}/users/${state.oderId}`).remove();
+                database.ref(`rooms/${state.roomCode}/cursors/${state. oderId}`).remove();
+                location.reload();
+            }
+        }
+
+        // Chat Functions
+        function sendMessage() {
+            const text = elements.chatInput.value.trim();
+            if (! text) return;
+            
+            database.ref(`rooms/${state.roomCode}/chat`).push({
+                userId: state.oderId,
+                name: state.username,
+                color: state.users[state.oderId]?.color || '#6366f1',
+                text,
+                timestamp: Date.now()
+            });
+            
+            elements.chatInput. value = '';
+        }
+
+        function addChatMessage(message) {
+            const div = document.createElement('div');
+            div.className = 'chat-message';
+            const time = new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            div.innerHTML = `
+                <div class="message-avatar" style="background: ${message.color}">${message.name. charAt(0).toUpperCase()}</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-name">${message.name}${message.userId === state.oderId ?  ' (You)' : ''}</span>
+                        <span class="message-time">${time}</span>
+                    </div>
+                    <div class="message-text">${escapeHtml(message.text)}</div>
+                </div>
+            `;
+            elements.chatMessages.appendChild(div);
+            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+        }
+
+        function addSystemMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'system-message';
+            div.textContent = text;
+            elements.chatMessages.appendChild(div);
+            elements.chatMessages.scrollTop = elements.chat        . message-text {
+            font-size: 0. 875rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .system-message {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .chat-input-wrapper {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        . chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: var(--bg-input);
+            color: var(--text);
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0. 2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0. 5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast. success { border-left: 3px solid var(--success); }
+        .toast.error { border-left: 3px solid var(--danger); }
+        . toast.info { border-left: 3px solid var(--primary); }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 15, 35, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--bg-input);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .chat-panel { display: none; }
+            .toolbar { width: 60px; }
+            .room-info { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="logo">
+                <h1>🎨 ArtSync</h1>
+                <p>Real-time collaborative canvas</p>
+            </div>
+            <div class="input-group">
+                <label for="username">Your Name</label>
+                <input type="text" id="username" placeholder="Enter your display name" maxlength="20">
+            </div>
+            <button class="btn btn-primary" id="createRoomBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+                Create New Room
+            </button>
+            <div class="divider"><span>or join existing</span></div>
+            <div class="input-group">
+                <label for="roomCode">Room Code</label>
+                <input type="text" id="roomCode" placeholder="Enter 6-character room code" maxlength="6" style="text-transform: uppercase;">
+            </div>
+            <button class="btn btn-secondary" id="joinRoomBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+                </svg>
+                Join Room
+            </button>
+        </div>
+    </div>
+    
+    <div class="app-container" id="appContainer">
+        <header class="header">
+            <div class="header-left">
+                <span class="header-logo">🎨 ArtSync</span>
+                <div class="room-info">
+                    <span>Room:</span>
+                    <span class="room-code" id="displayRoomCode">ABC123</span>
+                    <button class="copy-btn" id="copyCodeBtn" title="Copy room code">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="users-avatars" id="usersAvatars"></div>
+                <button class="leave-btn" id="leaveBtn">Leave</button>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="toolbar">
+                <button class="tool-btn active" data-tool="brush" title="Brush">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1. 5-7. 5L2 2l3. 5 14.5L13 18l5-5z"/></svg>
+                </button>
+                <button class="tool-btn" data-tool="eraser" title="Eraser">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20H7L3 16c-. 8-. 8-. 8-2 0-2.8L13. 8 2. 4c. 8-. 8 2-. 8 2.8 0L21 6.8c.8. 8. 8 2 0 2.8L12 18"/></svg>
+                </button>
+                <button class="tool-btn" data-tool="fill" title="Fill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 11l-8-8-8. 6 8.6a2 2 0 0 0 0 2.8l5.2 5.2c.8.8 2 .8 2. 8 0L19 11z"/><path d="M5 2l5 5"/><path d="M2 13h15"/><path d="M22 20. 7c0 .8-.7 1.3-1.5 1.3s-1.5-. 5-1.5-1.3c0-1 1.5-2.7 1.5-2.7s1.5 1.7 1.5 2.7z"/></svg>
+                </button>
+                <div class="tool-divider"></div>
+                <button class="tool-btn" data-tool="line" title="Line">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="19" x2="19" y2="5"/></svg>
+                </button>
+                <button class="tool-btn" data-tool="rect" title="Rectangle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                </button>
+                <button class="tool-btn" data-tool="circle" title="Circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+                </button>
+                <div class="tool-divider"></div>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="colorPicker" value="#6366f1">
+                    <div class="color-preview" id="colorPreview" style="background:#6366f1;"></div>
+                </div>
+                <div class="color-palette" id="colorPalette"></div>
+                <div class="brush-size-wrapper">
+                    <div class="brush-size-display"><span id="brushSizeValue">5</span>px</div>
+                    <input type="range" class="brush-slider" id="brushSlider" min="1" max="50" value="5">
+                </div>
+                <div class="history-controls">
+                    <button class="history-btn" id="undoBtn" title="Undo" disabled>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7. 7L3 7"/></svg>
+                    </button>
+                    <button class="history-btn" id="redoBtn" title="Redo" disabled>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M21 13a9 9 0 1 1-3-7. 7L21 7"/></svg>
+                    </button>
+                </div>
+                <button class="tool-btn" id="downloadBtn" title="Download" style="margin-top:auto;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </button>
+                <button class="tool-btn" id="clearBtn" title="Clear" style="color:var(--danger);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+            </div>
+            
+            <div class="canvas-area" id="canvasArea">
+                <div class="canvas-container" id="canvasContainer">
+                    <canvas id="canvas" width="1200" height="800"></canvas>
+                </div>
+            </div>
+            
+            <div class="chat-panel">
+                <div class="chat-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Room Chat
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input-wrapper">
+                    <div class="chat-input-container">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
+                        <button class="send-btn" id="sendBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    <div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner"></div></div>
+
+    <script src="https://www.gstatic. com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat. js"></script>
+    
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAE75AlF1oDc_02lue7A7rtZ74x0y3eQLI",
+            authDomain: "retrochat-795b4.firebaseapp. com",
+            databaseURL: "https://retrochat-795b4-default-rtdb. asia-southeast1.firebasedatabase.app",
+            projectId: "retrochat-795b4",
+            storageBucket: "retrochat-795b4. firebasestorage.app",
+            messagingSenderId: "588960494570",
+            appId: "1:588960494570:web:702a85c54f386e626fb893",
+            measurementId: "G-PLF4ETNC5Z"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // App State
+        const state = {
+            username: '',
+            oderId: '',
+            roomCode: '',
+            currentTool: 'brush',
+            currentColor: '#6366f1',
+            brushSize: 5,
+            isDrawing: false,
+            lastX: 0,
+            lastY: 0,
+            shapeStartX: 0,
+            shapeStartY: 0,
+            users: {},
+            undoStack: [],
+            redoStack: [],
+            maxHistory: 30
+        };
+
+        const colors = [
+            '#000000', '#ffffff', '#ef4444', '#f97316',
+            '#eab308', '#22c55e', '#14b8a6', '#3b82f6',
+            '#6366f1', '#8b5cf6', '#d946ef', '#ec4899',
+            '#78716c', '#64748b', '#0ea5e9', '#84cc16'
+        ];
+
+        // DOM Elements
+        const $ = id => document.getElementById(id);
+        const canvas = $('canvas');
+        const ctx = canvas.getContext('2d');
+        let tempCanvas, tempCtx;
+
+        // Utility Functions
+        const generateId = () => Math.random().toString(36).substr(2, 9);
+        const generateRoomCode = () => {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            return Array. from({length: 6}, () => chars[Math.floor(Math. random() * chars. length)]).join('');
+        };
+        const getRandomColor = () => `hsl(${Math. floor(Math.random() * 360)}, 70%, 50%)`;
+        const escapeHtml = text => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        };
+
+        const showLoading = () => $('loadingOverlay').style.display = 'flex';
+        const hideLoading = () => $('loadingOverlay').style.display = 'none';
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            $('toastContainer'). appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Color Palette
+        function initColorPalette() {
+            const palette = $('colorPalette');
+            colors.forEach(color => {
+                const div = document.createElement('div');
+                div.className = 'palette-color';
+                div. style.background = color;
+                div.onclick = () => setColor(color);
+                palette.appendChild(div);
+            });
+        }
+
+        function setColor(color) {
+            state.currentColor = color;
+            $('colorPicker').value = color;
+            $('colorPreview').style.background = color;
+        }
+
+        // Canvas Functions
+        function initCanvas() {
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx. fillStyle = 'white';
+            ctx. fillRect(0, 0, canvas.width, canvas.height);
+            
+            tempCanvas = document.createElement('canvas');
+            tempCanvas. width = canvas.width;
+            tempCanvas.height = canvas. height;
+            tempCtx = tempCanvas.getContext('2d');
+            
+            saveState();
+        }
+
+        function saveState() {
+            if (state.undoStack.length >= state.maxHistory) state.undoStack. shift();
+            state.undoStack. push(canvas.toDataURL());
+            state.redoStack = [];
+            updateHistoryButtons();
+        }
+
+        function updateHistoryButtons() {
+            $('undoBtn').disabled = state.undoStack.length <= 1;
+            $('redoBtn').disabled = state. redoStack.length === 0;
+        }
+
+        function loadCanvasState(dataUrl) {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+            };
+            img. src = dataUrl;
+        }
+
+        function undo() {
+            if (state.undoStack.length <= 1) return;
+            state.redoStack.push(state.undoStack.pop());
+            loadCanvasState(state.undoStack[state.undoStack.length - 1]);
+            updateHistoryButtons();
+            syncCanvas();
+        }
+
+        function redo() {
+            if (state.redoStack.length === 0) return;
+            const stateData = state.redoStack.pop();
+            state.undoStack.push(stateData);
+            loadCanvasState(stateData);
+            updateHistoryButtons();
+            syncCanvas();
+        }
+
+        function getCanvasCoords(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas. width / rect.width;
+            const scaleY = canvas. height / rect.height;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        function startDrawing(e) {
+            e.preventDefault();
+            const {x, y} = getCanvasCoords(e);
+            
+            state.isDrawing = true;
+            state.lastX = x;
+            state.lastY = y;
+            state.shapeStartX = x;
+            state.shapeStartY = y;
+            
+            if (state.currentTool === 'brush' || state.currentTool === 'eraser') {
+                ctx.beginPath();
+                ctx.arc(x, y, state.brushSize / 2, 0, Math.PI * 2);
+                ctx. fillStyle = state. currentTool === 'eraser' ? 'white' : state.currentColor;
+                ctx.fill();
+                syncStroke({ tool: state.currentTool, color: ctx.fillStyle, size: state.brushSize, points: [{x, y}] });
+            } else if (state.currentTool === 'fill') {
+                floodFill(Math.floor(x), Math.floor(y), state.currentColor);
+                saveState();
+                syncCanvas();
+            }
+            
+            tempCtx.clearRect(0, 0, tempCanvas. width, tempCanvas. height);
+            tempCtx.drawImage(canvas, 0, 0);
+        }
+
+        function draw(e) {
+            if (!state. isDrawing) return;
+            e.preventDefault();
+            const {x, y} = getCanvasCoords(e);
+            
+            syncCursor(x, y);
+            
+            if (state.currentTool === 'brush' || state. currentTool === 'eraser') {
+                ctx.beginPath();
+                ctx.moveTo(state.lastX, state.lastY);
+                ctx.lineTo(x, y);
+                ctx.strokeStyle = state.currentTool === 'eraser' ? 'white' : state.currentColor;
+                ctx.lineWidth = state.brushSize;
+                ctx.stroke();
+                
+                syncStroke({ tool: state.currentTool, color: ctx. strokeStyle, size: state.brushSize, points: [{x: state.lastX, y: state.lastY}, {x, y}] });
+                
+                state.lastX = x;
+                state.lastY = y;
+            } else if (['line', 'rect', 'circle'].includes(state.currentTool)) {
+                ctx.clearRect(0, 0, canvas.width, canvas. height);
+                ctx.drawImage(tempCanvas, 0, 0);
+                
+                ctx.strokeStyle = state.currentColor;
+                ctx. lineWidth = state. brushSize;
+                ctx.beginPath();
+                
+                if (state.currentTool === 'line') {
+                    ctx.moveTo(state.shapeStartX, state.shapeStartY);
+                    ctx.lineTo(x, y);
+                } else if (state. currentTool === 'rect') {
+                    ctx.rect(state.shapeStartX, state. shapeStartY, x - state.shapeStartX, y - state.shapeStartY);
+                } else if (state.currentTool === 'circle') {
+                    const radius = Math.hypot(x - state.shapeStartX, y - state. shapeStartY);
+                    ctx. arc(state.shapeStartX, state.shapeStartY, radius, 0, Math.PI * 2);
+                }
+                ctx.stroke();
+            }
+        }
+
+        function stopDrawing(e) {
+            if (!state.isDrawing) return;
+            state.isDrawing = false;
+            
+            if (['line', 'rect', 'circle'].includes(state. currentTool)) {
+                const {x, y} = e.changedTouches ?  getCanvasCoords({touches: e.changedTouches}) : getCanvasCoords(e);
+                syncShape({ tool: state. currentTool, color: state.currentColor, size: state.brushSize, startX: state.shapeStartX, startY: state.shapeStartY, endX: x, endY: y });
+            }
+            
+            saveState();
+            syncCanvas();
+        }
+
+        // Flood Fill Algorithm
+        function floodFill(startX, startY, fillColor) {
+            const imageData = ctx.getImageData(0, 0, canvas. width, canvas.height);
+            const data = imageData.data;
+            const width = canvas.width;
+            const height = canvas. height;
+            
+            const startIdx = (startY * width + startX) * 4;
+            const startR = data[startIdx], startG = data[startIdx + 1], startB = data[startIdx + 2];
+            
+            const temp = document.createElement('div');
+            temp. style.color = fillColor;
+            document.body.appendChild(temp);
+            const rgb = getComputedStyle(temp).color. match(/\d+/g). map(Number);
+            document.body.removeChild(temp);
+            
+            if (startR === rgb[0] && startG === rgb[1] && startB === rgb[2]) return;
+            
+            const stack = [[startX, startY]];
+            const visited = new Set();
+            
+            while (stack.length) {
+                const [x, y] = stack.pop();
+                const key = `${x},${y}`;
+                
+                if (visited.has(key) || x < 0 || x >= width || y < 0 || y >= height) continue;
+                
+                const idx = (y * width + x) * 4;
+                if (Math.abs(data[idx] - startR) > 30 || Math.abs(data[idx+1] - startG) > 30 || Math.abs(data[idx+2] - startB) > 30) continue;
+                
+                visited.add(key);
+                data[idx] = rgb[0];
+                data[idx+1] = rgb[1];
+                data[idx+2] = rgb[2];
+                data[idx+3] = 255;
+                
+                stack.push([x+1, y], [x-1, y], [x, y+1], [x, y-1]);
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        // Firebase Sync
+        function syncCursor(x, y) {
+            if (! state.roomCode) return;
+            database.ref(`rooms/${state.roomCode}/cursors/${state.oderId}`).set({
+                x, y, color: state.users[state.oderId]?. color || '#6366f1', name: state.username
+            });
+        }
+
+        function syncStroke(strokeData) {
+            if (!state.roomCode) return;
+            database.ref(`rooms/${state.roomCode}/strokes`).push({ ... strokeData, oderId: state.oderId, timestamp: Date.now() });
+        }
+
+        function syncShape(shapeData) {
+            if (!state.roomCode) return;
+            database. ref(`rooms/${state.roomCode}/shapes`).push({ ... shapeData, oderId: state.oderId, timestamp: Date.now() });
+        }
+
+        function syncCanvas() {
+            if (!state. roomCode) return;
+            const dataUrl = canvas.toDataURL('image/png', 0.5);
+            database.ref(`rooms/${state. roomCode}/canvas`).set({ data: dataUrl, timestamp: Date.now(), updatedBy: state.oderId });
+        }
+
+        function drawRemoteStroke(stroke) {
+            ctx.strokeStyle = stroke.color;
+            ctx. fillStyle = stroke.color;
+            ctx. lineWidth = stroke. size;
+            ctx. lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            if (stroke.points.length === 1) {
+                ctx.beginPath();
+                ctx.arc(stroke.points[0].x, stroke.points[0]. y, stroke.size / 2, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+                ctx.lineTo(stroke.points[1]. x, stroke.points[1].y);
+                ctx.stroke();
+            }
+        }
+
+        function drawRemoteShape(shape) {
+            ctx.strokeStyle = shape.color;
+            ctx.lineWidth = shape.size;
+            ctx. beginPath();
+            
+            if (shape. tool === 'line') {
+                ctx. moveTo(shape. startX, shape.startY);
+                ctx.lineTo(shape.endX, shape.endY);
+            } else if (shape.tool === 'rect') {
+                ctx.rect(shape.startX, shape.startY, shape.endX - shape.startX, shape.endY - shape.startY);
+            } else if (shape.tool === 'circle') {
+                const radius = Math.hypot(shape.endX - shape.startX, shape.endY - shape.startY);
+                ctx.arc(shape. startX, shape. startY, radius, 0, Math. PI * 2);
+            }
+            ctx.stroke();
+        }
+
+        function updateRemoteCursors(cursors) {
+            document.querySelectorAll('.remote-cursor'). forEach(el => {
+                if (! cursors[el. dataset.oderId]) el.remove();
+            });
+            
+            Object.entries(cursors).forEach(([oderId, cursor]) => {
+                if (oderId === state.oderId) return;
+                
+                let cursorEl = document.querySelector(`[data-user-id="${oderId}"]`);
+                if (!cursorEl) {
+                    cursorEl = document.createElement('div');
+                    cursorEl.className = 'remote-cursor';
+                    cursorEl.dataset.oderId = oderId;
+                    cursorEl.innerHTML = `<div class="cursor-pointer" style="background:${cursor.color}"></div><div class="cursor-name">${cursor.name}</div>`;
+                    $('canvasContainer').appendChild(cursorEl);
+                }
+                
+                const rect = canvas.getBoundingClientRect();
+                cursorEl.style. left = `${cursor.x * rect.width / canvas.width}px`;
+                cursorEl.style.top = `${cursor. y * rect.height / canvas.height}px`;
+            });
+        }
+
+        function updateUsersDisplay() {
+            const container = $('usersAvatars');
+            container.innerHTML = '';
+            Object.entries(state. users).forEach(([oderId, user]) => {
+                const avatar = document.createElement('div');
+                avatar.className = 'user-avatar';
+                avatar.style.background = user.color;
+                avatar.innerHTML = `${user.name. charAt(0).toUpperCase()}<span class="tooltip">${user.name}${oderId === state.oderId ?  ' (You)' : ''}</span>`;
+                container. appendChild(avatar);
+            });
+        }
+
+        // Room Functions
+        async function createRoom() {
+            const username = $('username').value.trim();
+            if (!username) return showToast('Please enter your name', 'error');
+            
+            showLoading();
+            state.username = username;
+            state.oderId = generateId();
+            state.roomCode = generateRoomCode();
+            
+            try {
+                await database. ref(`rooms/${state.roomCode}`). set({ createdAt: Date. now(), createdBy: state. oderId });
+                await joinRoomInternal();
+                hideLoading();
+                showToast('Room created!  🎉', 'success');
+            } catch (err) {
+                hideLoading();
+                showToast('Failed to create room', 'error');
+            }
+        }
+
+        async function joinRoom() {
+            const username = $('username').value.trim();
+            const roomCode = $('roomCode').value. trim(). toUpperCase();
+            
+            if (!username) return showToast('Please enter your name', 'error');
+            if (!roomCode || roomCode.length !== 6) return showToast('Enter valid room code', 'error');
+            
+            showLoading();
+            state.username = username;
+            state.oderId = generateId();
+            state.roomCode = roomCode;
+            
+            try {
+                const snapshot = await database.ref(`rooms/${roomCode}`).once('value');
+                if (! snapshot.exists()) {
+                    hideLoading();
+                    return showToast('Room not found', 'error');
+                }
+                await joinRoomInternal();
+                hideLoading();
+                showToast('Joined room! 🎨', 'success');
+            } catch (err) {
+                hideLoading();
+                showToast('Failed to join room', 'error');
+            }
+        }
+
+        async function joinRoomInternal() {
+            const userColor = getRandomColor();
+            state.users[state. oderId] = { name: state.username, color: userColor };
+            
+            const userRef = database.ref(`rooms/${state.roomCode}/users/${state. oderId}`);
+            await userRef. set({ name: state.username, color: userColor, joinedAt: Date. now() });
+            userRef.onDisconnect().remove();
+            database.ref(`rooms/${state.roomCode}/cursors/${state.oderId}`).onDisconnect().remove();
+            
+            // Listeners
+            database.ref(`rooms/${state.roomCode}/users`).on('value', snapshot => {
+                state.users = snapshot.val() || {};
+                updateUsersDisplay();
+            });
+            
+            database.ref(`rooms/${state.roomCode}/users`).on('child_added', snapshot => {
+                if (snapshot.key !== state.oderId) addSystemMessage(`${snapshot.val(). name} joined`);
+            });
+            
+            database. ref(`rooms/${state.roomCode}/users`).on('child_removed', snapshot => {
+                addSystemMessage(`${snapshot.val().name} left`);
+                document.querySelector(`[data-user-id="${snapshot. key}"]`)?.remove();
+            });
+            
+            database.ref(`rooms/${state.roomCode}/canvas`).on('value', snapshot => {
+                const data = snapshot.val();
+                if (data && data.updatedBy !== state.oderId) loadCanvasState(data.data);
+            });
+            
+            database.ref(`rooms/${state.roomCode}/strokes`).orderByChild('timestamp'). limitToLast(1).on('child_added', snapshot => {
+                const stroke = snapshot.val();
+                if (stroke.oderId !== state.oderId) drawRemoteStroke(stroke);
+            });
+            
+            database.ref(`rooms/${state.roomCode}/shapes`).orderByChild('timestamp').limitToLast(1).on('child_added', snapshot => {
+                const shape = snapshot.val();
+                if (shape. oderId !== state. oderId) drawRemoteShape(shape);
+            });
+            
+            database.ref(`rooms/${state.roomCode}/cursors`).on('value', snapshot => {
+                updateRemoteCursors(snapshot.val() || {});
+            });
+            
+            database.ref(`rooms/${state.roomCode}/chat`).orderByChild('timestamp').limitToLast(50).on('child_added', snapshot => {
+                addChatMessage(snapshot. val());
+            });
+            
+            const canvasSnapshot = await database.ref(`rooms/${state. roomCode}/canvas`).once('value');
+            if (canvasSnapshot.exists()) loadCanvasState(canvasSnapshot.val(). data);
+            
+            $('loginScreen').style.display = 'none';
+            $('appContainer').style.display = 'block';
+            $('displayRoomCode').textContent = state.roomCode;
+            
+            initCanvas();
+        }
+
+        function leaveRoom() {
+            if (confirm('Leave room?')) {
+                database.ref(`rooms/${state.roomCode}/users/${state.oderId}`).remove();
+                database.ref(`rooms/${state. roomCode}/cursors/${state.oderId}`).remove();
+                location.reload();
+            }
+        }
+
+        // Chat Functions
+        function sendMessage() {
+            const text = $('chatInput').value.trim();
+            if (! text) return;
+            
+            database.ref(`rooms/${state.roomCode}/chat`).push({
+                oderId: state.oderId,
+                name: state.username,
+                color: state.users[state.oderId]?.color || '#6366f1',
+                text,
+                timestamp: Date.now()
+            });
+            
+            $('chatInput'). value = '';
+        }
+
+        function addChatMessage(msg) {
+            const div = document.createElement('div');
+            div.className = 'chat-message';
+            const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+            div.innerHTML = `
+                <div class="message-avatar" style="background:${msg.color}">${msg.name. charAt(0).toUpperCase()}</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-name">${escapeHtml(msg.name)}${msg.oderId === state.oderId ? ' (You)' : ''}</span>
+                        <span class="message-time">${time}</span>
+                    </div>
+                    <div class="message-text">${escapeHtml(msg.text)}</div>
+                </div>
+            `;
+            $('chatMessages').appendChild(div);
+            $('chatMessages').scrollTop = $('chatMessages'). scrollHeight;
+        }
+
+        function addSystemMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'system-message';
+            div.textContent = text;
+            $('chatMessages').appendChild(div);
+            $('chatMessages').scrollTop = $('chatMessages'). scrollHeight;
+        }
+
+        // Event Listeners
+        function initEventListeners() {
+            // Buttons
+            $('createRoomBtn').onclick = createRoom;
+            $('joinRoomBtn'). onclick = joinRoom;
+            $('leaveBtn').onclick = leaveRoom;
+            $('copyCodeBtn').onclick = () => {
+                navigator.clipboard.writeText(state.roomCode);
+                showToast('Room code copied! ', 'success');
+            };
+            $('undoBtn').onclick = undo;
+            $('redoBtn').onclick = redo;
+            $('downloadBtn').onclick = () => {
+                const link = document.createElement('a');
+                link.download = `artsync-${state.roomCode}-${Date.now()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+                showToast('Canvas downloaded!', 'success');
+            };
+            $('clearBtn').onclick = () => {
+                if (confirm('Clear entire canvas?')) {
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas. height);
+                    saveState();
+                    syncCanvas();
+                    showToast('Canvas cleared', 'info');
+                }
+            };
+            
+            // Tools
+            document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
+                btn. onclick = () => {
+                    document.querySelectorAll('.tool-btn[data-tool]'). forEach(b => b.classList. remove('active'));
+                    btn.classList.add('active');
+                    state.currentTool = btn.dataset.tool;
+                };
+            });
+            
+            // Color
+            $('colorPicker').oninput = e => setColor(e.target.value);
+            $('colorPreview').onclick = () => $('colorPicker'). click();
+            
+            // Brush Size
+            $('brushSlider').oninput = e => {
+                state.brushSize = parseInt(e.target. value);
+                $('brushSizeValue').textContent = state.brushSize;
+            };
+            
+                        // Canvas Events
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseleave', stopDrawing);
+            
+            // Touch support
+            canvas.addEventListener('touchstart', startDrawing, {passive: false});
+            canvas.addEventListener('touchmove', draw, {passive: false});
+            canvas. addEventListener('touchend', stopDrawing);
+            canvas.addEventListener('touchcancel', stopDrawing);
+            
+            // Chat
+            $('sendBtn').onclick = sendMessage;
+            $('chatInput'). onkeypress = e => {
+                if (e.key === 'Enter') sendMessage();
+            };
+            
+            // Enter key for login
+            $('username').onkeypress = e => {
+                if (e. key === 'Enter') {
+                    if ($('roomCode').value. trim()) {
+                        joinRoom();
+                    } else {
+                        createRoom();
+                    }
+                }
+            };
+            $('roomCode').onkeypress = e => {
+                if (e.key === 'Enter') joinRoom();
+            };
+            
+            // Keyboard shortcuts
+            document. addEventListener('keydown', e => {
+                if (! $('appContainer').style.display || $('appContainer').style.display === 'none') return;
+                if (document.activeElement === $('chatInput')) return;
+                
+                if (e.ctrlKey || e.metaKey) {
+                    if (e.key === 'z') {
+                        e. preventDefault();
+                        if (e.shiftKey) redo();
+                        else undo();
+                    } else if (e. key === 'y') {
+                        e.preventDefault();
+                        redo();
+                    } else if (e. key === 's') {
+                        e.preventDefault();
+                        $('downloadBtn').click();
+                    }
+                } else {
+                    switch(e.key. toLowerCase()) {
+                        case 'b': document.querySelector('[data-tool="brush"]').click(); break;
+                        case 'e': document.querySelector('[data-tool="eraser"]').click(); break;
+                        case 'g': document.querySelector('[data-tool="fill"]').click(); break;
+                        case 'l': document.querySelector('[data-tool="line"]').click(); break;
+                        case 'r': document.querySelector('[data-tool="rect"]').click(); break;
+                        case 'c': document.querySelector('[data-tool="circle"]').click(); break;
+                        case '[': 
+                            state.brushSize = Math.max(1, state. brushSize - 5);
+                            $('brushSlider').value = state.brushSize;
+                            $('brushSizeValue').textContent = state.brushSize;
+                            break;
+                        case ']': 
+                            state. brushSize = Math. min(50, state.brushSize + 5);
+                            $('brushSlider').value = state. brushSize;
+                            $('brushSizeValue').textContent = state.brushSize;
+                            break;
+                    }
+                }
+            });
+            
+            // Window resize - adjust canvas display
+            window.addEventListener('resize', () => {
+                const container = $('canvasArea');
+                const maxWidth = container.clientWidth - 40;
+                const maxHeight = container.clientHeight - 40;
+                const scale = Math.min(maxWidth / canvas.width, maxHeight / canvas.height, 1);
+                canvas.style.width = (canvas.width * scale) + 'px';
+                canvas. style.height = (canvas.height * scale) + 'px';
+            });
+            
+            // Trigger initial resize
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+        }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            initColorPalette();
+            initEventListeners();
+            
+            // Focus username input
+            $('username').focus();
+        });
     </script>
 </body>
 </html>
