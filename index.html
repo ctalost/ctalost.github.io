@@ -355,147 +355,121 @@
         }
         .app-container.active { display: block; }
 
-        /* Sidebar */
-        .sidebar {
+        /* Navigation Rail (Floating Dock) */
+        .nav-rail {
             position: fixed;
-            left: 0;
-            top: 0;
-            width: 260px;
-            height: 100vh;
-            background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border-right: 1px solid var(--border);
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
-            z-index: 100;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-header {
-            padding: 24px 20px;
-            display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 24px;
+            z-index: 1000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .sidebar-logo-icon {
-            width: 32px;
-            height: 32px;
+        .nav-logo {
+            width: 48px;
+            height: 48px;
             background: var(--gradient-primary);
-            border-radius: 8px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 24px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 20px rgba(94, 92, 230, 0.4);
         }
 
-        .sidebar-logo {
-            font-weight: 700;
-            font-size: 18px;
-            letter-spacing: -0.5px;
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            align-items: center;
         }
 
-        .sidebar-nav {
-            flex: 1;
-            padding: 0 12px;
-            overflow-y: auto;
-        }
-
-        .nav-section { margin-bottom: 24px; }
-
-        .nav-section-title {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            padding: 0 12px;
-        }
-
-        .nav-item {
+        .nav-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            border-radius: 10px;
+            justify-content: center;
             color: var(--text-secondary);
+            transition: all 0.3s;
+            position: relative;
             cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 2px;
         }
 
-        .nav-item:hover {
-            background: var(--bg-glass-hover);
+        .nav-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 1.5px;
+        }
+
+        .nav-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
             color: white;
+            transform: scale(1.05);
         }
 
-        .nav-item.active {
-            background: var(--bg-glass-hover);
+        .nav-icon.active {
+            background: white;
+            color: black;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-tooltip {
+            position: absolute;
+            left: 60px;
+            background: rgba(30, 30, 30, 0.9);
             color: white;
-        }
-        .nav-item.active svg { color: var(--primary); }
-
-        .nav-item svg {
-            width: 20px;
-            height: 20px;
-            opacity: 0.7;
-            transition: all 0.2s;
-        }
-        .nav-item:hover svg, .nav-item.active svg { opacity: 1; }
-
-        .nav-badge {
-            margin-left: auto;
-            background: var(--red);
-            color: white;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 12px;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .sidebar-footer {
-            padding: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .user-profile:hover { background: var(--bg-glass-hover); }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--gradient-silver);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
             font-weight: 600;
-            font-size: 14px;
-            color: white;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-10px);
+            transition: all 0.2s;
+            white-space: nowrap;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .user-info { flex: 1; overflow: hidden; }
-        .user-name { font-size: 14px; font-weight: 600; }
-        .user-status { font-size: 12px; color: var(--text-tertiary); }
+        .nav-icon:hover .nav-tooltip {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
-        /* Main Content */
-        .main-content {
-            margin-left: 260px;
-            padding: 40px;
-            max-width: 1400px;
+        .user-nav {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Main Stage */
+        .main-stage {
+            margin-left: 140px;
+            margin-right: 40px;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            min-height: 100vh;
+            max-width: 1600px;
         }
 
         .page { display: none; animation: fadeUp 0.4s ease-out; }
@@ -816,28 +790,309 @@
             text-align: center;
         }
 
-        /* TTT */
+        /* TTT Redesign */
         .ttt-board {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            max-width: 320px;
+            gap: 16px;
+            max-width: 360px;
             margin: 0 auto;
         }
         .ttt-cell {
             aspect-ratio: 1;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .ttt-cell:hover {
+            background: rgba(255,255,255,0.08);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+        }
+        .ttt-cell svg {
+            width: 60%;
+            height: 60%;
+            stroke-width: 2.5px;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .ttt-cell.active svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .ttt-cell.x svg { stroke: var(--blue); filter: drop-shadow(0 0 8px rgba(10, 132, 255, 0.6)); }
+        .ttt-cell.o svg { stroke: var(--red); filter: drop-shadow(0 0 8px rgba(255, 69, 58, 0.6)); }
+
+        /* Memory Redesign */
+        .memory-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            max-width: 480px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+        .memory-card {
+            aspect-ratio: 1;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+            cursor: pointer;
+        }
+        .memory-card:hover { transform: scale(1.05); }
+        .memory-card.flipped { transform: rotateY(180deg) scale(1.05); }
+
+        .memory-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
-            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .memory-front {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+        }
+
+        .memory-back {
+            background: rgba(30,30,30,0.9);
+            transform: rotateY(180deg);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(94, 92, 230, 0.2);
+        }
+        .memory-back svg {
+            width: 50%;
+            height: 50%;
+            stroke: white;
+            stroke-width: 2px;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+        }
+
+        /* Snake Redesign */
+        .snake-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        #snake-canvas {
+            background: rgba(10, 10, 12, 0.8);
+            border-radius: 24px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .snake-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 64px);
+            gap: 12px;
+            margin-top: 32px;
+            justify-content: center;
+        }
+        .snake-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.2s;
         }
-        .ttt-cell:hover { background: rgba(255,255,255,0.1); }
-        .ttt-cell.x { color: var(--blue); }
-        .ttt-cell.o { color: var(--red); }
+        .snake-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+        }
+        .snake-btn:active { transform: scale(0.95); }
+
+        .snake-btn:nth-child(1) { grid-column: 2; }
+        .snake-btn:nth-child(2) { grid-column: 1; }
+        .snake-btn:nth-child(3) { grid-column: 2; }
+        .snake-btn:nth-child(4) { grid-column: 3; }
+
+        /* RPS Redesign */
+        .rps-choice {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            transition: all 0.4s;
+            position: relative;
+        }
+        .rps-choice::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+            filter: blur(10px);
+        }
+        .rps-choice.winner {
+            border-color: transparent;
+            transform: scale(1.1);
+        }
+        .rps-choice.winner::before { opacity: 0.6; }
+
+        .rps-choice svg {
+            width: 64px;
+            height: 64px;
+            stroke-width: 1.5px;
+            color: var(--text-secondary);
+        }
+        .rps-choice.winner svg { color: white; }
+
+        .rps-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .rps-btn:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .rps-btn svg { width: 32px; height: 32px; stroke-width: 1.5px; }
+
+        /* Quiz Redesign */
+        .quiz-container {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .quiz-question {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            text-align: center;
+            line-height: 1.3;
+            min-height: 60px;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .quiz-option {
+            padding: 18px 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .quiz-option:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateX(4px);
+        }
+        .quiz-option.correct {
+            background: rgba(48, 209, 88, 0.2);
+            border-color: var(--green);
+            color: var(--green);
+        }
+        .quiz-option.wrong {
+            background: rgba(255, 69, 58, 0.2);
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .quiz-progress {
+            display: flex;
+            gap: 6px;
+            margin-top: 40px;
+            justify-content: center;
+        }
+        .quiz-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        .quiz-dot.active { width: 24px; background: white; }
+        .quiz-dot.correct { background: var(--green); }
+        .quiz-dot.wrong { background: var(--red); }
+
+        /* Reaction Redesign */
+        .reaction-container {
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .reaction-box {
+            width: 100%;
+            height: 100%;
+            border-radius: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .reaction-box[data-state="waiting"] {
+            background: rgba(255, 69, 58, 0.1);
+            border-color: rgba(255, 69, 58, 0.3);
+            color: var(--red);
+        }
+        .reaction-box[data-state="ready"] {
+            background: rgba(48, 209, 88, 0.2);
+            border-color: var(--green);
+            color: var(--green);
+            box-shadow: 0 0 50px rgba(48, 209, 88, 0.2);
+            transform: scale(1.02);
+        }
+
+        .reaction-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
+        }
 
         /* Modals */
         .modal-overlay {
@@ -869,30 +1124,39 @@
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 24px; }
         .modal-title { font-size: 20px; font-weight: 700; }
 
-        /* Mobile */
-        .menu-toggle {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 200;
-            width: 44px;
-            height: 44px;
-            background: rgba(20,20,20,0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: white;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
+        /* Responsive */
         @media (max-width: 1024px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 20px; padding-top: 80px; }
-            .menu-toggle { display: flex; }
+            .nav-rail {
+                width: 100%;
+                height: 70px;
+                bottom: 24px;
+                top: auto;
+                left: 0;
+                right: 0;
+                transform: none;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0 20px;
+                border-radius: 20px;
+                max-width: 90%;
+                margin: 0 auto;
+            }
+
+            .nav-rail .nav-logo, .nav-rail .user-nav, .nav-rail .nav-tooltip {
+                display: none;
+            }
+
+            .nav-items {
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            .main-stage {
+                margin: 0;
+                padding: 20px;
+                padding-bottom: 120px;
+            }
+
             .chat-container { grid-template-columns: 1fr; }
             .chat-sidebar { display: none; }
         }
@@ -969,120 +1233,48 @@
 
     <!-- Main App -->
     <div class="app-container" id="appContainer">
-        <!-- Mobile Menu Toggle -->
-        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
 
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo-icon">🎮</div>
-                <span class="sidebar-logo">RetroChat</span>
-            </div>
+        <!-- Navigation Rail -->
+        <nav class="nav-rail">
+            <div class="nav-logo">🎮</div>
 
-            <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <div class="nav-section-title">Menu</div>
-                    <div class="nav-item active" onclick="showPage('dashboard')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
-                            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
-                            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
-                            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
-                        </svg>
-                        <span>Dashboard</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('chat')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                        <span>Global Chat</span>
-                        <span class="nav-badge" id="chatBadge" style="display: none;">0</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('rooms')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                        <span>Private Rooms</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('leaderboard')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                            <path d="M4 22h16"></path>
-                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
-                        </svg>
-                        <span>Leaderboard</span>
-                    </div>
+            <div class="nav-items">
+                <div class="nav-icon active" onclick="showPage('dashboard')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+                    <div class="nav-tooltip">Dashboard</div>
                 </div>
 
-                <div class="nav-section">
-                    <div class="nav-section-title">Games</div>
-                    <div class="nav-item" onclick="showPage('games')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <line x1="6" y1="12" x2="10" y2="12"></line>
-                            <line x1="8" y1="10" x2="8" y2="14"></line>
-                            <line x1="15" y1="13" x2="15.01" y2="13"></line>
-                            <line x1="18" y1="11" x2="18.01" y2="11"></line>
-                            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
-                        </svg>
-                        <span>All Games</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('ttt')">
-                        <span style="margin-left: 2px; margin-right: 12px; font-size: 16px;">❌</span>
-                        <span>Tic Tac Toe</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('memory')">
-                        <span style="margin-left: 2px; margin-right: 12px; font-size: 16px;">🧠</span>
-                        <span>Memory Game</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('snake')">
-                        <span style="margin-left: 2px; margin-right: 12px; font-size: 16px;">🐍</span>
-                        <span>Snake</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('quiz')">
-                        <span style="margin-left: 2px; margin-right: 12px; font-size: 16px;">❓</span>
-                        <span>Quiz</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('rps')">
-                        <span style="margin-left: 2px; margin-right: 12px; font-size: 16px;">✊</span>
-                        <span>Rock Paper Scissors</span>
-                    </div>
-                    <div class="nav-item" onclick="showPage('reaction')">
-                        <span style="margin-left: 2px; margin-right: 12px; font-size: 16px;">⚡</span>
-                        <span>Reaction Test</span>
-                    </div>
+                <div class="nav-icon" onclick="showPage('games')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12H3"/><path d="M21 6H3"/><path d="M21 18H3"/></svg>
+                    <div class="nav-tooltip">Games</div>
                 </div>
 
-                <div class="nav-section">
-                    <div class="nav-section-title">Account</div>
-                    <div class="nav-item" onclick="showPage('settings')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                        </svg>
-                        <span>Settings</span>
-                    </div>
+                <div class="nav-icon" onclick="showPage('chat')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <div class="nav-tooltip">Chat</div>
                 </div>
-            </nav>
 
-            <div class="sidebar-footer">
-                <div class="user-profile" onclick="showPage('settings')">
-                    <div class="user-avatar" id="userAvatar">?</div>
-                    <div class="user-info">
-                        <div class="user-name" id="userName">Loading...</div>
-                        <div class="user-status">Online</div>
-                    </div>
+                <div class="nav-icon" onclick="showPage('rooms')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <div class="nav-tooltip">Rooms</div>
+                </div>
+
+                <div class="nav-icon" onclick="showPage('leaderboard')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                    <div class="nav-tooltip">Leaderboard</div>
                 </div>
             </div>
-        </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
+            <div class="user-nav">
+                <div class="nav-icon" onclick="showPage('settings')">
+                    <div class="user-avatar" id="userAvatar" style="width: 32px; height: 32px; font-size: 12px;">U</div>
+                    <div class="nav-tooltip">Profile</div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Stage -->
+        <main class="main-stage">
             <!-- Dashboard Page -->
             <div class="page active" id="page-dashboard">
                 <div class="page-header">
@@ -2330,10 +2522,16 @@
         function renderTTT() {
             const cells = document.querySelectorAll('.ttt-cell');
             cells.forEach((cell, i) => {
-                cell.textContent = tttBoard[i];
+                cell.innerHTML = ''; // Clear existing
                 cell.className = 'ttt-cell';
-                if (tttBoard[i] === 'X') cell.classList.add('x');
-                if (tttBoard[i] === 'O') cell.classList.add('o');
+
+                if (tttBoard[i] === 'X') {
+                    cell.classList.add('x', 'active');
+                    cell.innerHTML = '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+                } else if (tttBoard[i] === 'O') {
+                    cell.classList.add('o', 'active');
+                    cell.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle></svg>';
+                }
             });
         }
 
@@ -2345,7 +2543,18 @@
         }
 
         // Memory Game
-        const memoryEmojis = ['🎮', '🎯', '🎲', '🎨', '🎭', '🎪', '🎢', '🎡'];
+        // SVG Icons for memory cards
+        const memoryIcons = [
+            '<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>', // Stack
+            '<circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line>', // Smile
+            '<path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>', // Pie
+            '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>', // Star
+            '<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>', // Insta
+            '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>', // Message
+            '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path>', // Bell
+            '<path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line>' // Feather
+        ];
+
         let memoryCards = [];
         let flippedCards = [];
         let matchedPairs = 0;
@@ -2354,8 +2563,8 @@
         let memorySeconds = 0;
 
         function initMemoryGame() {
-            const shuffled = [...memoryEmojis, ...memoryEmojis].sort(() => Math.random() - 0.5);
-            memoryCards = shuffled.map((emoji, i) => ({ id: i, emoji, flipped: false, matched: false }));
+            const shuffled = [...memoryIcons, ...memoryIcons].sort(() => Math.random() - 0.5);
+            memoryCards = shuffled.map((icon, i) => ({ id: i, icon, flipped: false, matched: false }));
             flippedCards = [];
             matchedPairs = 0;
             memoryMoves = 0;
@@ -2382,8 +2591,19 @@
         function renderMemory() {
             const board = document.getElementById('memoryBoard');
             board.innerHTML = memoryCards.map((card, i) => `
-                <div class="memory-card ${card.flipped ? 'flipped' : ''} ${card.matched ? 'matched' : ''}" onclick="flipCard(${i})">
-                    ${card.flipped || card.matched ? card.emoji : '❓'}
+                <div id="card-${i}" class="memory-card ${card.flipped ? 'flipped' : ''} ${card.matched ? 'matched' : ''}" onclick="flipCard(${i})">
+                    <div class="memory-face memory-front">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 24px; opacity: 0.5;">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="19" cy="12" r="1"></circle>
+                            <circle cx="5" cy="12" r="1"></circle>
+                        </svg>
+                    </div>
+                    <div class="memory-face memory-back">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            ${card.icon}
+                        </svg>
+                    </div>
                 </div>
             `).join('');
         }
@@ -2392,18 +2612,26 @@
             const card = memoryCards[index];
             if (card.flipped || card.matched || flippedCards.length >= 2) return;
 
+            // Flip the card visually and in state
             card.flipped = true;
+            document.getElementById(`card-${index}`).classList.add('flipped');
+
             flippedCards.push(index);
-            renderMemory();
 
             if (flippedCards.length === 2) {
                 memoryMoves++;
                 document.getElementById('memoryMoves').textContent = memoryMoves;
 
                 const [first, second] = flippedCards;
-                if (memoryCards[first].emoji === memoryCards[second].emoji) {
+                // FIX: use .icon instead of .emoji
+                if (memoryCards[first].icon === memoryCards[second].icon) {
                     memoryCards[first].matched = true;
                     memoryCards[second].matched = true;
+
+                    // Update visual for match (optional, or just keep flipped)
+                    document.getElementById(`card-${first}`).classList.add('matched');
+                    document.getElementById(`card-${second}`).classList.add('matched');
+
                     matchedPairs++;
                     document.getElementById('memoryPairs').textContent = matchedPairs;
                     flippedCards = [];
@@ -2417,17 +2645,21 @@
                         showToast(`🎉 You won! Score: ${score}`, 'success');
                     }
                 } else {
+                    // No match
                     setTimeout(() => {
                         memoryCards[first].flipped = false;
                         memoryCards[second].flipped = false;
+
+                        document.getElementById(`card-${first}`).classList.remove('flipped');
+                        document.getElementById(`card-${second}`).classList.remove('flipped');
+
                         flippedCards = [];
-                        renderMemory();
                     }, 1000);
                 }
             }
         }
 
-        // Snake Game
+        // Snake Game (Redesigned)
         let snake = [];
         let food = {};
         let snakeDirection = 'right';
@@ -2451,7 +2683,7 @@
             spawnFood();
             
             if (snakeGame) clearInterval(snakeGame);
-            snakeGame = setInterval(gameLoop, 120);
+            snakeGame = setInterval(gameLoop, 100);
         }
 
         function spawnFood() {
@@ -2492,58 +2724,52 @@
         }
 
         function drawSnake() {
-            snakeCtx.fillStyle = '#0a0f1a';
-            snakeCtx.fillRect(0, 0, canvasSize, canvasSize);
+            // Clear & Draw Background
+            snakeCtx.clearRect(0, 0, canvasSize, canvasSize);
 
-            // Draw grid
-            snakeCtx.strokeStyle = '#1f2937';
-            for (let i = 0; i <= canvasSize; i += gridSize) {
-                snakeCtx.beginPath();
-                snakeCtx.moveTo(i, 0);
-                snakeCtx.lineTo(i, canvasSize);
-                snakeCtx.stroke();
-                snakeCtx.beginPath();
-                snakeCtx.moveTo(0, i);
-                snakeCtx.lineTo(canvasSize, i);
-                snakeCtx.stroke();
+            // Draw subtle dot grid
+            snakeCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            for(let x=0; x<canvasSize; x+=gridSize) {
+                for(let y=0; y<canvasSize; y+=gridSize) {
+                    snakeCtx.beginPath();
+                    snakeCtx.arc(x + gridSize/2, y + gridSize/2, 1, 0, Math.PI*2);
+                    snakeCtx.fill();
+                }
             }
 
-            // Draw food
-            snakeCtx.fillStyle = '#ef4444';
+            // Draw Food (Pulsing Orb)
+            snakeCtx.shadowBlur = 15;
+            snakeCtx.shadowColor = '#FF453A';
+            snakeCtx.fillStyle = '#FF453A';
             snakeCtx.beginPath();
             snakeCtx.arc(
                 food.x * gridSize + gridSize / 2,
                 food.y * gridSize + gridSize / 2,
-                gridSize / 2 - 2,
+                gridSize / 3,
                 0,
                 Math.PI * 2
             );
             snakeCtx.fill();
+            snakeCtx.shadowBlur = 0;
 
-            // Draw snake
+            // Draw Snake (Smooth Neon)
             snake.forEach((seg, i) => {
-                const gradient = snakeCtx.createRadialGradient(
-                    seg.x * gridSize + gridSize / 2,
-                    seg.y * gridSize + gridSize / 2,
-                    0,
-                    seg.x * gridSize + gridSize / 2,
-                    seg.y * gridSize + gridSize / 2,
-                    gridSize / 2
-                );
-                gradient.addColorStop(0, i === 0 ? '#10b981' : '#06b6d4');
-                gradient.addColorStop(1, i === 0 ? '#059669' : '#0891b2');
+                const isHead = i === 0;
+                snakeCtx.shadowBlur = 10;
+                snakeCtx.shadowColor = isHead ? '#BF5AF2' : '#5E5CE6';
+                snakeCtx.fillStyle = isHead ? '#BF5AF2' : '#5E5CE6';
                 
-                snakeCtx.fillStyle = gradient;
                 snakeCtx.beginPath();
-                snakeCtx.roundRect(
-                    seg.x * gridSize + 1,
-                    seg.y * gridSize + 1,
-                    gridSize - 2,
-                    gridSize - 2,
-                    4
-                );
+                // Draw rounded rects for segments
+                const x = seg.x * gridSize + 2;
+                const y = seg.y * gridSize + 2;
+                const size = gridSize - 4;
+
+                // Manual rounded rect
+                snakeCtx.roundRect(x, y, size, size, isHead ? 6 : 4);
                 snakeCtx.fill();
             });
+            snakeCtx.shadowBlur = 0;
         }
 
         function setSnakeDirection(dir) {
@@ -2704,19 +2930,33 @@
             }, 1500);
         }
 
-        // Rock Paper Scissors
+        // Rock Paper Scissors (Redesigned)
         let rpsPlayerScore = 0;
         let rpsComputerScore = 0;
 
+        const rpsIcons = {
+            rock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>',
+            paper: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+            scissors: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" y1="4" x2="8.12" y2="15.88"></line><line x1="14.47" y1="14.48" x2="20" y2="20"></line><line x1="8.12" y1="8.12" x2="12" y2="12"></line></svg>',
+            question: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>'
+        };
+
         function playRPS(playerChoice) {
             const choices = ['rock', 'paper', 'scissors'];
-            const emojis = { rock: '✊', paper: '✋', scissors: '✌️' };
             const computerChoice = choices[Math.floor(Math.random() * 3)];
 
-            document.getElementById('rpsPlayerChoice').textContent = emojis[playerChoice];
-            document.getElementById('rpsComputerChoice').textContent = emojis[computerChoice];
+            // Update UI with SVG icons
+            document.getElementById('rpsPlayerChoice').innerHTML = rpsIcons[playerChoice];
+            document.getElementById('rpsComputerChoice').innerHTML = rpsIcons[computerChoice];
+
+            // Remove previous winner classes
+            document.getElementById('rpsPlayerChoice').classList.remove('winner');
+            document.getElementById('rpsComputerChoice').classList.remove('winner');
 
             let result = '';
+            let playerWin = false;
+            let computerWin = false;
+
             if (playerChoice === computerChoice) {
                 result = "🤝 It's a Tie!";
                 addScore(5);
@@ -2728,10 +2968,16 @@
                 result = '🎉 You Win!';
                 rpsPlayerScore++;
                 addScore(15);
+                playerWin = true;
             } else {
                 result = '😔 You Lose!';
                 rpsComputerScore++;
+                computerWin = true;
             }
+
+            // Add winner effects
+            if (playerWin) document.getElementById('rpsPlayerChoice').classList.add('winner');
+            if (computerWin) document.getElementById('rpsComputerChoice').classList.add('winner');
 
             document.getElementById('rpsResult').textContent = result;
             document.getElementById('rpsPlayerScore').textContent = rpsPlayerScore;
@@ -2743,12 +2989,14 @@
             rpsComputerScore = 0;
             document.getElementById('rpsPlayerScore').textContent = '0';
             document.getElementById('rpsComputerScore').textContent = '0';
-            document.getElementById('rpsPlayerChoice').textContent = '❓';
-            document.getElementById('rpsComputerChoice').textContent = '❓';
+            document.getElementById('rpsPlayerChoice').innerHTML = rpsIcons.question;
+            document.getElementById('rpsComputerChoice').innerHTML = rpsIcons.question;
             document.getElementById('rpsResult').textContent = '';
+            document.getElementById('rpsPlayerChoice').classList.remove('winner');
+            document.getElementById('rpsComputerChoice').classList.remove('winner');
         }
 
-        // Reaction Time
+        // Reaction Time (Redesigned)
         let reactionState = 'idle';
         let reactionTimeout = null;
         let reactionStartTime = 0;
@@ -2756,16 +3004,17 @@
 
         function startReaction() {
             const box = document.getElementById('reactionBox');
-            box.style.background = 'var(--danger)';
-            box.textContent = 'Wait for green...';
+            box.setAttribute('data-state', 'waiting');
+            box.innerHTML = '<div class="reaction-icon">🛑</div><div>Wait for Green...</div>';
+
             reactionState = 'waiting';
             document.getElementById('reactionTime').textContent = '0 ms';
             document.getElementById('reactionMessage').textContent = 'Wait for it...';
 
             const delay = Math.random() * 3000 + 2000;
             reactionTimeout = setTimeout(() => {
-                box.style.background = 'var(--secondary)';
-                box.textContent = 'CLICK NOW!';
+                box.setAttribute('data-state', 'ready');
+                box.innerHTML = '<div class="reaction-icon">⚡</div><div>CLICK NOW!</div>';
                 reactionState = 'ready';
                 reactionStartTime = Date.now();
             }, delay);
@@ -2776,8 +3025,8 @@
 
             if (reactionState === 'waiting') {
                 clearTimeout(reactionTimeout);
-                box.style.background = 'var(--danger)';
-                box.textContent = 'Too early! Click Start to try again.';
+                box.removeAttribute('data-state');
+                box.innerHTML = '<div class="reaction-icon">⚠️</div><div>Too Early!</div><div style="font-size: 14px; margin-top: 8px; opacity: 0.7;">Click to try again</div>';
                 document.getElementById('reactionMessage').textContent = 'Too early!';
                 reactionState = 'idle';
             } else if (reactionState === 'ready') {
@@ -2797,9 +3046,11 @@
                 addScore(score);
                 incrementGames();
 
-                box.style.background = 'var(--primary)';
-                box.textContent = reactionTime + 'ms - Click Start to play again';
+                box.removeAttribute('data-state');
+                box.innerHTML = `<div class="reaction-icon">⏱️</div><div>${reactionTime}ms</div><div style="font-size: 14px; margin-top: 8px; opacity: 0.7;">Click to play again</div>`;
                 reactionState = 'idle';
+            } else if (reactionState === 'idle') {
+                startReaction();
             }
         }
 
