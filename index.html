@@ -2594,15 +2594,15 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase Configuration - Replace with your own config
         const firebaseConfig = {
-            apiKey: "AIzaSyDemo-REPLACE-WITH-YOUR-KEY",
-            authDomain: "your-project.firebaseapp.com",
-            databaseURL: "https://your-project-default-rtdb.firebaseio.com",
-            projectId: "your-project",
-            storageBucket: "your-project.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef123456"
+            apiKey: "AIzaSyAE75AlF1oDc_02lue7A7rtZ74x0y3eQLI",
+            authDomain: "retrochat-795b4.firebaseapp.com",
+            databaseURL: "https://retrochat-795b4-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "retrochat-795b4",
+            storageBucket: "retrochat-795b4.firebasestorage.app",
+            messagingSenderId: "588960494570",
+            appId: "1:588960494570:web:702a85c54f386e626fb893",
+            measurementId: "G-PLF4ETNC5Z"
         };
 
         // Initialize Firebase
@@ -2752,6 +2752,7 @@
             loadLeaderboard();
             loadRooms();
             initMemoryGame();
+            loadSettings(); // Load settings on app init
         }
 
         function updateUserUI() {
@@ -2855,8 +2856,11 @@
 
             document.getElementById('sidebar').classList.remove('open');
 
+            // Specific game initializations on page show
             if (pageId === 'snake') initSnake();
             if (pageId === 'memory') initMemoryGame();
+            if (pageId === 'ttt') renderTTT(); // Ensure TTT board is rendered
+            if (pageId === 'quiz') renderQuizQuestion(); // Render current quiz state
         }
 
         function toggleSidebar() {
@@ -2865,13 +2869,15 @@
 
         // Chat
         function setupChatListener() {
-            db.ref('globalChat').orderByChild('timestamp').limitToLast(100).on('value', (snap) => {
+            const chatRef = db.ref('globalChat').orderByChild('timestamp').limitToLast(100);
+            const chatListener = chatRef.on('value', (snap) => {
                 const messages = [];
                 snap.forEach(child => {
                     messages.push({ id: child.key, ...child.val() });
                 });
                 renderChatMessages(messages);
             });
+            unsubscribers.push(() => chatRef.off('value', chatListener)); // Store listener to remove later
         }
 
         function renderChatMessages(messages) {
@@ -2932,13 +2938,15 @@
 
         // Private Rooms
         function loadRooms() {
-            db.ref('rooms').on('value', (snap) => {
+            const roomsRef = db.ref('rooms');
+            const roomsListener = roomsRef.on('value', (snap) => {
                 const rooms = [];
                 snap.forEach(child => {
                     rooms.push({ id: child.key, ...child.val() });
                 });
                 renderRoomsList(rooms);
             });
+            unsubscribers.push(() => roomsRef.off('value', roomsListener));
         }
 
         function renderRoomsList(rooms) {
@@ -3008,6 +3016,13 @@
         }
 
         async function joinRoom(roomId, hasPassword) {
+            // Check if the user is already in the room to avoid re-joining and duplicating listeners
+            if (currentRoom === roomId) return;
+
+            // Clean up previous room listeners
+            unsubscribers.forEach(unsub => unsub());
+            unsubscribers = [];
+
             if (hasPassword) {
                 const memberSnap = await db.ref('roomMembers/' + roomId + '/' + currentUser.uid).once('value');
                 if (!memberSnap.exists()) {
@@ -3025,24 +3040,27 @@
             });
 
             const membersSnap = await db.ref('roomMembers/' + roomId).once('value');
-            await db.ref('rooms/' + roomId + '/memberCount').set(Object.keys(membersSnap.val() || {}).length);
+            const memberCount = Object.keys(membersSnap.val() || {}).length;
+            await db.ref('rooms/' + roomId + '/memberCount').set(memberCount);
 
             const roomSnap = await db.ref('rooms/' + roomId).once('value');
             const room = roomSnap.val();
 
             document.getElementById('currentRoomName').textContent = room.name;
-            document.getElementById('currentRoomMembers').textContent = (room.memberCount || 0) + ' members';
+            document.getElementById('currentRoomMembers').textContent = memberCount + ' members';
             document.getElementById('currentRoomIcon').textContent = room.hasPassword ? '🔒' : '🔓';
             document.getElementById('roomChatInput').disabled = false;
             document.getElementById('roomSendBtn').disabled = false;
 
-            db.ref('roomMessages/' + roomId).orderByChild('timestamp').limitToLast(100).on('value', (snap) => {
+            const roomMessagesRef = db.ref('roomMessages/' + roomId).orderByChild('timestamp').limitToLast(100);
+            const roomMessagesListener = roomMessagesRef.on('value', (snap) => {
                 const messages = [];
                 snap.forEach(child => {
                     messages.push({ id: child.key, ...child.val() });
                 });
                 renderRoomMessages(messages);
             });
+            unsubscribers.push(() => roomMessagesRef.off('value', roomMessagesListener));
         }
 
         async function joinRoomWithPassword(e) {
@@ -3053,10 +3071,10 @@
             const roomSnap = await db.ref('rooms/' + roomId).once('value');
             const room = roomSnap.val();
 
-            if (room.password === password) {
+            if (room && room.password === password) {
                 closeModal('joinRoomModal');
                 document.getElementById('joinRoomPassword').value = '';
-                await joinRoom(roomId, false);
+                await joinRoom(roomId, false); // Join without password check now
             } else {
                 showToast('Incorrect password', 'error');
             }
@@ -3114,7 +3132,8 @@
 
         // Leaderboard
         function loadLeaderboard() {
-            db.ref('users').orderByChild('score').on('value', (snap) => {
+            const leaderboardRef = db.ref('users').orderByChild('score');
+            const leaderboardListener = leaderboardRef.on('value', (snap) => {
                 const users = [];
                 snap.forEach(child => {
                     users.push({ id: child.key, ...child.val() });
@@ -3122,6 +3141,7 @@
                 users.reverse();
                 renderLeaderboard(users);
             });
+            unsubscribers.push(() => leaderboardRef.off('value', leaderboardListener));
         }
 
         function renderLeaderboard(users) {
@@ -3788,9 +3808,13 @@
             const notifEnabled = localStorage.getItem('notifEnabled') !== 'false';
 
             if (!soundEnabled) document.getElementById('soundToggle').classList.remove('active');
+            else document.getElementById('soundToggle').classList.add('active');
+
             if (!notifEnabled) document.getElementById('notifToggle').classList.remove('active');
+            else document.getElementById('notifToggle').classList.add('active');
         }
 
+        // Initial load of settings when DOM is ready
         document.addEventListener('DOMContentLoaded', loadSettings);
 
         document.addEventListener('visibilitychange', () => {
