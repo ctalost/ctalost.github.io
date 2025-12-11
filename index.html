@@ -1094,6 +1094,275 @@
             display: block;
         }
 
+        /* Settings Page Styles */
+        .settings-section {
+            background: var(--bg-glass-heavy);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .settings-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .setting-item:first-child {
+            padding-top: 0;
+        }
+
+        .setting-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .setting-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .toggle {
+            width: 48px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle.active {
+            background: var(--primary);
+        }
+
+        .toggle.active::after {
+            transform: translateX(20px);
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: white;
+        }
+
+        .reaction-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 24px;
+        }
+
+        .reaction-stat {
+            text-align: center;
+        }
+
+        .reaction-stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+        }
+
+        .reaction-stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: rgba(30, 30, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            pointer-events: all;
+        }
+
+        .toast.success { border-left: 3px solid var(--green); }
+        .toast.error { border-left: 3px solid var(--red); }
+        .toast.info { border-left: 3px solid var(--blue); }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        /* Room Styles */
+        .room-item {
+            background: var(--bg-glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .room-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+
+        .room-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--bg-panel);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .room-info {
+            flex: 1;
+        }
+
+        .room-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .room-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .room-members {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .player-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+        }
+
+        .player-name {
+            font-weight: 500;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+            color: white;
+            flex-shrink: 0;
+        }
+
         /* Modals */
         .modal-overlay {
             position: fixed;
@@ -1127,18 +1396,19 @@
         /* Responsive */
         @media (max-width: 1024px) {
             .nav-rail {
-                width: 100%;
+                position: fixed;
+                width: calc(100% - 32px);
                 height: 70px;
-                bottom: 24px;
+                bottom: 16px;
                 top: auto;
-                left: 0;
-                right: 0;
+                left: 16px;
+                right: 16px;
                 transform: none;
                 flex-direction: row;
                 justify-content: space-around;
-                padding: 0 20px;
+                padding: 0 12px;
                 border-radius: 20px;
-                max-width: 90%;
+                max-width: 600px;
                 margin: 0 auto;
             }
             
@@ -1148,17 +1418,191 @@
             
             .nav-items {
                 flex-direction: row;
-                gap: 8px;
+                gap: 4px;
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .nav-icon {
+                width: 48px;
+                height: 48px;
             }
 
             .main-stage {
                 margin: 0;
-                padding: 20px;
-                padding-bottom: 120px;
+                padding: 20px 16px;
+                padding-bottom: 110px;
             }
 
-            .chat-container { grid-template-columns: 1fr; }
+            .chat-container { 
+                grid-template-columns: 1fr;
+                height: calc(100vh - 200px);
+            }
             .chat-sidebar { display: none; }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 24px;
+            }
+
+            .page-subtitle {
+                font-size: 14px;
+            }
+
+            .nav-rail {
+                width: calc(100% - 16px);
+                left: 8px;
+                right: 8px;
+                bottom: 8px;
+                height: 64px;
+                padding: 0 8px;
+            }
+
+            .nav-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .nav-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .main-stage {
+                padding: 16px 12px;
+                padding-bottom: 90px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-value {
+                font-size: 28px;
+            }
+
+            .cards-grid, .games-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .game-card {
+                min-width: 0;
+            }
+
+            .ttt-board {
+                gap: 12px;
+                max-width: 100%;
+            }
+
+            .memory-board {
+                gap: 12px;
+                max-width: 100%;
+            }
+
+            #snake-canvas {
+                max-width: 100%;
+                width: 100% !important;
+                height: auto !important;
+            }
+
+            .snake-controls {
+                grid-template-columns: repeat(3, 56px);
+                gap: 8px;
+            }
+
+            .snake-btn {
+                width: 56px;
+                height: 56px;
+            }
+
+            .rps-choice {
+                width: 100px;
+                height: 100px;
+            }
+
+            .rps-choice svg {
+                width: 48px;
+                height: 48px;
+            }
+
+            .rps-btn {
+                width: 64px;
+                height: 64px;
+            }
+
+            .quiz-option {
+                padding: 14px 18px;
+                font-size: 14px;
+            }
+
+            .reaction-box {
+                font-size: 18px;
+            }
+
+            .reaction-icon {
+                font-size: 36px;
+            }
+
+            .modal {
+                max-width: calc(100% - 32px);
+                padding: 24px;
+            }
+
+            .auth-card {
+                padding: 32px 24px;
+            }
+
+            .toast-container {
+                top: 16px;
+                right: 16px;
+                left: 16px;
+            }
+
+            .toast {
+                min-width: 0;
+            }
+
+            .leaderboard-table th,
+            .leaderboard-table td {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
+
+            .chat-container {
+                height: calc(100vh - 160px);
+            }
+
+            .settings-section {
+                padding: 20px 16px;
+            }
+
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
         }
     </style>
 </head>
@@ -1871,10 +2315,17 @@
             measurementId: "G-PLF4ETNC5Z"
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+        // Initialize Firebase with error handling
+        let auth, db;
+        try {
+            if (typeof firebase !== 'undefined') {
+                firebase.initializeApp(firebaseConfig);
+                auth = firebase.auth();
+                db = firebase.database();
+            }
+        } catch (error) {
+            console.warn('Firebase initialization failed:', error);
+        }
 
         // Global Variables
         let currentUser = null;
@@ -1897,6 +2348,10 @@
 
         async function handleLogin(e) {
             e.preventDefault();
+            if (!auth) {
+                showToast('Authentication not available', 'error');
+                return;
+            }
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
@@ -1910,6 +2365,10 @@
 
         async function handleRegister(e) {
             e.preventDefault();
+            if (!auth || !db) {
+                showToast('Authentication not available', 'error');
+                return;
+            }
             const username = document.getElementById('registerUsername').value;
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
@@ -1935,6 +2394,10 @@
         }
 
         async function signInWithGoogle() {
+            if (!auth || !db) {
+                showToast('Authentication not available', 'error');
+                return;
+            }
             try {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 const result = await auth.signInWithPopup(provider);
@@ -1961,6 +2424,10 @@
         }
 
         async function signInAsGuest() {
+            if (!auth || !db) {
+                showToast('Authentication not available', 'error');
+                return;
+            }
             try {
                 const result = await auth.signInAnonymously();
                 const guestName = 'Guest_' + Math.floor(Math.random() * 10000);
@@ -1984,7 +2451,8 @@
         }
 
         function signOut() {
-            if (currentUser) {
+            if (!auth) return;
+            if (currentUser && db) {
                 db.ref('presence/' + currentUser.uid).remove();
             }
             auth.signOut();
@@ -1992,45 +2460,68 @@
         }
 
         // Auth State Observer
-        auth.onAuthStateChanged(async (user) => {
+        // Add fallback to hide loading screen even if Firebase fails
+        setTimeout(() => {
             document.getElementById('loadingScreen').classList.add('hidden');
-            
-            if (user) {
-                currentUser = user;
-                document.getElementById('authContainer').style.display = 'none';
-                document.getElementById('appContainer').classList.add('active');
-                initializeApp();
-            } else {
-                currentUser = null;
-                document.getElementById('authContainer').style.display = 'flex';
-                document.getElementById('appContainer').classList.remove('active');
-                unsubscribers.forEach(unsub => unsub());
-                unsubscribers = [];
-            }
-        });
+        }, 1000);
+
+        // Check if Firebase is loaded before trying to use it
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            auth.onAuthStateChanged(async (user) => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('appContainer').classList.add('active');
+                    initializeApp();
+                } else {
+                    currentUser = null;
+                    document.getElementById('authContainer').style.display = 'flex';
+                    document.getElementById('appContainer').classList.remove('active');
+                    unsubscribers.forEach(unsub => unsub());
+                    unsubscribers = [];
+                }
+            });
+        } else {
+            // Firebase not available - show error or demo mode
+            console.warn('Firebase not available. Running in demo mode.');
+            document.getElementById('loadingScreen').classList.add('hidden');
+        }
 
         // App Initialization
         function initializeApp() {
             updateUserUI();
-            setupPresence();
-            loadDashboardData();
-            setupChatListener();
-            loadLeaderboard();
-            loadRooms();
+            if (db) {
+                setupPresence();
+                loadDashboardData();
+                setupChatListener();
+                loadLeaderboard();
+                loadRooms();
+            }
             initMemoryGame();
-            loadSettings(); // Load settings on app init
+            if (db) {
+                loadSettings(); // Load settings on app init
+            }
         }
 
         function updateUserUI() {
-            const displayName = currentUser.displayName || 'User';
-            document.getElementById('userName').textContent = displayName;
-            document.getElementById('userAvatar').textContent = displayName.charAt(0).toUpperCase();
-            document.getElementById('settingsDisplayName').textContent = displayName;
-            document.getElementById('settingsEmail').textContent = currentUser.email || 'Anonymous';
-            document.getElementById('settingsUserId').textContent = currentUser.uid;
+            const displayName = currentUser ? (currentUser.displayName || 'User') : 'Demo User';
+            const userNameEl = document.getElementById('userName');
+            const userAvatarEl = document.getElementById('userAvatar');
+            const settingsDisplayNameEl = document.getElementById('settingsDisplayName');
+            const settingsEmailEl = document.getElementById('settingsEmail');
+            const settingsUserIdEl = document.getElementById('settingsUserId');
+            
+            if (userNameEl) userNameEl.textContent = displayName;
+            if (userAvatarEl) userAvatarEl.textContent = displayName.charAt(0).toUpperCase();
+            if (settingsDisplayNameEl) settingsDisplayNameEl.textContent = displayName;
+            if (settingsEmailEl) settingsEmailEl.textContent = currentUser ? (currentUser.email || 'Anonymous') : 'Demo Mode';
+            if (settingsUserIdEl) settingsUserIdEl.textContent = currentUser ? currentUser.uid : 'demo-user';
         }
 
         function setupPresence() {
+            if (!db || !currentUser) return;
             const presenceRef = db.ref('presence/' + currentUser.uid);
             const connectedRef = db.ref('.info/connected');
 
@@ -2048,8 +2539,10 @@
             db.ref('presence').on('value', (snap) => {
                 const users = snap.val() || {};
                 const count = Object.keys(users).length;
-                document.getElementById('onlineUsers').textContent = count;
-                document.getElementById('chatOnlineCount').textContent = count;
+                const onlineUsersEl = document.getElementById('onlineUsers');
+                const chatOnlineCountEl = document.getElementById('chatOnlineCount');
+                if (onlineUsersEl) onlineUsersEl.textContent = count;
+                if (chatOnlineCountEl) chatOnlineCountEl.textContent = count;
                 updateOnlineUsersList(users);
             });
         }
@@ -2074,15 +2567,23 @@
         }
 
         async function loadDashboardData() {
+            if (!db || !currentUser) return;
             const userRef = db.ref('users/' + currentUser.uid);
             userRef.on('value', (snap) => {
                 const data = snap.val() || {};
-                document.getElementById('userScore').textContent = data.score || 0;
-                document.getElementById('gamesPlayed').textContent = data.gamesPlayed || 0;
-                document.getElementById('messagesCount').textContent = data.messagesSent || 0;
-                document.getElementById('statsTotalScore').textContent = (data.score || 0) + ' points';
-                document.getElementById('statsGamesPlayed').textContent = (data.gamesPlayed || 0) + ' games';
-                document.getElementById('statsMessages').textContent = (data.messagesSent || 0) + ' messages';
+                const userScoreEl = document.getElementById('userScore');
+                const gamesPlayedEl = document.getElementById('gamesPlayed');
+                const messagesCountEl = document.getElementById('messagesCount');
+                const statsTotalScoreEl = document.getElementById('statsTotalScore');
+                const statsGamesPlayedEl = document.getElementById('statsGamesPlayed');
+                const statsMessagesEl = document.getElementById('statsMessages');
+                
+                if (userScoreEl) userScoreEl.textContent = data.score || 0;
+                if (gamesPlayedEl) gamesPlayedEl.textContent = data.gamesPlayed || 0;
+                if (messagesCountEl) messagesCountEl.textContent = data.messagesSent || 0;
+                if (statsTotalScoreEl) statsTotalScoreEl.textContent = (data.score || 0) + ' points';
+                if (statsGamesPlayedEl) statsGamesPlayedEl.textContent = (data.gamesPlayed || 0) + ' games';
+                if (statsMessagesEl) statsMessagesEl.textContent = (data.messagesSent || 0) + ' messages';
             });
 
             db.ref('users').orderByChild('score').limitToLast(3).on('value', (snap) => {
@@ -2097,30 +2598,37 @@
                     html += `
                         <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; ${i < users.length - 1 ? 'border-bottom: 1px solid var(--border);' : ''}">
                             <div class="rank rank-${i + 1}" style="width: 32px; height: 32px; font-size: 12px;">${i + 1}</div>
-                            <div style="flex: 1; font-weight: 500;">${user.username || 'User'}</div>
+                            <div style="flex: 1; font-weight: 500;">${escapeHtml(user.username || 'User')}</div>
                             <div style="font-weight: 700; color: var(--primary-light);">${user.score || 0}</div>
                         </div>
                     `;
                 });
-                document.getElementById('topPlayersPreview').innerHTML = html || '<p style="color: var(--text-secondary); text-align: center;">No players yet</p>';
+                const topPlayersEl = document.getElementById('topPlayersPreview');
+                if (topPlayersEl) {
+                    topPlayersEl.innerHTML = html || '<p style="color: var(--text-secondary); text-align: center;">No players yet</p>';
+                }
             });
         }
 
         // Navigation
         function showPage(pageId) {
+            // Remove active class from all pages and nav icons
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelectorAll('.nav-icon').forEach(n => n.classList.remove('active'));
             
-            document.getElementById('page-' + pageId).classList.add('active');
+            // Show the selected page
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
             
-            document.querySelectorAll('.nav-item').forEach(nav => {
-                if (nav.textContent.toLowerCase().includes(pageId) || 
-                    nav.onclick?.toString().includes(pageId)) {
+            // Highlight the active nav icon based on onclick attribute
+            document.querySelectorAll('.nav-icon').forEach(nav => {
+                if (nav.onclick?.toString().includes("'" + pageId + "'") || 
+                    nav.onclick?.toString().includes('"' + pageId + '"')) {
                     nav.classList.add('active');
                 }
             });
-
-            document.getElementById('sidebar').classList.remove('open');
 
             // Specific game initializations on page show
             if (pageId === 'snake') initSnake();
@@ -2135,6 +2643,7 @@
 
         // Chat
         function setupChatListener() {
+            if (!db) return;
             const chatRef = db.ref('globalChat').orderByChild('timestamp').limitToLast(100);
             const chatListener = chatRef.on('value', (snap) => {
                 const messages = [];
@@ -2176,6 +2685,10 @@
         }
 
         async function sendMessage() {
+            if (!db || !currentUser) {
+                showToast('Chat not available', 'error');
+                return;
+            }
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             
@@ -2204,6 +2717,7 @@
 
         // Private Rooms
         function loadRooms() {
+            if (!db) return;
             const roomsRef = db.ref('rooms');
             const roomsListener = roomsRef.on('value', (snap) => {
                 const rooms = [];
@@ -2398,6 +2912,7 @@
 
         // Leaderboard
         function loadLeaderboard() {
+            if (!db) return;
             const leaderboardRef = db.ref('users').orderByChild('score');
             const leaderboardListener = leaderboardRef.on('value', (snap) => {
                 const users = [];
@@ -2759,14 +3274,23 @@
                 snakeCtx.shadowColor = isHead ? '#BF5AF2' : '#5E5CE6';
                 snakeCtx.fillStyle = isHead ? '#BF5AF2' : '#5E5CE6';
                 
-                snakeCtx.beginPath();
-                // Draw rounded rects for segments
                 const x = seg.x * gridSize + 2;
                 const y = seg.y * gridSize + 2;
                 const size = gridSize - 4;
+                const radius = isHead ? 6 : 4;
                 
-                // Manual rounded rect
-                snakeCtx.roundRect(x, y, size, size, isHead ? 6 : 4);
+                // Draw rounded rectangle manually for compatibility
+                snakeCtx.beginPath();
+                snakeCtx.moveTo(x + radius, y);
+                snakeCtx.lineTo(x + size - radius, y);
+                snakeCtx.quadraticCurveTo(x + size, y, x + size, y + radius);
+                snakeCtx.lineTo(x + size, y + size - radius);
+                snakeCtx.quadraticCurveTo(x + size, y + size, x + size - radius, y + size);
+                snakeCtx.lineTo(x + radius, y + size);
+                snakeCtx.quadraticCurveTo(x, y + size, x, y + size - radius);
+                snakeCtx.lineTo(x, y + radius);
+                snakeCtx.quadraticCurveTo(x, y, x + radius, y);
+                snakeCtx.closePath();
                 snakeCtx.fill();
             });
             snakeCtx.shadowBlur = 0;
@@ -3056,7 +3580,7 @@
 
         // Utility Functions
         async function addScore(points) {
-            if (!currentUser) return;
+            if (!currentUser || !db) return;
             try {
                 await db.ref('users/' + currentUser.uid + '/score').transaction(score => (score || 0) + points);
             } catch (e) {
@@ -3065,7 +3589,7 @@
         }
 
         async function incrementGames() {
-            if (!currentUser) return;
+            if (!currentUser || !db) return;
             try {
                 await db.ref('users/' + currentUser.uid + '/gamesPlayed').transaction(count => (count || 0) + 1);
             } catch (e) {
@@ -3074,7 +3598,7 @@
         }
 
         async function incrementWins() {
-            if (!currentUser) return;
+            if (!currentUser || !db) return;
             try {
                 await db.ref('users/' + currentUser.uid + '/wins').transaction(count => (count || 0) + 1);
             } catch (e) {
