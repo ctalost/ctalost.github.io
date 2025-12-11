@@ -2484,9 +2484,36 @@
                 }
             });
         } else {
-            // Firebase not available - show error or demo mode
-            console.warn('Firebase not available. Running in demo mode.');
+            // Firebase not available - enable demo mode button
+            console.warn('Firebase not available. Demo mode enabled.');
             document.getElementById('loadingScreen').classList.add('hidden');
+            
+            // Add demo mode button
+            const authCard = document.querySelector('.auth-card');
+            if (authCard && !document.getElementById('demoModeBtn')) {
+                const demoBtn = document.createElement('button');
+                demoBtn.id = 'demoModeBtn';
+                demoBtn.className = 'btn btn-primary';
+                demoBtn.style.marginTop = '16px';
+                demoBtn.textContent = '🎮 Enter Demo Mode';
+                demoBtn.onclick = enterDemoMode;
+                authCard.appendChild(demoBtn);
+            }
+        }
+
+        function enterDemoMode() {
+            // Create a demo user
+            currentUser = {
+                uid: 'demo-user-' + Date.now(),
+                displayName: 'Demo User',
+                email: null,
+                isAnonymous: true
+            };
+            
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('appContainer').classList.add('active');
+            initializeApp();
+            showToast('Welcome to Demo Mode! Games work, but data is not saved.', 'info');
         }
 
         // App Initialization
@@ -2549,6 +2576,8 @@
 
         function updateOnlineUsersList(users) {
             const list = document.getElementById('onlineUsersList');
+            if (!list) return;
+            
             let html = '';
             
             Object.entries(users).forEach(([uid, user]) => {
@@ -2556,7 +2585,7 @@
                     <div class="chat-item">
                         <div class="chat-item-avatar">${(user.username || 'U').charAt(0).toUpperCase()}</div>
                         <div class="chat-item-info">
-                            <div class="chat-item-name">${user.username || 'User'}</div>
+                            <div class="chat-item-name">${escapeHtml(user.username || 'User')}</div>
                             <div class="chat-item-message" style="color: var(--secondary);">● Online</div>
                         </div>
                     </div>
@@ -2658,6 +2687,8 @@
         function renderChatMessages(messages) {
             const container = document.getElementById('chatMessages');
             
+            if (!container) return;
+            
             if (messages.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No messages yet. Start the conversation!</p>';
                 return;
@@ -2665,14 +2696,14 @@
 
             let html = '';
             messages.forEach(msg => {
-                const isSent = msg.userId === currentUser.uid;
+                const isSent = currentUser && msg.userId === currentUser.uid;
                 const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
                 html += `
                     <div class="message ${isSent ? 'sent' : ''}">
                         <div class="message-avatar">${(msg.username || 'U').charAt(0).toUpperCase()}</div>
                         <div class="message-content">
-                            ${!isSent ? `<div style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--primary-light);">${msg.username}</div>` : ''}
+                            ${!isSent ? `<div style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--primary-light);">${escapeHtml(msg.username)}</div>` : ''}
                             <div class="message-text">${escapeHtml(msg.text)}</div>
                             <div class="message-time">${time}</div>
                         </div>
@@ -2732,6 +2763,8 @@
         function renderRoomsList(rooms) {
             const container = document.getElementById('roomsList');
             
+            if (!container) return;
+            
             if (rooms.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">No rooms yet. Create one!</p>';
                 return;
@@ -2744,7 +2777,7 @@
                         <div class="room-icon">${room.hasPassword ? '🔒' : '🔓'}</div>
                         <div class="room-info">
                             <h4>${escapeHtml(room.name)}</h4>
-                            <p>by ${room.creatorName || 'Unknown'}</p>
+                            <p>by ${escapeHtml(room.creatorName || 'Unknown')}</p>
                         </div>
                         <div class="room-members">
                             <span>${room.memberCount || 0}</span> 👥
@@ -2863,6 +2896,8 @@
         function renderRoomMessages(messages) {
             const container = document.getElementById('roomMessages');
             
+            if (!container) return;
+            
             if (messages.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No messages in this room yet.</p>';
                 return;
@@ -2870,14 +2905,14 @@
 
             let html = '';
             messages.forEach(msg => {
-                const isSent = msg.userId === currentUser.uid;
+                const isSent = currentUser && msg.userId === currentUser.uid;
                 const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
                 html += `
                     <div class="message ${isSent ? 'sent' : ''}">
                         <div class="message-avatar">${(msg.username || 'U').charAt(0).toUpperCase()}</div>
                         <div class="message-content">
-                            ${!isSent ? `<div style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--primary-light);">${msg.username}</div>` : ''}
+                            ${!isSent ? `<div style="font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--primary-light);">${escapeHtml(msg.username)}</div>` : ''}
                             <div class="message-text">${escapeHtml(msg.text)}</div>
                             <div class="message-time">${time}</div>
                         </div>
@@ -2927,6 +2962,8 @@
 
         function renderLeaderboard(users) {
             const tbody = document.getElementById('leaderboardBody');
+            
+            if (!tbody) return;
             
             if (users.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-secondary);">No players yet</td></tr>';
@@ -3628,12 +3665,20 @@
         }
 
         function openEditNameModal() {
-            document.getElementById('newDisplayName').value = currentUser.displayName || '';
+            if (!currentUser) return;
+            const newDisplayNameEl = document.getElementById('newDisplayName');
+            if (newDisplayNameEl) {
+                newDisplayNameEl.value = currentUser.displayName || '';
+            }
             document.getElementById('editNameModal').classList.add('active');
         }
 
         async function updateDisplayName(e) {
             e.preventDefault();
+            if (!currentUser || !db) {
+                showToast('Profile update not available in demo mode', 'error');
+                return;
+            }
             const newName = document.getElementById('newDisplayName').value.trim();
 
             try {
@@ -3669,7 +3714,7 @@
         document.addEventListener('DOMContentLoaded', loadSettings);
 
         document.addEventListener('visibilitychange', () => {
-            if (currentUser) {
+            if (currentUser && db) {
                 if (document.hidden) {
                     db.ref('presence/' + currentUser.uid + '/online').set(false);
                 } else {
@@ -3679,7 +3724,7 @@
         });
 
         window.addEventListener('beforeunload', () => {
-            if (currentUser) {
+            if (currentUser && db) {
                 db.ref('presence/' + currentUser.uid).remove();
             }
         });
