@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetroChat Gaming Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             /* Palette - Premium Dark */
@@ -16,39 +18,40 @@
             --bg-glass-hover: rgba(255, 255, 255, 0.08);
             --bg-panel: rgba(30, 30, 35, 0.5);
             --bg-input: rgba(0, 0, 0, 0.3);
-            
+
             /* Gradients */
             --gradient-primary: linear-gradient(135deg, #5E5CE6 0%, #BF5AF2 100%);
             --gradient-blue: linear-gradient(135deg, #0A84FF 0%, #5E5CE6 100%);
             --gradient-silver: linear-gradient(135deg, #8E8E93 0%, #636366 100%);
             --gradient-text: linear-gradient(180deg, #FFFFFF 0%, #EBEBF5 100%);
-            
+
             /* Accents (Apple Human Interface Colors) */
-            --primary: #5E5CE6; /* Indigo */
+            --primary: #5E5CE6;
+            /* Indigo */
             --blue: #0A84FF;
             --cyan: #64D2FF;
             --green: #30D158;
             --orange: #FF9F0A;
             --red: #FF453A;
             --purple: #BF5AF2;
-            
+
             /* Text */
             --text-primary: #FFFFFF;
             --text-secondary: rgba(235, 235, 245, 0.6);
             --text-tertiary: rgba(235, 235, 245, 0.3);
-            
+
             /* Borders & Effects */
             --border: rgba(255, 255, 255, 0.08);
             --border-light: rgba(255, 255, 255, 0.12);
-            --shadow-sm: 0 4px 12px rgba(0,0,0,0.2);
-            --shadow-md: 0 12px 32px rgba(0,0,0,0.4);
-            --shadow-lg: 0 24px 60px rgba(0,0,0,0.5);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.5);
             --glow: 0 0 20px rgba(94, 92, 230, 0.2);
-            
+
             --radius-sm: 12px;
             --radius-md: 18px;
             --radius-lg: 24px;
-            
+
             --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --font-mono: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
         }
@@ -79,7 +82,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: 
+            background:
                 radial-gradient(circle at 50% 50%, rgba(94, 92, 230, 0.15), transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(10, 132, 255, 0.1), transparent 40%),
                 radial-gradient(circle at 20% 80%, rgba(191, 90, 242, 0.1), transparent 40%);
@@ -89,16 +92,25 @@
         }
 
         @keyframes aurora {
-            0% { transform: rotate(0deg) scale(1); }
-            100% { transform: rotate(5deg) scale(1.1); }
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            100% {
+                transform: rotate(5deg) scale(1.1);
+            }
         }
 
         /* Global UI Elements */
         svg {
             stroke-width: 1.5px;
         }
-        
-        button, a, input, .card, .stat-card {
+
+        button,
+        a,
+        input,
+        .card,
+        .stat-card {
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
@@ -126,14 +138,16 @@
         .loader {
             width: 40px;
             height: 40px;
-            border: 3px solid rgba(255,255,255,0.1);
+            border: 3px solid rgba(255, 255, 255, 0.1);
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 0.8s ease-in-out infinite;
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .loading-text {
@@ -220,7 +234,7 @@
         .auth-tab.active {
             background: rgba(255, 255, 255, 0.1);
             color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
@@ -250,7 +264,7 @@
 
         .form-group input:focus {
             border-color: var(--primary);
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             box-shadow: 0 0 0 3px rgba(94, 92, 230, 0.15);
         }
 
@@ -295,10 +309,19 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        .btn-danger { background: rgba(255, 69, 58, 0.15); color: #FF453A; }
-        .btn-danger:hover { background: rgba(255, 69, 58, 0.25); }
-        
-        .btn-success { background: rgba(48, 209, 88, 0.15); color: #30D158; }
+        .btn-danger {
+            background: rgba(255, 69, 58, 0.15);
+            color: #FF453A;
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 69, 58, 0.25);
+        }
+
+        .btn-success {
+            background: rgba(48, 209, 88, 0.15);
+            color: #30D158;
+        }
 
         .btn-small {
             padding: 8px 16px;
@@ -315,7 +338,8 @@
             font-size: 13px;
         }
 
-        .divider::before, .divider::after {
+        .divider::before,
+        .divider::after {
             content: '';
             flex: 1;
             height: 1px;
@@ -353,7 +377,10 @@
             display: none;
             min-height: 100vh;
         }
-        .app-container.active { display: block; }
+
+        .app-container.active {
+            display: block;
+        }
 
         /* Navigation Rail (Floating Dock) */
         .nav-rail {
@@ -443,7 +470,7 @@
             transform: translateX(-10px);
             transition: all 0.2s;
             white-space: nowrap;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .nav-icon:hover .nav-tooltip {
@@ -472,17 +499,43 @@
             max-width: 1600px;
         }
 
-        .page { display: none; animation: fadeUp 0.4s ease-out; }
-        .page.active { display: block; }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .page {
+            display: none;
+            animation: fadeUp 0.4s ease-out;
         }
 
-        .page-header { margin-bottom: 40px; }
-        .page-title { font-size: 32px; font-weight: 700; margin-bottom: 8px; letter-spacing: -1px; }
-        .page-subtitle { color: var(--text-secondary); font-size: 16px; font-weight: 400; }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 400;
+        }
 
         /* Dashboard Stats */
         .stats-grid {
@@ -504,8 +557,8 @@
 
         .stat-card:hover {
             transform: translateY(-4px);
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .stat-icon {
@@ -518,13 +571,38 @@
             margin-bottom: 16px;
         }
 
-        .stat-card.cyan .stat-icon { background: rgba(100, 210, 255, 0.15); color: var(--cyan); }
-        .stat-card.green .stat-icon { background: rgba(48, 209, 88, 0.15); color: var(--green); }
-        .stat-card.orange .stat-icon { background: rgba(255, 159, 10, 0.15); color: var(--orange); }
-        .stat-card.red .stat-icon { background: rgba(255, 69, 58, 0.15); color: var(--red); }
+        .stat-card.cyan .stat-icon {
+            background: rgba(100, 210, 255, 0.15);
+            color: var(--cyan);
+        }
 
-        .stat-value { font-size: 36px; font-weight: 700; letter-spacing: -1px; margin-bottom: 4px; }
-        .stat-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+        .stat-card.green .stat-icon {
+            background: rgba(48, 209, 88, 0.15);
+            color: var(--green);
+        }
+
+        .stat-card.orange .stat-icon {
+            background: rgba(255, 159, 10, 0.15);
+            color: var(--orange);
+        }
+
+        .stat-card.red .stat-icon {
+            background: rgba(255, 69, 58, 0.15);
+            color: var(--red);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
         /* Cards */
         .cards-grid {
@@ -550,8 +628,14 @@
             align-items: center;
         }
 
-        .card-title { font-size: 16px; font-weight: 600; }
-        .card-body { padding: 24px; }
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
 
         /* Chat */
         .chat-container {
@@ -570,17 +654,33 @@
             overflow: hidden;
         }
 
-        .chat-sidebar-header { padding: 16px; border-bottom: 1px solid var(--border); }
-        .chat-search { position: relative; }
+        .chat-sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chat-search {
+            position: relative;
+        }
+
         .chat-search input {
             padding-left: 36px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border: none;
             border-radius: 10px;
         }
-        .chat-search svg { left: 10px; width: 16px; height: 16px; }
 
-        .chat-list { flex: 1; overflow-y: auto; padding: 12px; }
+        .chat-search svg {
+            left: 10px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
 
         .chat-item {
             padding: 10px;
@@ -591,7 +691,10 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .chat-item:hover { background: rgba(255,255,255,0.05); }
+
+        .chat-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
 
         .chat-item-avatar {
             width: 40px;
@@ -605,9 +708,21 @@
             color: white;
         }
 
-        .chat-item-info { flex: 1; min-width: 0; }
-        .chat-item-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-        .chat-item-message { font-size: 12px; color: var(--text-tertiary); }
+        .chat-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-item-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .chat-item-message {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
 
         .chat-main {
             background: var(--bg-glass-heavy);
@@ -624,9 +739,13 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            background: rgba(255,255,255,0.02);
+            background: rgba(255, 255, 255, 0.02);
         }
-        .chat-header h3 { font-size: 16px; font-weight: 600; }
+
+        .chat-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
 
         .chat-messages {
             flex: 1;
@@ -637,36 +756,52 @@
             gap: 16px;
         }
 
-        .message { display: flex; gap: 12px; max-width: 70%; }
-        .message.sent { align-self: flex-end; flex-direction: row-reverse; }
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
 
         .message-content {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             padding: 12px 16px;
             border-radius: 18px;
             border-bottom-left-radius: 4px;
             color: var(--text-primary);
         }
-        
+
         .message.sent .message-content {
             background: var(--primary);
             border-radius: 18px;
             border-bottom-right-radius: 4px;
         }
 
-        .message-text { font-size: 14px; line-height: 1.4; }
-        .message-time { font-size: 10px; margin-top: 4px; opacity: 0.6; }
+        .message-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message-time {
+            font-size: 10px;
+            margin-top: 4px;
+            opacity: 0.6;
+        }
 
         .chat-input {
             padding: 16px 24px;
             border-top: 1px solid var(--border);
             display: flex;
             gap: 12px;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.2);
         }
-        
+
         .chat-input input {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 12px 20px;
@@ -681,8 +816,12 @@
         }
 
         /* Leaderboard */
-        .leaderboard-table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
         .leaderboard-table th {
             text-align: left;
             padding: 16px 24px;
@@ -698,9 +837,14 @@
             border-bottom: 1px solid var(--border);
             color: var(--text-secondary);
         }
-        
-        .leaderboard-table tr:last-child td { border-bottom: none; }
-        .leaderboard-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+        .leaderboard-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .leaderboard-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
 
         .rank {
             width: 28px;
@@ -712,12 +856,32 @@
             font-weight: 700;
             font-size: 12px;
         }
-        .rank-1 { background: #FFD60A; color: black; }
-        .rank-2 { background: #AEAEB2; color: black; }
-        .rank-3 { background: #FF9F0A; color: white; }
-        .rank-other { background: rgba(255,255,255,0.1); color: var(--text-secondary); }
 
-        .score { font-weight: 700; color: white; font-family: var(--font-mono); }
+        .rank-1 {
+            background: #FFD60A;
+            color: black;
+        }
+
+        .rank-2 {
+            background: #AEAEB2;
+            color: black;
+        }
+
+        .rank-3 {
+            background: #FF9F0A;
+            color: white;
+        }
+
+        .rank-other {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .score {
+            font-weight: 700;
+            color: white;
+            font-family: var(--font-mono);
+        }
 
         /* Games Grid */
         .games-grid {
@@ -749,36 +913,75 @@
             position: relative;
             background: var(--bg-panel);
         }
-        
+
         .game-cover::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
         }
 
-        .game-cover.cyan { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
-        .game-cover.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .game-cover.orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .game-cover.red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
-        .game-cover.teal { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
-        .game-cover.pink { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
+        .game-cover.cyan {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        }
 
-        .game-info { padding: 24px; }
-        .game-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-        .game-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.4; }
-        
-        .game-meta { display: flex; justify-content: space-between; align-items: center; }
+        .game-cover.green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .game-cover.orange {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .game-cover.red {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .game-cover.teal {
+            background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+        }
+
+        .game-cover.pink {
+            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+        }
+
+        .game-info {
+            padding: 24px;
+        }
+
+        .game-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .game-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .game-play-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
             padding: 6px 16px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
         }
-        .game-card:hover .game-play-btn { background: white; color: black; }
+
+        .game-card:hover .game-play-btn {
+            background: white;
+            color: black;
+        }
 
         /* Game Interfaces */
         .game-container {
@@ -798,10 +1001,11 @@
             max-width: 360px;
             margin: 0 auto;
         }
+
         .ttt-cell {
             aspect-ratio: 1;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 24px;
             display: flex;
             align-items: center;
@@ -811,11 +1015,13 @@
             position: relative;
             overflow: hidden;
         }
-        .ttt-cell:hover { 
-            background: rgba(255,255,255,0.08); 
+
+        .ttt-cell:hover {
+            background: rgba(255, 255, 255, 0.08);
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
         }
+
         .ttt-cell svg {
             width: 60%;
             height: 60%;
@@ -827,12 +1033,21 @@
             transform: scale(0.5);
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+
         .ttt-cell.active svg {
             opacity: 1;
             transform: scale(1);
         }
-        .ttt-cell.x svg { stroke: var(--blue); filter: drop-shadow(0 0 8px rgba(10, 132, 255, 0.6)); }
-        .ttt-cell.o svg { stroke: var(--red); filter: drop-shadow(0 0 8px rgba(255, 69, 58, 0.6)); }
+
+        .ttt-cell.x svg {
+            stroke: var(--blue);
+            filter: drop-shadow(0 0 8px rgba(10, 132, 255, 0.6));
+        }
+
+        .ttt-cell.o svg {
+            stroke: var(--red);
+            filter: drop-shadow(0 0 8px rgba(255, 69, 58, 0.6));
+        }
 
         /* Memory Redesign */
         .memory-board {
@@ -843,6 +1058,7 @@
             margin: 0 auto;
             perspective: 1000px;
         }
+
         .memory-card {
             aspect-ratio: 1;
             position: relative;
@@ -850,9 +1066,15 @@
             transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
             cursor: pointer;
         }
-        .memory-card:hover { transform: scale(1.05); }
-        .memory-card.flipped { transform: rotateY(180deg) scale(1.05); }
-        
+
+        .memory-card:hover {
+            transform: scale(1.05);
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg) scale(1.05);
+        }
+
         .memory-face {
             position: absolute;
             inset: 0;
@@ -861,27 +1083,28 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-        
+
         .memory-front {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             backdrop-filter: blur(10px);
         }
-        
+
         .memory-back {
-            background: rgba(30,30,30,0.9);
+            background: rgba(30, 30, 30, 0.9);
             transform: rotateY(180deg);
             border-color: var(--primary);
             box-shadow: 0 0 20px rgba(94, 92, 230, 0.2);
         }
+
         .memory-back svg {
             width: 50%;
             height: 50%;
             stroke: white;
             stroke-width: 2px;
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
         }
 
         /* Snake Redesign */
@@ -890,12 +1113,14 @@
             display: flex;
             justify-content: center;
         }
+
         #snake-canvas {
             background: rgba(10, 10, 12, 0.8);
             border-radius: 24px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .snake-controls {
             display: grid;
             grid-template-columns: repeat(3, 64px);
@@ -903,12 +1128,13 @@
             margin-top: 32px;
             justify-content: center;
         }
+
         .snake-btn {
             width: 64px;
             height: 64px;
             border-radius: 20px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
             font-size: 24px;
             display: flex;
@@ -916,25 +1142,40 @@
             justify-content: center;
             transition: all 0.2s;
         }
+
         .snake-btn:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
         }
-        .snake-btn:active { transform: scale(0.95); }
-        
-        .snake-btn:nth-child(1) { grid-column: 2; }
-        .snake-btn:nth-child(2) { grid-column: 1; }
-        .snake-btn:nth-child(3) { grid-column: 2; }
-        .snake-btn:nth-child(4) { grid-column: 3; }
+
+        .snake-btn:active {
+            transform: scale(0.95);
+        }
+
+        .snake-btn:nth-child(1) {
+            grid-column: 2;
+        }
+
+        .snake-btn:nth-child(2) {
+            grid-column: 1;
+        }
+
+        .snake-btn:nth-child(3) {
+            grid-column: 2;
+        }
+
+        .snake-btn:nth-child(4) {
+            grid-column: 3;
+        }
 
         /* RPS Redesign */
         .rps-choice {
             width: 140px;
             height: 140px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -942,6 +1183,7 @@
             transition: all 0.4s;
             position: relative;
         }
+
         .rps-choice::before {
             content: '';
             position: absolute;
@@ -953,38 +1195,51 @@
             z-index: -1;
             filter: blur(10px);
         }
-        .rps-choice.winner { 
-            border-color: transparent; 
+
+        .rps-choice.winner {
+            border-color: transparent;
             transform: scale(1.1);
         }
-        .rps-choice.winner::before { opacity: 0.6; }
-        
+
+        .rps-choice.winner::before {
+            opacity: 0.6;
+        }
+
         .rps-choice svg {
             width: 64px;
             height: 64px;
             stroke-width: 1.5px;
             color: var(--text-secondary);
         }
-        .rps-choice.winner svg { color: white; }
+
+        .rps-choice.winner svg {
+            color: white;
+        }
 
         .rps-btn {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
         }
+
         .rps-btn:hover {
             transform: translateY(-5px);
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.3);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
-        .rps-btn svg { width: 32px; height: 32px; stroke-width: 1.5px; }
+
+        .rps-btn svg {
+            width: 32px;
+            height: 32px;
+            stroke-width: 1.5px;
+        }
 
         /* Quiz Redesign */
         .quiz-container {
@@ -992,6 +1247,7 @@
             margin: 0 auto;
             position: relative;
         }
+
         .quiz-question {
             font-size: 22px;
             font-weight: 700;
@@ -1000,15 +1256,17 @@
             line-height: 1.3;
             min-height: 60px;
         }
+
         .quiz-options {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
+
         .quiz-option {
             padding: 18px 24px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
             font-size: 16px;
             font-weight: 500;
@@ -1017,37 +1275,51 @@
             position: relative;
             overflow: hidden;
         }
+
         .quiz-option:hover {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             transform: translateX(4px);
         }
+
         .quiz-option.correct {
             background: rgba(48, 209, 88, 0.2);
             border-color: var(--green);
             color: var(--green);
         }
+
         .quiz-option.wrong {
             background: rgba(255, 69, 58, 0.2);
             border-color: var(--red);
             color: var(--red);
         }
-        
+
         .quiz-progress {
             display: flex;
             gap: 6px;
             margin-top: 40px;
             justify-content: center;
         }
+
         .quiz-dot {
             width: 8px;
             height: 8px;
             border-radius: 4px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             transition: all 0.3s;
         }
-        .quiz-dot.active { width: 24px; background: white; }
-        .quiz-dot.correct { background: var(--green); }
-        .quiz-dot.wrong { background: var(--red); }
+
+        .quiz-dot.active {
+            width: 24px;
+            background: white;
+        }
+
+        .quiz-dot.correct {
+            background: var(--green);
+        }
+
+        .quiz-dot.wrong {
+            background: var(--red);
+        }
 
         /* Reaction Redesign */
         .reaction-container {
@@ -1057,6 +1329,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .reaction-box {
             width: 100%;
             height: 100%;
@@ -1071,15 +1344,16 @@
             transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
             position: relative;
             overflow: hidden;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .reaction-box[data-state="waiting"] {
             background: rgba(255, 69, 58, 0.1);
             border-color: rgba(255, 69, 58, 0.3);
             color: var(--red);
         }
+
         .reaction-box[data-state="ready"] {
             background: rgba(48, 209, 88, 0.2);
             border-color: var(--green);
@@ -1087,18 +1361,122 @@
             box-shadow: 0 0 50px rgba(48, 209, 88, 0.2);
             transform: scale(1.02);
         }
-        
+
         .reaction-icon {
             font-size: 48px;
             margin-bottom: 16px;
             display: block;
         }
 
+        /* Settings / Profile Styles */
+        .settings-section {
+            background: var(--bg-glass-heavy);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .settings-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .setting-item:first-of-type {
+            padding-top: 0;
+        }
+
+        .setting-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .setting-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+            word-break: break-all;
+        }
+
+        .toggle {
+            width: 50px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+        }
+
+        .toggle.active {
+            background: var(--green);
+        }
+
+        .toggle.active::after {
+            transform: translateX(22px);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 16px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .modal-close:hover {
+            color: white;
+        }
+
         /* Modals */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
             z-index: 2000;
             display: flex;
@@ -1108,7 +1486,11 @@
             visibility: hidden;
             transition: all 0.3s;
         }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
         .modal {
             background: #1c1c1e;
@@ -1120,10 +1502,22 @@
             transform: scale(0.95);
             transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .modal-overlay.active .modal { transform: scale(1); }
-        .modal-header { display: flex; justify-content: space-between; margin-bottom: 24px; }
-        .modal-title { font-size: 20px; font-weight: 700; }
-        
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .nav-rail {
@@ -1141,11 +1535,13 @@
                 max-width: 90%;
                 margin: 0 auto;
             }
-            
-            .nav-rail .nav-logo, .nav-rail .user-nav, .nav-rail .nav-tooltip {
+
+            .nav-rail .nav-logo,
+            .nav-rail .user-nav,
+            .nav-rail .nav-tooltip {
                 display: none;
             }
-            
+
             .nav-items {
                 flex-direction: row;
                 gap: 8px;
@@ -1157,11 +1553,17 @@
                 padding-bottom: 120px;
             }
 
-            .chat-container { grid-template-columns: 1fr; }
-            .chat-sidebar { display: none; }
+            .chat-container {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-sidebar {
+                display: none;
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
@@ -1220,11 +1622,24 @@
 
             <div class="social-login">
                 <button class="social-btn" onclick="signInWithGoogle()">
-                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                        <path fill="currentColor"
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="currentColor"
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path fill="currentColor"
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
                     Google
                 </button>
                 <button class="social-btn" onclick="signInAsGuest()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
                     Guest
                 </button>
             </div>
@@ -1233,34 +1648,52 @@
 
     <!-- Main App -->
     <div class="app-container" id="appContainer">
-        
+
         <!-- Navigation Rail -->
         <nav class="nav-rail">
             <div class="nav-logo">🎮</div>
-            
+
             <div class="nav-items">
                 <div class="nav-icon active" onclick="showPage('dashboard')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                        <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                    </svg>
                     <div class="nav-tooltip">Dashboard</div>
                 </div>
-                
+
                 <div class="nav-icon" onclick="showPage('games')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12H3"/><path d="M21 6H3"/><path d="M21 18H3"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 12H3" />
+                        <path d="M21 6H3" />
+                        <path d="M21 18H3" />
+                    </svg>
                     <div class="nav-tooltip">Games</div>
                 </div>
 
                 <div class="nav-icon" onclick="showPage('chat')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
                     <div class="nav-tooltip">Chat</div>
                 </div>
 
                 <div class="nav-icon" onclick="showPage('rooms')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
                     <div class="nav-tooltip">Rooms</div>
                 </div>
 
                 <div class="nav-icon" onclick="showPage('leaderboard')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M18 20V10" />
+                        <path d="M12 20V4" />
+                        <path d="M6 20v-6" />
+                    </svg>
                     <div class="nav-tooltip">Leaderboard</div>
                 </div>
             </div>
@@ -1286,7 +1719,8 @@
                     <div class="stat-card cyan">
                         <div class="stat-header">
                             <div class="stat-icon cyan">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="9" cy="7" r="4"></circle>
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -1300,7 +1734,8 @@
                     <div class="stat-card green">
                         <div class="stat-header">
                             <div class="stat-icon green">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
                                     <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
                                     <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
                                     <path d="M4 22h16"></path>
@@ -1314,7 +1749,8 @@
                     <div class="stat-card orange">
                         <div class="stat-header">
                             <div class="stat-icon orange">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
                                     <line x1="6" y1="12" x2="10" y2="12"></line>
                                     <line x1="8" y1="10" x2="8" y2="14"></line>
                                     <rect x="2" y="6" width="20" height="12" rx="2"></rect>
@@ -1327,7 +1763,8 @@
                     <div class="stat-card red">
                         <div class="stat-header">
                             <div class="stat-icon red">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
                                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                 </svg>
                             </div>
@@ -1354,7 +1791,8 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">🏆 Top Players</h3>
-                            <button class="btn btn-small btn-secondary" onclick="showPage('leaderboard')">View All</button>
+                            <button class="btn btn-small btn-secondary" onclick="showPage('leaderboard')">View
+                                All</button>
                         </div>
                         <div class="card-body" id="topPlayersPreview">
                             <p style="color: var(--text-secondary); text-align: center;">Loading...</p>
@@ -1382,7 +1820,8 @@
                             </div>
                         </div>
                         <div class="chat-list" id="onlineUsersList">
-                            <p style="color: var(--text-secondary); text-align: center; padding: 20px;">Loading users...</p>
+                            <p style="color: var(--text-secondary); text-align: center; padding: 20px;">Loading users...
+                            </p>
                         </div>
                     </div>
                     <div class="chat-main">
@@ -1394,10 +1833,12 @@
                             </div>
                         </div>
                         <div class="chat-messages" id="chatMessages">
-                            <p style="color: var(--text-secondary); text-align: center;">No messages yet. Start the conversation!</p>
+                            <p style="color: var(--text-secondary); text-align: center;">No messages yet. Start the
+                                conversation!</p>
                         </div>
                         <div class="chat-input">
-                            <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendMessage()">
+                            <input type="text" id="chatInput" placeholder="Type a message..."
+                                onkeypress="if(event.key==='Enter')sendMessage()">
                             <button onclick="sendMessage()">Send</button>
                         </div>
                     </div>
@@ -1417,7 +1858,8 @@
                             + Create New Room
                         </button>
                         <div id="roomsList">
-                            <p style="color: var(--text-secondary); text-align: center; padding: 20px;">No rooms yet. Create one!</p>
+                            <p style="color: var(--text-secondary); text-align: center; padding: 20px;">No rooms yet.
+                                Create one!</p>
                         </div>
                     </div>
                     <div class="room-content">
@@ -1429,10 +1871,12 @@
                             </div>
                         </div>
                         <div class="chat-messages" id="roomMessages" style="height: calc(100vh - 340px);">
-                            <p style="color: var(--text-secondary); text-align: center;">Select a room to start chatting</p>
+                            <p style="color: var(--text-secondary); text-align: center;">Select a room to start chatting
+                            </p>
                         </div>
                         <div class="chat-input">
-                            <input type="text" id="roomChatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendRoomMessage()" disabled>
+                            <input type="text" id="roomChatInput" placeholder="Type a message..."
+                                onkeypress="if(event.key==='Enter')sendRoomMessage()" disabled>
                             <button onclick="sendRoomMessage()" id="roomSendBtn" disabled>Send</button>
                         </div>
                     </div>
@@ -1449,7 +1893,8 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">🏆 Global Rankings</h3>
-                        <select class="btn btn-secondary btn-small" id="leaderboardFilter" onchange="filterLeaderboard()" style="padding: 8px 12px;">
+                        <select class="btn btn-secondary btn-small" id="leaderboardFilter"
+                            onchange="filterLeaderboard()" style="padding: 8px 12px;">
                             <option value="all">All Games</option>
                             <option value="ttt">Tic Tac Toe</option>
                             <option value="memory">Memory</option>
@@ -1470,7 +1915,8 @@
                             </thead>
                             <tbody id="leaderboardBody">
                                 <tr>
-                                    <td colspan="5" style="text-align: center; color: var(--text-secondary);">Loading...</td>
+                                    <td colspan="5" style="text-align: center; color: var(--text-secondary);">Loading...
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1564,7 +2010,8 @@
 
                 <div class="game-container">
                     <div class="game-header">
-                        <div class="game-score-display">You: <span style="color: var(--primary);">X</span> vs AI: <span style="color: var(--danger);">O</span></div>
+                        <div class="game-score-display">You: <span style="color: var(--primary);">X</span> vs AI: <span
+                                style="color: var(--danger);">O</span></div>
                         <button class="btn btn-secondary" onclick="resetTTT()">New Game</button>
                     </div>
                     <div class="ttt-board" id="tttBoard">
@@ -1642,7 +2089,8 @@
 
                 <div class="game-container">
                     <div class="game-header">
-                        <div class="game-score-display">Score: <span id="quizScore">0</span>/<span id="quizTotal">10</span></div>
+                        <div class="game-score-display">Score: <span id="quizScore">0</span>/<span
+                                id="quizTotal">10</span></div>
                         <button class="btn btn-secondary" onclick="startQuiz()">New Quiz</button>
                     </div>
                     <div class="quiz-container" id="quizContainer">
@@ -1689,7 +2137,8 @@
                                 <div class="rps-score-label">AI Wins</div>
                             </div>
                         </div>
-                        <button class="btn btn-secondary" onclick="resetRPS()" style="margin-top: 24px;">Reset Scores</button>
+                        <button class="btn btn-secondary" onclick="resetRPS()" style="margin-top: 24px;">Reset
+                            Scores</button>
                     </div>
                 </div>
             </div>
@@ -1703,7 +2152,8 @@
 
                 <div class="game-container">
                     <div class="reaction-container">
-                        <button class="btn btn-primary" onclick="startReaction()" style="margin-bottom: 24px;">Start Test</button>
+                        <button class="btn btn-primary" onclick="startReaction()" style="margin-bottom: 24px;">Start
+                            Test</button>
                         <div class="reaction-box" id="reactionBox" onclick="handleReactionClick()">
                             Click "Start Test" to begin
                         </div>
@@ -1747,7 +2197,8 @@
                     <div class="setting-item">
                         <div class="setting-info">
                             <h4>User ID</h4>
-                            <p id="settingsUserId" style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">Loading...</p>
+                            <p id="settingsUserId" style="font-family: 'JetBrains Mono', monospace; font-size: 12px;">
+                                Loading...</p>
                         </div>
                     </div>
                 </div>
@@ -1885,7 +2336,7 @@
         function switchAuthTab(tab) {
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
-            
+
             if (tab === 'login') {
                 document.getElementById('loginForm').style.display = 'block';
                 document.getElementById('registerForm').style.display = 'none';
@@ -1917,7 +2368,7 @@
             try {
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 await userCredential.user.updateProfile({ displayName: username });
-                
+
                 await db.ref('users/' + userCredential.user.uid).set({
                     username: username,
                     email: email,
@@ -1938,10 +2389,10 @@
             try {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 const result = await auth.signInWithPopup(provider);
-                
+
                 const userRef = db.ref('users/' + result.user.uid);
                 const snapshot = await userRef.once('value');
-                
+
                 if (!snapshot.exists()) {
                     await userRef.set({
                         username: result.user.displayName,
@@ -1964,9 +2415,9 @@
             try {
                 const result = await auth.signInAnonymously();
                 const guestName = 'Guest_' + Math.floor(Math.random() * 10000);
-                
+
                 await result.user.updateProfile({ displayName: guestName });
-                
+
                 await db.ref('users/' + result.user.uid).set({
                     username: guestName,
                     score: 0,
@@ -1994,7 +2445,7 @@
         // Auth State Observer
         auth.onAuthStateChanged(async (user) => {
             document.getElementById('loadingScreen').classList.add('hidden');
-            
+
             if (user) {
                 currentUser = user;
                 document.getElementById('authContainer').style.display = 'none';
@@ -2057,7 +2508,7 @@
         function updateOnlineUsersList(users) {
             const list = document.getElementById('onlineUsersList');
             let html = '';
-            
+
             Object.entries(users).forEach(([uid, user]) => {
                 html += `
                     <div class="chat-item">
@@ -2110,11 +2561,11 @@
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
+
             document.getElementById('page-' + pageId).classList.add('active');
-            
+
             document.querySelectorAll('.nav-item').forEach(nav => {
-                if (nav.textContent.toLowerCase().includes(pageId) || 
+                if (nav.textContent.toLowerCase().includes(pageId) ||
                     nav.onclick?.toString().includes(pageId)) {
                     nav.classList.add('active');
                 }
@@ -2148,7 +2599,7 @@
 
         function renderChatMessages(messages) {
             const container = document.getElementById('chatMessages');
-            
+
             if (messages.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No messages yet. Start the conversation!</p>';
                 return;
@@ -2158,7 +2609,7 @@
             messages.forEach(msg => {
                 const isSent = msg.userId === currentUser.uid;
                 const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
+
                 html += `
                     <div class="message ${isSent ? 'sent' : ''}">
                         <div class="message-avatar">${(msg.username || 'U').charAt(0).toUpperCase()}</div>
@@ -2178,7 +2629,7 @@
         async function sendMessage() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
-            
+
             if (!text) return;
 
             try {
@@ -2217,7 +2668,7 @@
 
         function renderRoomsList(rooms) {
             const container = document.getElementById('roomsList');
-            
+
             if (rooms.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">No rooms yet. Create one!</p>';
                 return;
@@ -2348,7 +2799,7 @@
 
         function renderRoomMessages(messages) {
             const container = document.getElementById('roomMessages');
-            
+
             if (messages.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No messages in this room yet.</p>';
                 return;
@@ -2358,7 +2809,7 @@
             messages.forEach(msg => {
                 const isSent = msg.userId === currentUser.uid;
                 const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
+
                 html += `
                     <div class="message ${isSent ? 'sent' : ''}">
                         <div class="message-avatar">${(msg.username || 'U').charAt(0).toUpperCase()}</div>
@@ -2377,10 +2828,10 @@
 
         async function sendRoomMessage() {
             if (!currentRoom) return;
-            
+
             const input = document.getElementById('roomChatInput');
             const text = input.value.trim();
-            
+
             if (!text) return;
 
             try {
@@ -2397,7 +2848,15 @@
         }
 
         // Leaderboard
+        let leaderboardUnsubscriber = null; // Track leaderboard listener separately
+
         function loadLeaderboard() {
+            // Unsubscribe from previous listener if exists
+            if (leaderboardUnsubscriber) {
+                leaderboardUnsubscriber();
+                leaderboardUnsubscriber = null;
+            }
+
             const leaderboardRef = db.ref('users').orderByChild('score');
             const leaderboardListener = leaderboardRef.on('value', (snap) => {
                 const users = [];
@@ -2407,12 +2866,13 @@
                 users.reverse();
                 renderLeaderboard(users);
             });
-            unsubscribers.push(() => leaderboardRef.off('value', leaderboardListener));
+            leaderboardUnsubscriber = () => leaderboardRef.off('value', leaderboardListener);
+            unsubscribers.push(leaderboardUnsubscriber);
         }
 
         function renderLeaderboard(users) {
             const tbody = document.getElementById('leaderboardBody');
-            
+
             if (users.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-secondary);">No players yet</td></tr>';
                 return;
@@ -2480,7 +2940,7 @@
 
             // Simple AI: Try to win, block, or random
             let move = findWinningMove('O') || findWinningMove('X') || emptyCells[Math.floor(Math.random() * emptyCells.length)];
-            
+
             tttBoard[move] = 'O';
             renderTTT();
 
@@ -2503,7 +2963,7 @@
         }
 
         function findWinningMove(player) {
-            const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            const lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
             for (let line of lines) {
                 const [a, b, c] = line;
                 const cells = [tttBoard[a], tttBoard[b], tttBoard[c]];
@@ -2515,8 +2975,8 @@
         }
 
         function checkTTTWinner(player) {
-            const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            return lines.some(([a,b,c]) => tttBoard[a] === player && tttBoard[b] === player && tttBoard[c] === player);
+            const lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+            return lines.some(([a, b, c]) => tttBoard[a] === player && tttBoard[b] === player && tttBoard[c] === player);
         }
 
         function renderTTT() {
@@ -2524,7 +2984,7 @@
             cells.forEach((cell, i) => {
                 cell.innerHTML = ''; // Clear existing
                 cell.className = 'ttt-cell';
-                
+
                 if (tttBoard[i] === 'X') {
                     cell.classList.add('x', 'active');
                     cell.innerHTML = '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
@@ -2554,7 +3014,7 @@
             '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path>', // Bell
             '<path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line>' // Feather
         ];
-        
+
         let memoryCards = [];
         let flippedCards = [];
         let matchedPairs = 0;
@@ -2569,7 +3029,7 @@
             matchedPairs = 0;
             memoryMoves = 0;
             memorySeconds = 0;
-            
+
             clearInterval(memoryTimer);
             memoryTimer = setInterval(() => {
                 memorySeconds++;
@@ -2615,7 +3075,7 @@
             // Flip the card visually and in state
             card.flipped = true;
             document.getElementById(`card-${index}`).classList.add('flipped');
-            
+
             flippedCards.push(index);
 
             if (flippedCards.length === 2) {
@@ -2627,15 +3087,15 @@
                 if (memoryCards[first].icon === memoryCards[second].icon) {
                     memoryCards[first].matched = true;
                     memoryCards[second].matched = true;
-                    
+
                     // Update visual for match (optional, or just keep flipped)
                     document.getElementById(`card-${first}`).classList.add('matched');
                     document.getElementById(`card-${second}`).classList.add('matched');
-                    
+
                     matchedPairs++;
                     document.getElementById('memoryPairs').textContent = matchedPairs;
                     flippedCards = [];
-                    
+
                     if (matchedPairs === 8) {
                         clearInterval(memoryTimer);
                         const score = Math.max(200 - memoryMoves * 5 - memorySeconds, 50);
@@ -2649,10 +3109,10 @@
                     setTimeout(() => {
                         memoryCards[first].flipped = false;
                         memoryCards[second].flipped = false;
-                        
+
                         document.getElementById(`card-${first}`).classList.remove('flipped');
                         document.getElementById(`card-${second}`).classList.remove('flipped');
-                        
+
                         flippedCards = [];
                     }, 1000);
                 }
@@ -2673,15 +3133,15 @@
         function initSnake() {
             const canvas = document.getElementById('snake-canvas');
             snakeCtx = canvas.getContext('2d');
-            
+
             snake = [{ x: 5, y: 10 }, { x: 4, y: 10 }, { x: 3, y: 10 }];
             snakeDirection = 'right';
             snakeScore = 0;
             document.getElementById('snakeScore').textContent = snakeScore;
             document.getElementById('snakeHighScore').textContent = snakeHighScore;
-            
+
             spawnFood();
-            
+
             if (snakeGame) clearInterval(snakeGame);
             snakeGame = setInterval(gameLoop, 100);
         }
@@ -2695,7 +3155,7 @@
 
         function gameLoop() {
             const head = { ...snake[0] };
-            
+
             switch (snakeDirection) {
                 case 'up': head.y--; break;
                 case 'down': head.y++; break;
@@ -2703,7 +3163,7 @@
                 case 'right': head.x++; break;
             }
 
-            if (head.x < 0 || head.x >= canvasSize / gridSize || 
+            if (head.x < 0 || head.x >= canvasSize / gridSize ||
                 head.y < 0 || head.y >= canvasSize / gridSize ||
                 snake.some(seg => seg.x === head.x && seg.y === head.y)) {
                 endSnakeGame();
@@ -2726,13 +3186,13 @@
         function drawSnake() {
             // Clear & Draw Background
             snakeCtx.clearRect(0, 0, canvasSize, canvasSize);
-            
+
             // Draw subtle dot grid
             snakeCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-            for(let x=0; x<canvasSize; x+=gridSize) {
-                for(let y=0; y<canvasSize; y+=gridSize) {
+            for (let x = 0; x < canvasSize; x += gridSize) {
+                for (let y = 0; y < canvasSize; y += gridSize) {
                     snakeCtx.beginPath();
-                    snakeCtx.arc(x + gridSize/2, y + gridSize/2, 1, 0, Math.PI*2);
+                    snakeCtx.arc(x + gridSize / 2, y + gridSize / 2, 1, 0, Math.PI * 2);
                     snakeCtx.fill();
                 }
             }
@@ -2758,13 +3218,13 @@
                 snakeCtx.shadowBlur = 10;
                 snakeCtx.shadowColor = isHead ? '#BF5AF2' : '#5E5CE6';
                 snakeCtx.fillStyle = isHead ? '#BF5AF2' : '#5E5CE6';
-                
+
                 snakeCtx.beginPath();
                 // Draw rounded rects for segments
                 const x = seg.x * gridSize + 2;
                 const y = seg.y * gridSize + 2;
                 const size = gridSize - 4;
-                
+
                 // Manual rounded rect
                 snakeCtx.roundRect(x, y, size, size, isHead ? 6 : 4);
                 snakeCtx.fill();
@@ -2855,7 +3315,7 @@
                 const container = document.getElementById('quizContainer');
                 const percentage = Math.round((quizScore / currentQuiz.length) * 100);
                 const scorePoints = quizScore * 20;
-                
+
                 container.innerHTML = `
                     <div style="text-align: center; padding: 40px 0;">
                         <div style="font-size: 64px; margin-bottom: 24px;">🎉</div>
@@ -2883,7 +3343,7 @@
             quizAnswered = false;
 
             document.getElementById('quizQuestion').textContent = question.q;
-            
+
             const optionsHtml = question.options.map((opt, i) => `
                 <div class="quiz-option" onclick="answerQuiz(${i})" data-index="${i}">
                     ${opt}
@@ -2933,7 +3393,7 @@
         // Rock Paper Scissors (Redesigned)
         let rpsPlayerScore = 0;
         let rpsComputerScore = 0;
-        
+
         const rpsIcons = {
             rock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>',
             paper: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
@@ -2948,7 +3408,7 @@
             // Update UI with SVG icons
             document.getElementById('rpsPlayerChoice').innerHTML = rpsIcons[playerChoice];
             document.getElementById('rpsComputerChoice').innerHTML = rpsIcons[computerChoice];
-            
+
             // Remove previous winner classes
             document.getElementById('rpsPlayerChoice').classList.remove('winner');
             document.getElementById('rpsComputerChoice').classList.remove('winner');
@@ -2974,7 +3434,7 @@
                 rpsComputerScore++;
                 computerWin = true;
             }
-            
+
             // Add winner effects
             if (playerWin) document.getElementById('rpsPlayerChoice').classList.add('winner');
             if (computerWin) document.getElementById('rpsComputerChoice').classList.add('winner');
@@ -3006,7 +3466,7 @@
             const box = document.getElementById('reactionBox');
             box.setAttribute('data-state', 'waiting');
             box.innerHTML = '<div class="reaction-icon">🛑</div><div>Wait for Green...</div>';
-            
+
             reactionState = 'waiting';
             document.getElementById('reactionTime').textContent = '0 ms';
             document.getElementById('reactionMessage').textContent = 'Wait for it...';
@@ -3086,7 +3546,7 @@
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
+
             const icons = { success: '✅', error: '❌', info: 'ℹ️' };
 
             toast.innerHTML = `
@@ -3115,7 +3575,7 @@
             try {
                 await currentUser.updateProfile({ displayName: newName });
                 await db.ref('users/' + currentUser.uid + '/username').set(newName);
-                
+
                 updateUserUI();
                 closeModal('editNameModal');
                 showToast('Display name updated!', 'success');
@@ -3164,4 +3624,5 @@
         console.log('%cWelcome to the console! Have fun gaming!', 'font-size: 14px; color: #9ca3af;');
     </script>
 </body>
+
 </html>
