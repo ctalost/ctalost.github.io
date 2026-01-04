@@ -439,15 +439,36 @@
         }
     </script>
 
-    <!-- Mobile Menu Toggle Script -->
+    <!-- Scripts -->
     <script>
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileNav = document.getElementById('mobile-nav');
 
+        // Toggle mobile nav
         if(mobileMenuBtn && mobileNav) {
             mobileMenuBtn.addEventListener('click', () => {
                 mobileNav.classList.toggle('hidden');
             });
         }
+
+        // Smooth scrolling for all anchor links & hide mobile nav on click
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if(targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+
+                if(mobileNav && !mobileNav.classList.contains('hidden')) {
+                    mobileNav.classList.add('hidden');
+                }
+            });
+        });
     </script>
 </body></html>
