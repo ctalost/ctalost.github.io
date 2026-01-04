@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-
 <html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>3sv6 | 3D Designer &amp; Lua Developer</title>
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<!-- Material Symbols -->
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- Theme Configuration -->
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -38,8 +33,10 @@
         }
     </script>
 <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
+html {
+    scroll-behavior: smooth;
+}
+::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
@@ -51,85 +48,72 @@
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #0db9f2;
-        }
-
-        /* Glassmorphism Utilities */
-        .glass-panel {
+        }.glass-panel {
             background: rgba(30, 41, 59, 0.4);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.3s ease;
         }
-
         .glass-card:hover {
             border-color: rgba(13, 185, 242, 0.3);
             background: rgba(255, 255, 255, 0.05);
             box-shadow: 0 0 20px rgba(13, 185, 242, 0.1);
             transform: translateY(-2px);
         }
-
         .neon-text {
             text-shadow: 0 0 10px rgba(13, 185, 242, 0.5);
         }
     </style>
 </head>
 <body class="bg-background-dark text-white font-body selection:bg-primary selection:text-white overflow-x-hidden">
-<!-- Navbar -->
 <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/5">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="flex items-center justify-between h-16">
-<!-- Logo -->
 <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
 <span class="material-symbols-outlined text-primary text-3xl">deployed_code</span>
 <span class="font-display font-bold text-xl tracking-tight">3sv6<span class="text-primary">.dev</span></span>
 </div>
-<!-- Desktop Nav -->
-<div id="desktop-nav" class="hidden md:flex items-center gap-8">
-    <nav class="flex gap-6">
-        <a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#home">Home</a>
-        <a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#about">About</a>
-        <a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#skills">Skills</a>
-        <a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#pricing">Pricing</a>
-        <a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#portfolio">Portfolio</a>
-    </nav>
-    <a class="flex items-center justify-center h-9 px-5 bg-primary hover:bg-primary-dark text-background-dark text-sm font-bold rounded-lg transition-colors font-display" href="#contact">
-        Hire Me
-    </a>
+<div class="hidden md:flex items-center gap-8">
+<nav class="flex gap-6">
+<a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#home">Home</a>
+<a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#about">About</a>
+<a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#skills">Skills</a>
+<a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#pricing">Pricing</a>
+<a class="text-sm font-medium text-gray-300 hover:text-primary transition-colors" href="#portfolio">Portfolio</a>
+</nav>
+<a class="flex items-center justify-center h-9 px-5 bg-primary hover:bg-primary-dark text-background-dark text-sm font-bold rounded-lg transition-colors font-display" href="#contact">
+                        Hire Me
+                    </a>
 </div>
-<!-- Mobile menu button -->
 <div class="md:hidden flex items-center">
-    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white p-2">
-        <span class="material-symbols-outlined">menu</span>
-    </button>
+<button id="mobile-menu-button" class="text-gray-300 hover:text-white p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
 </div>
 </div>
 </div>
 </header>
-<!-- Mobile Nav -->
-<div id="mobile-nav" class="fixed top-16 left-0 right-0 z-40 bg-surface-dark/90 backdrop-blur-lg p-6 hidden">
-    <nav class="flex flex-col gap-4">
-        <a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#home">Home</a>
-        <a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#about">About</a>
-        <a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#skills">Skills</a>
-        <a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#pricing">Pricing</a>
-        <a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#portfolio">Portfolio</a>
-    </nav>
+<div id="mobile-menu" class="fixed top-16 left-0 right-0 z-40 bg-surface-dark/90 backdrop-blur-lg p-6 hidden md:hidden">
+<nav class="flex flex-col gap-4">
+<a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#home">Home</a>
+<a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#about">About</a>
+<a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#skills">Skills</a>
+<a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#pricing">Pricing</a>
+<a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#portfolio">Portfolio</a>
+<a class="text-lg font-medium text-gray-300 hover:text-primary transition-colors" href="#contact">Contact</a>
+</nav>
 </div>
-<!-- Main Content -->
 <main class="relative pt-16">
-<!-- Background Ambient Glows -->
 <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
 <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]"></div>
 <div class="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] bg-secondary/10 rounded-full blur-[100px]"></div>
 </div>
-<!-- Hero Section -->
 <section class="relative min-h-[90vh] flex items-center justify-center px-4 py-20" id="home">
 <div class="max-w-4xl mx-auto text-center z-10">
 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-6 animate-fade-in">
@@ -154,7 +138,6 @@
 </div>
 </div>
 </section>
-<!-- Trust Signals Strip -->
 <section class="border-y border-white/5 bg-black/20 backdrop-blur-sm">
 <div class="max-w-7xl mx-auto px-4 py-8">
 <div class="flex flex-wrap justify-center gap-4 md:gap-8">
@@ -177,7 +160,6 @@
 </div>
 </div>
 </section>
-<!-- About Section -->
 <section class="py-20 px-4" id="about">
 <div class="max-w-3xl mx-auto">
 <div class="flex items-center gap-4 mb-8">
@@ -197,7 +179,6 @@
 </div>
 </div>
 </section>
-<!-- Skills Section -->
 <section class="py-20 px-4 bg-black/20" id="skills">
 <div class="max-w-6xl mx-auto">
 <div class="mb-12 text-center">
@@ -205,7 +186,6 @@
 <p class="text-gray-400">Everything you need to build your game.</p>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<!-- 3D Design Card -->
 <div class="glass-card p-6 rounded-2xl flex flex-col items-start gap-4 group">
 <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background-dark transition-colors">
 <span class="material-symbols-outlined text-3xl">view_in_ar</span>
@@ -218,7 +198,6 @@
 <li class="flex items-start gap-2"><span class="material-symbols-outlined text-primary text-sm mt-0.5">check</span> Clean topology</li>
 </ul>
 </div>
-<!-- Lua Dev Card -->
 <div class="glass-card p-6 rounded-2xl flex flex-col items-start gap-4 group">
 <div class="w-12 h-12 rounded-lg bg-secondary/20 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-colors">
 <span class="material-symbols-outlined text-3xl">terminal</span>
@@ -231,7 +210,6 @@
 <li class="flex items-start gap-2"><span class="material-symbols-outlined text-secondary text-sm mt-0.5">check</span> DataStore systems</li>
 </ul>
 </div>
-<!-- Extras Card -->
 <div class="glass-card p-6 rounded-2xl flex flex-col items-start gap-4 group">
 <div class="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400 group-hover:bg-green-500 group-hover:text-background-dark transition-colors">
 <span class="material-symbols-outlined text-3xl">flash_on</span>
@@ -247,17 +225,15 @@
 </div>
 </div>
 </section>
-<!-- Pricing Section -->
 <section class="py-20 px-4" id="pricing">
-<div class="max-w-5xl mx-auto">
+<div class="max-w-6xl mx-auto">
 <div class="mb-12 text-center">
 <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">Affordable Pricing</h2>
 <p class="text-gray-400 max-w-xl mx-auto">Prices are kept intentionally low to support small developers and indie creators.</p>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-<!-- 3D Pricing -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 <div class="glass-card rounded-2xl overflow-hidden border-t-4 border-t-primary">
-<div class="p-8">
+<div class="p-6">
 <div class="flex items-center gap-3 mb-4">
 <span class="material-symbols-outlined text-primary text-3xl">deployed_code</span>
 <h3 class="font-display text-2xl font-bold">3D Design</h3>
@@ -283,9 +259,8 @@
 </div>
 </div>
 </div>
-<!-- Lua Pricing -->
 <div class="glass-card rounded-2xl overflow-hidden border-t-4 border-t-secondary">
-<div class="p-8">
+<div class="p-6">
 <div class="flex items-center gap-3 mb-4">
 <span class="material-symbols-outlined text-secondary text-3xl">code</span>
 <h3 class="font-display text-2xl font-bold">Lua Scripting</h3>
@@ -311,10 +286,35 @@
 </div>
 </div>
 </div>
+<div class="glass-card rounded-2xl overflow-hidden border-t-4 border-t-pink-500">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-pink-500 text-3xl">desktop_windows</span>
+<h3 class="font-display text-2xl font-bold">Web Design</h3>
+</div>
+<div class="space-y-6">
+<div class="bg-white/5 rounded-xl p-4 border border-white/5">
+<p class="text-sm text-gray-400 mb-1">Single Page Site</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-pink-500">$2</span>
+<span class="text-sm text-gray-500">OR</span>
+<span class="text-xl font-bold text-white">250 R$</span>
+</div>
+</div>
+<div class="bg-white/5 rounded-xl p-4 border border-white/5">
+<p class="text-sm text-gray-400 mb-1">Multi-Page Site</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-bold text-pink-500">Negotiable</span>
+<span class="text-sm text-gray-500"></span>
+</div>
+</div>
+<p class="text-sm text-gray-400 italic text-center">Modern, dark-themed, responsive.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </section>
-<!-- Portfolio Section -->
 <section class="py-20 px-4 bg-black/20" id="portfolio">
 <div class="max-w-6xl mx-auto">
 <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -327,7 +327,6 @@
 </a>
 </div>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-<!-- Portfolio Item 1 -->
 <div class="group relative aspect-[4/3] rounded-xl overflow-hidden bg-surface-dark border border-white/5">
 <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60 z-10"></div>
 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Collection of low poly game props on a dark background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDYXIBZT9m7WvUOwM5nyzXLYLPxOp4hbQ8SAyJgZJXCY_nVvXMzH-6tEzuHZoE01bl-2svstdRfjJ96NngbD1LTDsiqQ21BHEZ_1367iD535VfOjizpv8tTZWFcYXoOL8MGq3RB2Q5kwGoFnaamfraUPEbjxS8MUnZlfLBfca5ZPDVyqb4MiN8AJprWvoQyryVLgTEAlW8n4U3s9WZA-c6osTEpbAiRzAGhImy0swW64ql_Y8Jklpn8Y0frXpPX2MpEdCP7lo8keOY');"></div>
@@ -343,7 +342,6 @@
 </div>
 </div>
 </div>
-<!-- Portfolio Item 2 -->
 <div class="group relative aspect-[4/3] rounded-xl overflow-hidden bg-surface-dark border border-white/5">
 <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60 z-10"></div>
 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Screenshot of a game inventory UI with code overlay" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDl5Bm5m8F719UiCGx58oHSqedJEnPQp4vQYezIuXN8DmdqqUlRqVM0QKZD1MYkhJNLvmfhuC1wk8JZ8s5s8q6AqEEdoXZn0v5Aqow-FTfI_z8XGSoitAFm_TRWd6HoVIg9wVXZQi28Xn2Wyg6keDFXpAjFDwSn9DJKsn398akEhYliNMht-kFtrczBSKwd42OIqE8sBUzFFNifmedNZ4NOxl-VtOnzgzYDJiJNPPIl8vFdiBUgVhlQdRg4f2ZkonnhA2jD84wLTo');"></div>
@@ -359,7 +357,6 @@
 </div>
 </div>
 </div>
-<!-- Portfolio Item 3 -->
 <div class="group relative aspect-[4/3] rounded-xl overflow-hidden bg-surface-dark border border-white/5">
 <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60 z-10"></div>
 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="3D environment scene with trees and terrain" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBmM1UxWCyuNgWEDqrSH_bic6grMfFPxP3qS8sl50b76QY3k_ywu8tYHsalu2yoFyRO2mC0u8gkbNi504b0PLmD59rQ3mNmu-wNSeGffu7MOiXYi_zv_p6r3aLjIiNY5ePIt285lk5ISm1SMWr8bpPagatbzFHRhmvXZI2Cgu4O6oWLririS9JJ_P-oHzJGIlhLZc2TzFTjX6Orf8cqmsfzAbbJ6nrJwGesERYqJkY3Y-jsNtip2MVT_AQP1RxPhYIBhkxkUCVf8pY');"></div>
@@ -378,9 +375,7 @@
 </div>
 </div>
 </section>
-<!-- Contact Section -->
 <section class="py-24 px-4 relative overflow-hidden" id="contact">
-<!-- Background Decoration -->
 <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -z-10"></div>
 <div class="max-w-2xl mx-auto text-center">
 <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/20 text-primary mb-6">
@@ -396,7 +391,7 @@
 <span class="text-3xl font-bold text-white font-display">3sv6</span>
 <span class="px-2 py-1 bg-[#5865F2] rounded text-xs font-bold text-white">DISCORD</span>
 </div>
-<button id="discord-copy-btn" class="w-full flex items-center justify-center gap-2 h-14 bg-primary hover:bg-primary-dark text-background-dark text-lg font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-primary/25">
+<button id="discord-copy-button" class="w-full flex items-center justify-center gap-2 h-14 bg-primary hover:bg-primary-dark text-background-dark text-lg font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-primary/25">
 <span class="material-symbols-outlined">chat_bubble</span>
                         Message Me on Discord
                     </button>
@@ -407,7 +402,6 @@
 </div>
 </div>
 </section>
-<!-- Footer -->
 <footer class="py-8 px-4 border-t border-white/5 bg-black/40 text-center">
 <div class="max-w-7xl mx-auto flex flex-col items-center">
 <div class="flex items-center gap-2 mb-4 opacity-50 hover:opacity-100 transition-opacity">
@@ -419,17 +413,15 @@
 </div>
 </footer>
 </main>
-<!-- Simple Copy Script for Discord ID -->
 <script>
-        const discordBtn = document.querySelector('#discord-copy-btn');
+        const discordBtn = document.getElementById('discord-copy-button');
         if(discordBtn) {
+            const originalText = discordBtn.innerHTML;
             discordBtn.addEventListener('click', () => {
                 navigator.clipboard.writeText('3sv6');
-                const originalText = discordBtn.innerHTML;
                 discordBtn.innerHTML = '<span class="material-symbols-outlined">check</span> Copied "3sv6" to Clipboard!';
                 discordBtn.classList.remove('bg-primary', 'hover:bg-primary-dark', 'text-background-dark');
                 discordBtn.classList.add('bg-green-500', 'text-white');
-
                 setTimeout(() => {
                     discordBtn.innerHTML = originalText;
                     discordBtn.classList.add('bg-primary', 'hover:bg-primary-dark', 'text-background-dark');
@@ -437,8 +429,22 @@
                 }, 2000);
             });
         }
-    </script>
 
+ feat-functional-portfolio-17528959975888939222
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = mobileMenu.querySelectorAll('a');
+
+            mobileMenuButton.addEventListener('click', function () {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+=======
     <!-- Scripts -->
     <script>
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -468,6 +474,7 @@
                 if(mobileNav && !mobileNav.classList.contains('hidden')) {
                     mobileNav.classList.add('hidden');
                 }
+ main
             });
         });
     </script>
